@@ -1,31 +1,56 @@
-import React from 'react';
-import styles from './phone.scss';
-import { Input } from '../../input/basic-input/input/input.component';
+import React, { useState } from 'react';
+import styles from '../field.scss';
+import formatPhoneNumber from './normlizePhoneNumber';
 import { useTranslation } from 'react-i18next';
-import InputMask from "react-input-mask";
+import { TextInput } from 'carbon-components-react';
 
- export interface MaskedInput {
-  mask: string;
+interface InputProps {
+  id: string;
   name: string;
-  placeholder: string;
-  setFieldValue(fieldName: string, value: string):void;
+  disabled?: boolean;
+  placeholder?: string;
+  setPhoneValue(fieldName: string, value: string): void;
 }
 
-export const PhoneField: React.FC<MaskedInput> = (props) => {
+
+export const PhoneField: React.FC<InputProps> = props => {
+  const prefix = '+(509)';
+  const [val, setVal] = useState(prefix)
+  const [patternText,setPatternText]= useState(null)
+  const [patternState,setPatternState]= useState(null)
+
+
+
+  const handleChange = (e,value) => {
+    e.target.value = formatPhoneNumber(value.substring(6));
+    const number = prefix.replace(/\D/g, "") + e.target.value.replace(/-/g, "")
+    setVal(prefix + e.target.value)
+    props.setPhoneValue(props.name, number);
+  }
+
+  const handleError = () => {
+    if (val.length < (prefix.length+9)){
+      setPatternState(true);
+      setPatternText('Format de telephone non valide');
+    }
+  }
 
   return (
-    <InputMask
-      className={styles.phoneInputStyle}
-      {...props}
-      onChange={(e) => {
-        const value = e.target.value || "";
-        const formatedValue = value
-          .replace(/\)/g, "")
-          .replace(/\(/g, "")
-          .replace(/-/g, "")
-          .replace(/ /g, "");
-          props.setFieldValue(props.name,formatedValue);
+    <div>
+      <TextInput
+        type="tel"
+        labelText={''}
+        {...props}
+        value={val}
+        light={true}
+        invalid={patternState}
+        invalidText={patternText}
+        onChange={(e) => {
+          const { value } = e.target;
+          handleChange(e,value)
         }}
-    />
+         onBlur={handleError}
+      />
+    </div>
   );
 };
