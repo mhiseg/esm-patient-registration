@@ -11,7 +11,6 @@ import { NumberInput } from "carbon-components-react/lib/components/NumberInput/
 import { Icon } from '@iconify/react';
 import { Field, FieldArray, Formik } from "formik";
 import * as Yup from "yup";
-import SearchAutocomplete from "../autocomplete/Autocomplete"
 import { PhoneField } from "../patient-form/patient-registration/field/phone/phone-field.component"
 
 const PatientFormRegistry = () => {
@@ -279,7 +278,7 @@ const PatientFormRegistry = () => {
                                         <RadioButton labelText="Feminin" value="Feminin" id="radio-sexe-2" />
                                     </RadioButtonGroup>
 
-                                    <SearchAutocomplete />
+                                    {/* <SearchAutocomplete /> */}
 
                                     {/* <TextInput
                                         className={styles.marginItem}
@@ -431,12 +430,7 @@ const PatientFormRegistry = () => {
                                         onBlur={handleBlur}
                                     /> */}
 
-                                    <PhoneField 
-                                        mask="+(50\9)9999-9999"
-                                        name='phone'
-                                        placeholder="Telephone"
-                                        setFieldValue={setFieldValue} 
-                                    />
+                                    <PhoneField id="telephone" name="telephone"  placeholder="Telephone" setPhoneValue = {setFieldValue}/>
                                 </Column>
 
 

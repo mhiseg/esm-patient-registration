@@ -1,0 +1,23 @@
+$feature-flags: (grid-columns-16: true);
+
+.formatPage{
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+.mainContainer{
+  background-color: #F8F7FB;
+  width: 100%;
+  min-height: calc(86vh - 1.5rem);
+  border-radius: 12px;
+  margin: 0;
+  padding: 15px;
+}
+
+.pm0{
+  margin: 0;
+  padding: 0;
+}
+
+.selfCenter{
+  margin: 0 auto;
+}
