@@ -35,6 +35,11 @@ export const PhoneField: React.FC<InputProps> = props => {
       setPatternText('Format de telephone non valide');
       setRequired(true);
     }
+    else{
+      setPatternState(false);
+      setPatternText(null);
+      setRequired(false);
+    }
   }
 
   return (
