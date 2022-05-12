@@ -18,6 +18,7 @@ export const PhoneField: React.FC<InputProps> = props => {
   const [val, setVal] = useState(prefix)
   const [patternText,setPatternText]= useState(null)
   const [patternState,setPatternState]= useState(null)
+  const [required,setRequired]= useState(false)
 
 
 
@@ -29,9 +30,10 @@ export const PhoneField: React.FC<InputProps> = props => {
   }
 
   const handleError = () => {
-    if (val.length < (prefix.length+9)){
+    if (val.length > 6 && val.length < prefix.length + 9){
       setPatternState(true);
       setPatternText('Format de telephone non valide');
+      setRequired(true);
     }
   }
 
@@ -50,6 +52,7 @@ export const PhoneField: React.FC<InputProps> = props => {
           handleChange(e,value)
         }}
          onBlur={handleError}
+         required= {required}
       />
     </div>
   );
