@@ -4,22 +4,22 @@ import formatPhoneNumber from './normlizePhoneNumber';
 import { useTranslation } from 'react-i18next';
 import { TextInput } from 'carbon-components-react';
 
+
 interface InputProps {
   id: string;
   name: string;
   disabled?: boolean;
   placeholder?: string;
-  setPhoneValue(fieldName: string, value: string): void;
+  required?: boolean;
+  setPhoneValue:(fieldName: string, value: string) => void;
 }
 
 
-export const PhoneField: React.FC<InputProps> = props => {
+export const PhoneField: React.FC<InputProps> = (props) => {
   const prefix = '+(509)';
   const [val, setVal] = useState(prefix)
   const [patternText,setPatternText]= useState(null)
-  const [patternState,setPatternState]= useState(null)
-  const [required,setRequired]= useState(false)
-
+  const [patternState,setPatternState]= useState(null) 
 
 
   const handleChange = (e,value) => {
@@ -33,12 +33,12 @@ export const PhoneField: React.FC<InputProps> = props => {
     if (val.length > 6 && val.length < prefix.length + 9){
       setPatternState(true);
       setPatternText('Format de telephone non valide');
-      setRequired(true);
-    }
-    else{
+    }else{
+      if(val.length == prefix.length){
+        setVal(undefined);
+      }
       setPatternState(false);
       setPatternText(null);
-      setRequired(false);
     }
   }
 
@@ -62,3 +62,4 @@ export const PhoneField: React.FC<InputProps> = props => {
     </div>
   );
 };
+let required = false

@@ -44,7 +44,6 @@ describe('text input to be normalized', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Format de telephone non valide')).toBeInTheDocument();
-      expect(input.required).toBe(true);
     });
   });
 
