@@ -1,9 +1,9 @@
 {
-  "name": "@openmrs/esm-template-app",
-  "version": "3.0.0",
+  "name": "@mhiseg/patient-registration",
+  "version": "0.0.1",
   "license": "MPL-2.0",
-  "description": "A microfrontend template OpenMRS",
-  "browser": "dist/openmrs-esm-template-app.js",
+  "description": "MHISEG patient registration module",
+  "browser": "dist/mhiseg-esm-patient-registration-app.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {
