@@ -15,11 +15,12 @@ interface InputProps {
 }
 
 
-export const PhoneField: React.FC<InputProps> = (props) => {
+export const PhoneInput: React.FC<InputProps> = (props) => {
   const prefix = '+(509)';
   const [val, setVal] = useState(prefix)
   const [patternText,setPatternText]= useState(null)
-  const [patternState,setPatternState]= useState(null) 
+  const [patternState,setPatternState]= useState(null)
+  let required = false
 
 
   const handleChange = (e,value) => {
@@ -49,17 +50,16 @@ export const PhoneField: React.FC<InputProps> = (props) => {
         labelText={''}
         {...props}
         value={val}
-        light={true}
         invalid={patternState}
         invalidText={patternText}
         onChange={(e) => {
           const { value } = e.target;
           handleChange(e,value)
         }}
-         onBlur={handleError}
-         required= {required}
+        light={true}
+        onBlur={handleError}
+        required= {required}
       />
     </div>
   );
 };
-let required = false

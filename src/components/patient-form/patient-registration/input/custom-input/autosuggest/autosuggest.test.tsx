@@ -29,7 +29,8 @@ const mockGetSearchResults = async (query: string) => {
     return person.display.toUpperCase().includes(query.toUpperCase());
   });
 };
-
+ 
+console.log(mockGetSearchResults);
 const handleSuggestionSelected = jest.fn((field, value) => [field, value]);
 
 describe('autosuggest', () => {
