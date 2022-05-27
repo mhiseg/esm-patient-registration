@@ -1,21 +1,16 @@
 import React from 'react';
-import { Input } from '../../input/basic-input/input/input.component';
 import { useTranslation } from 'react-i18next';
+import { SelectInput } from '../../input/basic-input/select/select-input.component';
 
 
-
-export const NameField = () => {
+export const IdSelect: React.FC = () => {
   const { t } = useTranslation();
-
-  return(
+  return (
     <>
-      <Input
-        id="identifiers"
-        name="identifiers"
-        labelText="Identifiant"
-        light={true}
-        placeholder={t('idFieldLabelText', 'Identifiant')}
-        hideLabel={true}
+      <SelectInput
+        options={[t('TypeCIN', 'Carte d\'identification nationale'), t('TypeNIF', 'Numero d\'identification fiscal')]}
+        label="Identifier type"
+        name="identifier"
       />
     </>
   );
