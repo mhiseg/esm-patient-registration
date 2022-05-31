@@ -1,0 +1,44 @@
+.suggestions {
+    position: relative;
+    border-top-width: 0;
+    list-style: none;
+    margin-top: 0;
+    max-height: 160px;
+    overflow-y: auto;
+    padding-left: 0;
+    min-width: calc(300px + 1rem);
+    left: 0;
+    background-color: #fff;
+    margin-bottom: 20px;
+    z-index: 2000;
+    border-left: 2px solid #1E6CFE;
+    border-bottom: 2px solid #1E6CFE;
+    border-right: 2px solid #1E6CFE;
+}
+
+.suggestions li {
+    padding: 1rem;
+    line-height: 1.29;
+    color: #525252;
+    //border-bottom: 1px solid #8d8d8d;
+}
+
+.suggestions li:hover {
+    background-color: rgba(11, 209, 252,0.09);
+    color: #1E6CFE;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.autocomplete {
+    position: relative;
+}
+
+.autocompleteSearch {
+    min-width: calc(300px + 1rem);
+}
+
+.suggestions a {
+    color: inherit;
+    text-decoration: none;
+}

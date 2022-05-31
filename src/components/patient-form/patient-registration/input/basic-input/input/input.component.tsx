@@ -9,23 +9,22 @@ interface InputProps {
   light: boolean;
   disabled?: boolean;
   placeholder?: string;
-  mask?: string;
-  formatPhoneNumber(formatPhoneNumber:string):string;
+  hideLabel?: boolean;
 }
 
 export const Input: React.FC<InputProps> = props => {
   const [field, meta] = useField(props.name);
 
   return (
-    <div style={{ marginBottom: '1rem' }}>
+    <div>
       <TextInput
         {...props}
         {...field}
         invalid={!!(meta.touched && meta.error)}
         invalidText={meta.error}
         value={field.value || ''}
-      />
 
+      />
     </div>
   );
 };

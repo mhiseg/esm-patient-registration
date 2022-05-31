@@ -4,21 +4,23 @@ import formatPhoneNumber from './normlizePhoneNumber';
 import { useTranslation } from 'react-i18next';
 import { TextInput } from 'carbon-components-react';
 
+
 interface InputProps {
   id: string;
   name: string;
   disabled?: boolean;
   placeholder?: string;
-  setPhoneValue(fieldName: string, value: string): void;
+  required?: boolean;
+  setPhoneValue:(fieldName: string, value: string) => void;
 }
 
 
-export const PhoneField: React.FC<InputProps> = props => {
+export const PhoneInput: React.FC<InputProps> = (props) => {
   const prefix = '+(509)';
   const [val, setVal] = useState(prefix)
   const [patternText,setPatternText]= useState(null)
   const [patternState,setPatternState]= useState(null)
-
+  let required = false
 
 
   const handleChange = (e,value) => {
@@ -29,9 +31,15 @@ export const PhoneField: React.FC<InputProps> = props => {
   }
 
   const handleError = () => {
-    if (val.length < (prefix.length+9)){
+    if (val.length > 6 && val.length < prefix.length + 9){
       setPatternState(true);
       setPatternText('Format de telephone non valide');
+    }else{
+      if(val.length == prefix.length){
+        setVal(undefined);
+      }
+      setPatternState(false);
+      setPatternText(null);
     }
   }
 
@@ -42,14 +50,15 @@ export const PhoneField: React.FC<InputProps> = props => {
         labelText={''}
         {...props}
         value={val}
-        light={true}
         invalid={patternState}
         invalidText={patternText}
         onChange={(e) => {
           const { value } = e.target;
           handleChange(e,value)
         }}
-         onBlur={handleError}
+        light={true}
+        onBlur={handleError}
+        required= {required}
       />
     </div>
   );
