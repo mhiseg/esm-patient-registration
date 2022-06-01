@@ -11,7 +11,6 @@ import { NumberInput } from "carbon-components-react/lib/components/NumberInput/
 import { Icon } from '@iconify/react';
 import { Field, FieldArray, Formik } from "formik";
 import * as Yup from "yup";
-import { PhoneField } from "./patient-registration/input/field/phone/phone-field.component";
 
 const PatientFormRegistry = () => {
 
@@ -430,7 +429,7 @@ const PatientFormRegistry = () => {
                                         onBlur={handleBlur}
                                     /> */}
 
-                                    <PhoneField/>
+                                    <PhoneField id="telephone" name="telephone"  placeholder="Telephone" setPhoneValue = {setFieldValue}/>
                                 </Column>
 
 
