@@ -25,7 +25,7 @@ describe('text input to be normalized', () => {
 
   it('is formated', async () => {
     const input = await setupInput();
-    const expected = '+(509) 4650-3243';
+    const expected = '+(509)4650-3243';
 
     fireEvent.change(input, { target: { value: expected } });
     fireEvent.blur(input);

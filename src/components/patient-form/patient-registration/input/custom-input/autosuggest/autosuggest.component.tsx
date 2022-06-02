@@ -36,7 +36,7 @@ export const Autosuggest: React.FC<AutosuggestProps> = ({
   }, [wrapper]);
 
   const handleClickOutsideComponent = e => {
-  
+
     if (wrapper.current && !wrapper.current.contains(e.target)) {
       setSuggestions([]);
     }
@@ -67,13 +67,14 @@ export const Autosuggest: React.FC<AutosuggestProps> = ({
         name={name}
         id="autosuggest"
         placeholder={placeholder}
-        labelText={t('fullName', 'Full Name')}
+        labelText={""}
         onChange={handleChange}
         ref={searchBox}
         className={styles.autocompleteSearch}
-        light= {true}
+        light={true}
+        size="lg"
       />
-      {suggestions.length >  0 && (
+      {suggestions.length > 0 && (
         <ul className={styles.suggestions}>
           {suggestions.map((suggestion, index) => (
             <li

@@ -1,15 +1,15 @@
 import React from 'react';
-import Select from 'carbon-components-react/es/components/Select';
-import SelectItem from 'carbon-components-react/es/components/SelectItem';
 import { useField } from 'formik';
+import { SelectItem, Select } from 'carbon-components-react';
 
 interface SelectInputProps {
   name: string;
   options: Array<string>;
   label: string;
+  className?: string;
 }
 
-export const SelectInput: React.FC<SelectInputProps> = ({ name, options, label }) => {
+export const SelectInput: React.FC<SelectInputProps> = ({ name, options, label,className }) => {
   const [field, meta] = useField(name);
   const selectOptions = [
     <SelectItem disabled hidden text={`Select ${label}`} key="" value="" />,
@@ -18,7 +18,13 @@ export const SelectInput: React.FC<SelectInputProps> = ({ name, options, label }
 
   return (
     <div>
-      <Select id="identifier" {...field} labelText={label} light={true} size="md" hideLabel={true}>
+      <Select 
+      id="identifier" {...field} 
+      labelText={label} 
+      light={true} size="md" 
+      className = {className}
+      hideLabel={true}>
+      
         {selectOptions}
       </Select>
     </div>

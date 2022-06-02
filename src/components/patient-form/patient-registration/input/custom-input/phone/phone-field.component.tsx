@@ -12,6 +12,7 @@ interface InputProps {
   placeholder?: string;
   required?: boolean;
   setPhoneValue:(fieldName: string, value: string) => void;
+  className?:string;
 }
 
 
@@ -26,7 +27,7 @@ export const PhoneInput: React.FC<InputProps> = (props) => {
   const handleChange = (e,value) => {
     e.target.value = formatPhoneNumber(value.substring(6));
     const number = prefix.replace(/\D/g, "") + e.target.value.replace(/-/g, "")
-    setVal(prefix + e.target.value)
+    setVal(prefix+" "+ e.target.value)
     props.setPhoneValue(props.name, number);
   }
 

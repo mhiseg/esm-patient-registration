@@ -1,6 +1,7 @@
 import React from 'react';
 import TextInput from 'carbon-components-react/es/components/TextInput';
 import { useField } from 'formik';
+import styles from "../../../input/input.scss";
 
 interface InputProps {
   id: string;
@@ -10,6 +11,7 @@ interface InputProps {
   disabled?: boolean;
   placeholder?: string;
   hideLabel?: boolean;
+  className?: string;
 }
 
 export const Input: React.FC<InputProps> = props => {
@@ -23,7 +25,7 @@ export const Input: React.FC<InputProps> = props => {
         invalid={!!(meta.touched && meta.error)}
         invalidText={meta.error}
         value={field.value || ''}
-
+        size="lg"
       />
     </div>
   );

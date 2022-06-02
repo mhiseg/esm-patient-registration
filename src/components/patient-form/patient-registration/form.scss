@@ -1,0 +1,98 @@
+@import "../../../../node_modules/carbon-components/scss/globals/scss/_spacing.scss";
+
+.cardForm {
+    background: #FFFFFF;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 1.5rem;
+}
+
+.secondColStyle {
+    padding-left: 2.5%;
+    //padding-right: 0;
+}
+
+.firstColSyle {
+     padding-right: 2.5%;
+    //padding-left: 0;
+}
+
+.radioStyle {
+    padding-left: 0;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.numberInputStyle {
+    min-width: 15px !important;
+}
+
+.buttonStyle {
+    margin-right: 10px;
+    min-width: 108px;
+    height: 34.79px;
+    border-radius: 5px;
+    background: rgba(247, 105, 114, 0.18);
+    border: 1px solid #FB000F;
+    padding: 20px;
+
+}
+
+.buttonStyle1 {
+    margin-left: 10px;
+    width: 108px;
+    height: 34.79px;
+    background: rgba(78, 203, 113, 0.1);
+    border-radius: 5px;
+    padding: 20px;
+
+    // &:hover{
+    //     background: rgba(78, 203, 113, 1); 
+    // }
+}
+
+.flexEnd {
+    float: right;
+}
+
+.formGroup {
+    width: 100%;
+}
+
+.marginItem {
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.marginSelect {
+    margin-bottom: 20px;
+    margin-top: 15px;
+}
+
+.buttonPlusStyle {
+    margin-top: 2.5px;
+    margin-left: 10px;
+}
+
+.pl0 {
+    padding-left: 0;
+}
+
+.pm0 {
+    margin: 0;
+    padding: 0;
+}
+
+.p0 {
+    padding: 0;
+}
+
+.marginTop {
+    margin-top: $spacing-07;
+}
+
+.iconStyle {
+    //margin-top: $spacing-07;
+    margin-left: 5px;
+    color: 699BF7;
+}

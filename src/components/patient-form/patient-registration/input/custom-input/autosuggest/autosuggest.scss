@@ -17,7 +17,7 @@
 }
 
 .suggestions li {
-    padding: 1rem;
+    padding: .7rem;
     line-height: 1.29;
     color: #525252;
     //border-bottom: 1px solid #8d8d8d;
@@ -32,6 +32,7 @@
 
 .autocomplete {
     position: relative;
+    margin-top: 15px;
 }
 
 .autocompleteSearch {
