@@ -8,6 +8,10 @@ import FieldForm from "./field.component";
 import { PatientRegistrationContext } from "./patient-registration-context";
 import { Grid, Row, Column, Button, DatePicker, DatePickerInput, Form } from "carbon-components-react";
 import { RelationShips } from "./field/relationship/relationship-field-component";
+import { generateIdentifier,savePatient,sourceUuid } from "./patient-registration.resource";
+import { Patient } from "./patient-registration-types";
+import { useTranslation } from "react-i18next";
+import { showToast } from "@openmrs/esm-framework";
 
 
 
@@ -16,13 +20,15 @@ const PatientFormRegistry = () => {
     function today() {
         return new Date().toLocaleDateString("fr");
     }
-
-
+    const abortController = new AbortController();
+    const { t } = useTranslation();
+    let patient: Patient;
+    
     const [initialV, setInitiatV] = useState({
         relationships: [{ prenomRef: "", nomRef: "", telRef: "" }],
         identifierType: "",
         firstName: "",
-        dob: "",
+        dob: today(),
         status: "",
         gender: "",
         birthPlace: "",
@@ -61,19 +67,54 @@ const PatientFormRegistry = () => {
         )
     });
 
-
-
-
-
+    const save = (id, values) => {
+        console.log(id,'====',values)
+        patient = {
+            identifiers: [{
+                identifier: id,
+                identifierType: "05a29f94-c0ed-11e2-94be-8c13b969e334",
+                location: "8d6c993e-c2cc-11de-8d13-0010c6dffd0f",
+                preferred: false
+            }],
+            person: {
+                names: [
+                    {
+                        givenName: values.firstName,
+                        familyName: values.familyName,
+                    }
+                ],
+                gender: values.gender,
+                birthdate: new Date(values.dob).toISOString(),
+                birthdateEstimated: false,
+                addresses: [
+                    {
+                        address1: values.adress,
+                        cityVillage: values.residence,
+                        stateProvince: 'Ouest',
+                        country: 'Haiti',
+                    },
+                ],
+            }
+        }
+        console.log('to save',patient)
+        savePatient(abortController, patient, null)
+            .then(res => showToast({
+                title: t('successfullyAdded', 'Successfully added'),
+                kind: 'success',
+                description: 'Patient save succesfully',
+            }))
+            .catch(error => showToast({ description: error.message }))
+    }
 
     return (
         <Formik
             initialValues={initialV}
             validationSchema={patientSchema}
-            onSubmit={(values) => {
-                console.log(values);
-                alert("Form is validated! Submitting the form...");
-            }
+            onSubmit={
+                async (values) => {
+                    const id = await generateIdentifier(sourceUuid, abortController);
+                    save(id.data.identifier, values)
+                }
             }
 
         >
