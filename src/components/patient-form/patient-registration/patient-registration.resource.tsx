@@ -4,8 +4,10 @@ import { Patient, Relationship, PatientIdentifier } from './patient-registration
 
 export const uuidIdentifier = '05a29f94-c0ed-11e2-94be-8c13b969e334';
 export const uuidIdentifierLocation = '8d6c993e-c2cc-11de-8d13-0010c6dffd0f';
-export const uuidTelephoneNumber = '14d4f066-15f5-102d-96e4-000c29c2a5d7';
+export const uuidPhoneNumber = '14d4f066-15f5-102d-96e4-000c29c2a5d7';
 export const sourceUuid = "691eed12-c0f1-11e2-94be-8c13b969e334";
+export const uuidBirthPlace = "8d8718c2-c2cc-11de-8d13-0010c6dffd0f";
+export const countryName = "Haiti";
 
 function dataURItoFile(dataURI: string) {
   const byteString = atob(dataURI.split(',')[1]);
@@ -87,6 +89,29 @@ export function deleteRelationship(abortController: AbortController, relationshi
     signal: abortController.signal,
   });
 }
+
+export async function fetchAllLocation() {
+  const url = '/module/addresshierarchy/ajax/getChildAddressHierarchyEntries.form?searchString=Haiti';
+  const statesData = await openmrsFetch(url, { method: 'GET' });
+  let states = await statesData
+  const cityVillages = async (state) => (openmrsFetch(`${url}%7C${state}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }));
+  let places = []
+  let placesTables = await Promise.all(
+    states.data.map(async state => {
+      let cities = await cityVillages(state.name)
+      let locs = await Promise.all(cities.data.map((city) => ({ state: state.name, city:city.name, display: `${city.name}, ${state.name}` })))
+      return locs;
+    })
+  )
+  await Promise.all(placesTables.map(async (tables) => tables.map(t => places.push(t))))
+  return places
+}
+
 
 export async function savePatientPhoto(
   patientUuid: string,

@@ -1,5 +1,5 @@
 .suggestions {
-    position: relative;
+    position: absolute;
     border-top-width: 0;
     list-style: none;
     margin-top: 0;
@@ -14,6 +14,7 @@
     border-left: 2px solid #1E6CFE;
     border-bottom: 2px solid #1E6CFE;
     border-right: 2px solid #1E6CFE;
+    width: 100%;
 }
 
 .suggestions li {

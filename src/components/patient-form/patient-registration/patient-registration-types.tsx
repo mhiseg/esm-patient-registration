@@ -17,8 +17,8 @@ export interface AttributeValue {
  */
 export interface FetchedPatientIdentifierType {
   name: string;
-  required: boolean;
-  uuid: string;
+  required?: boolean;
+  uuid?: string;
   fieldName: string;
   format: string;
   isPrimary: boolean;
@@ -55,6 +55,7 @@ export interface PatientIdentifierType extends FetchedPatientIdentifierType {
 export interface IdentifierSource {
   uuid: string;
   name: string;
+  description: string;
   autoGenerationOption?: IdentifierSourceAutoGenerationOption;
 }
 

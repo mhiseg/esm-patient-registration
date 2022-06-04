@@ -46,7 +46,7 @@
    return {
      pages: [
        {
-         load: getAsyncLifecycle(() => import("./renderSearch"), options),
+         load: getAsyncLifecycle(() => import("./patient-registration-component"), options),
          route: "death/add-patient",
        },
      ]

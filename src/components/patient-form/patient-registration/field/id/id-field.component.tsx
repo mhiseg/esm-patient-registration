@@ -10,8 +10,8 @@ export const IdField: React.FC = () => {
   return(
     <>
       <Input
-        id="identifiers"
-        name="identifiers"
+        id="identifier"
+        name="identifier"
         labelText="Identifiant"
         light={true}
         placeholder={t('idFieldLabelText', 'Identifiant')}
