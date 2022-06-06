@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { openmrsFetch, useConfig } from '@openmrs/esm-framework';
+import { openmrsFetch, useConfig,openmrsObservableFetch } from '@openmrs/esm-framework';
 import { Patient, Relationship, PatientIdentifier } from './patient-registration-types';
 
 export const uuidIdentifier = '05a29f94-c0ed-11e2-94be-8c13b969e334';

@@ -11,7 +11,7 @@ import { LastNameField } from './field/name/lastname-field.component';
 import { OccupationSelect } from './field/occupation/occuptation-field-component';
 import { PhoneField } from './field/phone/phone-field.component'
 import ResidenceField from './field/residence/residence';
-import { StatuField } from './field/statu/statu-selection-overlay';
+import { StatuField } from './field/status/status-selection-overlay';
 import { Unknow } from './input/custom-input/unknow-format-component';
 
 const FieldForm = (name: string) => {

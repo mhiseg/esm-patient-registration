@@ -2,5 +2,6 @@
   "savePatientTitle": "Save new patient ",
   "messageErrorGiveName": "Give name can't null",
   "messageErrorGender":"The patient must have a gender",
-  "selectIdentifier":" Select the identifier"
+  "selectIdentifier":" Select the identifier",
+  "givenNameLabelText":"Given name"
 }
