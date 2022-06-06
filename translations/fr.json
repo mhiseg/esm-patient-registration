@@ -1,0 +1,11 @@
+{
+  "savePatientTitle": "Enregistrer un  nouveau Patient",
+  "messageErrorGiveName": "Le prenom ne peut pas etre vide",
+  "messageErrorGender": "Le patient doit avoir un genre",
+  "messageErrorFamilyName": "Le nom ne peut pas etre vide",
+  "selectIdentifier": "Sélectionner l'identifiant",
+  "CIN": "Carte d'Identification Nationale (CIN)",
+  "NIF": "Numéro d'Identificatioin Fiscale (NIF)",
+  "givenNameLabelText":"Prénom",
+  "idFieldLabelText": "Identifiant"
+}

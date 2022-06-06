@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import { ContentSwitcher, DatePicker, DatePickerInput, Switch, TextInput } from 'carbon-components-react';
+import { Column, ContentSwitcher, DatePicker, DatePickerInput, NumberInput, Row, Switch, TextInput } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
 import { useField } from 'formik';
 import { PatientRegistrationContext } from '../../patient-registration-context';
 import { generateFormatting } from '../date-util';
-import styles from '../field.scss';
+import styles from '../../field/field.scss';
 
 export const DobField: React.FC = () => {
   const { t } = useTranslation();
@@ -23,7 +23,7 @@ export const DobField: React.FC = () => {
   };
 
   const onDateChange = ([birthdate]) => {
-    setFieldValue('birthdate', birthdate);
+    setFieldValue('birthdate',{date: birthdate});
   };
 
   const onEstimatedAgeChange = (ev) => {
@@ -36,53 +36,96 @@ export const DobField: React.FC = () => {
   };
 
   return (
-    <div className={styles.halfWidthInDesktopView}>
-      <h4 className={styles.productiveHeading02Light}>{t('birthFieldLabelText', 'Birth')}</h4>
-      <div className={styles.dobField}>
-        <div className={styles.dobContentSwitcherLabel}>
-          <span className={styles.label01}>{t('dobToggleLabelText', 'Date of Birth Known?')}</span>
-        </div>
-        <ContentSwitcher onChange={onToggle}>
-          <Switch name="known" text={t('yes', 'Yes')} />
-          <Switch name="unknown" text={t('no', 'No')} />
-        </ContentSwitcher>
-      </div>
-      {dobKnown ? (
-        <div className={styles.dobField}>
-          <DatePicker
-            dateFormat={dateFormat}
-            datePickerType="single"
-            light={true}
-            locale="fr"
-            onChange={onDateChange}
-            maxDate={format(today)}>
-            <DatePickerInput
-              id="birthdate"
-              {...birthdate}
-              placeholder={placeHolder}
-              labelText={t('dateOfBirthLabelText', 'Date of Birth')}
-              invalid={!!(birthdateMeta.touched && birthdateMeta.error)}
-              invalidText={birthdateMeta.error && t(birthdateMeta.error)}
-              value={format(birthdate.value)}
-              hideLabel={true}
-            />
-          </DatePicker>
-        </div>
-      ) : (
-        <div className={styles.dobField}>
-          <TextInput
-            id="ageEstimate"
-            type="number"
-            light
-            onChange={onEstimatedAgeChange}
-            labelText={t('estimatedYearsLabelText', 'Estimated Years')}
-            invalid={!!(ageEstimateMeta.touched && ageEstimateMeta.error)}
-            invalidText={ageEstimateMeta.error && t(ageEstimateMeta.error)}
-            value={ageEstimate.value}
-            min={0}
+    <div className={styles.dob}>
+      <div>
+        <DatePicker
+          className=""
+          maxDate={today}
+          datePickerType="single"
+          locale="fr"
+          dateFormat="d/m/Y"
+          light={true}
+          onChange={onDateChange}
+        // value={values}
+        // onChange={date => setFieldValue('dob', date)}
+        >
+          <DatePickerInput
+            id="date-picker-simple"
+            labelText="Date Picker label"
+            hideLabel={true}
+            placeholder="dd/mm/yyyy"
+            size="md"
           />
-        </div>
-      )}
+        </DatePicker>
+      </div>
+      <div >
+        <NumberInput
+          id="carbon-number"
+          invalidText="L'age ne doit pas etre inferieur a 0 et superieur 1000"
+          max={1000}
+          min={0}
+          size="md"
+          value={0}
+          allowEmpty={true}
+          light={true}
+          hideSteppers={true}
+        />
+        {/* <span>ans</span> */}
+      </div>
+
+      <div >
+        <NumberInput
+          id="carbon-number"
+          invalidText="Le nombre de mois doit etre compris entre 1 et 12"
+          max={11}
+          min={1}
+          size="md"
+          value={1}
+          allowEmpty={true}
+          light={true}
+          hideSteppers={true}
+          readOnly={true}
+        />
+        {/* <span>mois</span> */}
+      </div >
     </div>
   );
 };
+      /* {dobKnown ? (
+  <div className={styles.dobField}>
+    <DatePicker
+      dateFormat={dateFormat}
+      datePickerType="single"
+      light={true}
+      locale="fr"
+      onChange={onDateChange}
+      maxDate={format(today)}>
+      <DatePickerInput
+        id="birthdate"
+        {...birthdate}
+        placeholder={placeHolder}
+        labelText={t('dateOfBirthLabelText', 'Date of Birth')}
+        invalid={!!(birthdateMeta.touched && birthdateMeta.error)}
+        invalidText={birthdateMeta.error && t(birthdateMeta.error)}
+        value={format(birthdate.value)}
+        hideLabel={true}
+      />
+    </DatePicker>
+  </div>
+) : (
+  <div className={styles.dobField}>
+    <TextInput
+      id="ageEstimate"
+      type="number"
+      light
+      onChange={onEstimatedAgeChange}
+      labelText={t('estimatedYearsLabelText', 'Estimated Years')}
+      invalid={!!(ageEstimateMeta.touched && ageEstimateMeta.error)}
+      invalidText={ageEstimateMeta.error && t(ageEstimateMeta.error)}
+      value={ageEstimate.value}
+      min={0}
+    />
+  </div>
+)} */
+    // </div>
+

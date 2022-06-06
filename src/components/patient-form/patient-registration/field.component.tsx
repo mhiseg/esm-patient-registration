@@ -40,6 +40,8 @@ const FieldForm = (name: string) => {
       return <ResidenceField />;
     case 'birthPlace':
       return <BirthPlace />;
+    case 'dob':
+      return <DobField />;
     default:
       return <Unknow />;
   }

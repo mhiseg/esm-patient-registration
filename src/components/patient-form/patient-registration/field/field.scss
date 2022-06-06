@@ -1,7 +1,13 @@
-.margin_field{
+.margin_field {
   margin-top: 15px;
 }
 
+.dob {
+  padding-top: 15px;
+  border: 2px solid red;
+  display: flex;
+  overflow: hidden;
+}
 
 .radioFieldError {
   color: #da1e28;
