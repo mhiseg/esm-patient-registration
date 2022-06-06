@@ -13,9 +13,9 @@ export const LastNameField: React.FC = () => {
         className={styles.margin_field}
         id="familyName"
         name="familyName"
-        labelText="Nom"
+        labelText={t("familyNameLabelText", "Nom")}
         light={true}
-        placeholder={t('familyNameLabelText', 'Nom*')}
+        placeholder={t("familyNameLabelText", "Nom")+" *"}
         hideLabel={true}
       />
     </>

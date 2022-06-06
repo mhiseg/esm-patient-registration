@@ -14,7 +14,7 @@ export const IdField: React.FC = () => {
         name="identifier"
         labelText="Identifiant"
         light={true}
-        placeholder={t('idFieldLabelText', 'Identifiant')}
+        placeholder={t("idFieldLabelText", "Identifier")}
         hideLabel={true}
       />
     </>
