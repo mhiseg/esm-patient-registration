@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { openmrsFetch, useConfig,openmrsObservableFetch } from '@openmrs/esm-framework';
+import { openmrsFetch, useConfig, openmrsObservableFetch } from '@openmrs/esm-framework';
 import { Patient, Relationship, PatientIdentifier } from './patient-registration-types';
 
 export const uuidIdentifier = '05a29f94-c0ed-11e2-94be-8c13b969e334';
@@ -92,24 +92,27 @@ export function deleteRelationship(abortController: AbortController, relationshi
 
 export async function fetchAllLocation() {
   const url = '/module/addresshierarchy/ajax/getChildAddressHierarchyEntries.form?searchString=Haiti';
-  const statesData = await openmrsFetch(url, { method: 'GET' });
-  let states = await statesData
-  const cityVillages = async (state) => (openmrsFetch(`${url}%7C${state}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  }));
-  let places = []
-  let placesTables = await Promise.all(
-    states.data.map(async state => {
-      let cities = await cityVillages(state.name)
-      let locs = await Promise.all(cities.data.map((city) => ({ state: state.name, city:city.name, display: `${city.name}, ${state.name}` })))
-      return locs;
-    })
-  )
-  await Promise.all(placesTables.map(async (tables) => tables.map(t => places.push(t))))
-  return places
+
+  try {
+    const statesData = await openmrsFetch(url, { method: 'GET' });
+    let states = await statesData
+    const cityVillages = async (state) => (openmrsFetch(`${url}%7C${state}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }));
+    let places = []
+    let placesTables = await Promise.all(
+      states.data.map(async state => {
+        let cities = await cityVillages(state.name)
+        let locs = await Promise.all(cities.data.map((city) => ({ state: state.name, city: city.name, display: `${city.name}, ${state.name}` })))
+        return locs;
+      })
+    )
+    await Promise.all(placesTables.map(async (tables) => tables.map(t => places.push(t))))
+    return places
+  } catch (error) { }
 }
 
 
@@ -234,5 +237,11 @@ export async function deletePatientIdentifier(
       'Content-Type': 'application/json',
     },
     signal: abortController.signal,
+  });
+}
+
+export async function fetchRelationshipType() {
+  return openmrsFetch(`/ws/rest/v1/relationshiptype`, {
+    method: "GET",
   });
 }

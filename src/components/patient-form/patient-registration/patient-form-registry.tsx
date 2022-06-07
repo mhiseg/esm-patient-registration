@@ -20,10 +20,9 @@ const PatientFormRegistry = () => {
     const abortController = new AbortController();
     const { t } = useTranslation();
     let patient: Patient;
-    const today = new Date();
-
+    
     const [initialV, setInitiatV] = useState({
-        relationships: [{ prenomRef: "", nomRef: "", telRef: "" }],
+        relationships: [{ givenName: "", familyName: "", contactPhone: "", type:"" }],
         identifierType: "",
         givenName: "",
         dob: new Date(),
@@ -54,13 +53,13 @@ const PatientFormRegistry = () => {
         phone: Yup.string(),
         habitat: Yup.string(),
         relationships: Yup.array(
-            Yup.object({
-                prenomRefValue: Yup.boolean(),
-                nomRefValue: Yup.boolean(),
-                telRefValue: Yup.boolean(),
-                prenomRef: Yup.string().when('prenomRefValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') }),
-                nomRef: Yup.string().when('nomRefValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') }),
-                telRef: Yup.string().when('telRefValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') })
+            Yup.object({                
+                givenNameValue: Yup.boolean(),
+                familyNameValue: Yup.boolean(),
+                phoneValue: Yup.boolean(),
+                givenName: Yup.string().when('givenNameValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') }),
+                familyName: Yup.string().when('familyNameValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') }),
+                phone: Yup.string().when('phoneValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') })
             })
         )
     });
@@ -157,13 +156,13 @@ const PatientFormRegistry = () => {
                                     <Column className={styles.firstColSyle} lg={6}>
                                         {FieldForm("idType")}
                                         {FieldForm("givenName")}
-                                        {/* {FieldForm("dob")} */}
+                                        {FieldForm("dob")}
 
-                                        <Row className={styles.marginSelect}>
+                                        {/* <Row className={styles.marginSelect}>
                                             <Column sm={4} md={8} lg={6}>
                                                 <DatePicker
                                                     className=""
-                                                    maxDate={today}
+                                                    maxDate={today()}
                                                     datePickerType="single"
                                                     locale="fr"
                                                     dateFormat="d/m/Y"
@@ -215,7 +214,7 @@ const PatientFormRegistry = () => {
                                                     </Column >
                                                 </Row>
                                             </Column>
-                                        </Row>
+                                        </Row> */}
 
                                         {FieldForm("statu")}
 
@@ -230,7 +229,7 @@ const PatientFormRegistry = () => {
                                     <Column className={styles.secondColStyle} lg={6}>
                                         {FieldForm("idValue")}
 
-                                        {FieldForm("lastName")}
+                                        {FieldForm("familyName")}
 
                                         {FieldForm("birthPlace")}
 

@@ -10,10 +10,7 @@ export const IdSelect: React.FC = () => {
   const [identifiers, setIdentifier] = useState<Array<IdentifierSource>>([]);
 
   useEffect(() => {
-    fetchIdentifierType().then(res => {
-      // console.log("=================",res.data.results)
-      setIdentifier(getIdentifier(res.data.results))
-    })
+    fetchIdentifierType().then(res =>setIdentifier(getIdentifier(res.data.results)))
   }, [identifiers])
 
   const getIdentifier = (identifiers) => {
@@ -21,7 +18,7 @@ export const IdSelect: React.FC = () => {
     identiferSelected.forEach(el => {
       identifiers.map(id => {
         if(id.display.toUpperCase().includes(el)){
-          ids.push({ uuid: id.uuid, name: id.name, description: id.description})
+          ids.push({ uuid: id.uuid, name: id.name, description: id.description, display: id.display})
         }
       })
     });

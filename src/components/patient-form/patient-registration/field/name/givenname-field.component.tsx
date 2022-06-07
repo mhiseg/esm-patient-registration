@@ -4,15 +4,19 @@ import { useTranslation } from 'react-i18next';
 import styles from '../field.scss';
 
 
-export const GivenNameField:React.FC = () => {
-  const { t } = useTranslation();
+interface GivenNameFieldProps{
+  name: string;
+  className?: boolean
+}
 
+export const GivenNameField:React.FC<GivenNameFieldProps> = ({name, className}) => {
+  const { t } = useTranslation();
   return(
     <>
       <Input
-        className={styles.margin_field}
-        id="givenName"
-        name="givenName"
+        className={className == false ?styles.margin_field:""}
+        id={name}
+        name={name}
         labelText={t("givenNameLabelText","Given Name")}
         light={true}
         placeholder={t("givenNameLabelText", "Given name")+" *"}

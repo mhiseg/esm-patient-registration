@@ -10,13 +10,15 @@ import { fetchAllLocation } from "../../patient-registration.resource";
 const ResidenceField: React.FC = () => {
     const [places, setPlaces] = useState([]);
     const { t } = useTranslation();
-    const { setFieldValue } = useContext(PatientRegistrationContext);      
+    const { setFieldValue } = useContext(PatientRegistrationContext);
     const search = async (query: string) => {
-        return  places.filter(place => place.city.toUpperCase().includes(query.toUpperCase()))
+        return places.filter(place => place.city.toUpperCase().includes(query.toUpperCase()))
     };
     useEffect(() => {
-        fetchAllLocation().then(res => {
-            setPlaces(res)})
+        try {
+            fetchAllLocation().then(res => setPlaces(res))
+        } catch (error) { }
+
     }, [places])
 
     return (
