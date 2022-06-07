@@ -6,6 +6,10 @@ interface NameValue {
   givenName: string;
   familyName: string;
 }
+export type Person = {
+  names: Array<NameValue>;
+  gender: string;
+};
 
 export interface AttributeValue {
   attributeType: string;
