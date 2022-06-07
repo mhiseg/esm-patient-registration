@@ -96,6 +96,12 @@ export interface PatientRegistration {
     currentLocation: string;
   };
 }
+export type relationshipType = {
+  givenName: string;
+  familyName: string;
+  contactPhone: string;
+  uuid: string;
+}
 
 export type Relationship = {
   relationshipType: string;

@@ -13,12 +13,13 @@ interface InputProps {
   required?: boolean;
   setPhoneValue:(fieldName: string, value: string) => void;
   className?:string;
+  value?: string;
 }
 
 
 export const PhoneInput: React.FC<InputProps> = (props) => {
   const prefix = '+(509)';
-  const [val, setVal] = useState(prefix)
+  const [val, setVal] = useState(props.value?prefix+props.value:prefix)
   const [patternText,setPatternText]= useState(null)
   const [patternState,setPatternState]= useState(null)
   let required = false
@@ -28,6 +29,7 @@ export const PhoneInput: React.FC<InputProps> = (props) => {
     e.target.value = formatPhoneNumber(value.substring(6));
     const number = prefix.replace(/\D/g, "") + e.target.value.replace(/-/g, "")
     setVal(prefix+" "+ e.target.value)
+    console.log()
     props.setPhoneValue(props.name, number);
   }
 

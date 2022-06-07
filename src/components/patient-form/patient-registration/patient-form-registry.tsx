@@ -6,7 +6,7 @@ import { Formik } from "formik";
 import { Grid, Row, Column, Button, DatePicker, DatePickerInput, Form } from "carbon-components-react";
 import { useTranslation } from "react-i18next";
 import { showToast } from "@openmrs/esm-framework";
-import { Patient, Relationship } from "./patient-registration-types";
+import { Patient, Relationship, relationshipType } from "./patient-registration-types";
 import FieldForm from "./field.component";
 import { RelationShips } from "./field/relationship/relationship-field-component";
 import { PatientRegistrationContext } from "./patient-registration-context";
@@ -20,9 +20,12 @@ const PatientFormRegistry = () => {
     const abortController = new AbortController();
     const { t } = useTranslation();
     let patient: Patient;
+    let relationshipType: relationshipType[]=[{
+        givenName: "", familyName: "", contactPhone: "", uuid: "" 
+    }];
 
     const [initialV, setInitiatV] = useState({
-        relationships: [{ givenName: "", familyName: "", contactPhone: "", type: "" }],
+        relationships: relationshipType,
         identifierType: "",
         givenName: "",
         dob: new Date(),
@@ -57,9 +60,11 @@ const PatientFormRegistry = () => {
                 givenNameValue: Yup.boolean(),
                 familyNameValue: Yup.boolean(),
                 phoneValue: Yup.boolean(),
+                uuidValue: Yup.boolean(),
                 givenName: Yup.string().when('givenNameValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') }),
                 familyName: Yup.string().when('familyNameValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') }),
-                phone: Yup.string().when('phoneValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') })
+                contactPhone: Yup.string().when('phoneValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') }),
+                uuid: Yup.string().when('uuidValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') })
             })
         )
     });
@@ -75,10 +80,11 @@ const PatientFormRegistry = () => {
                     gender: null,
                     attributes: [{ attributeType: uuidPhoneNumber, value: relation.contactPhone, }]
                 },
-                type: relation.type
+                type: relation.uuid
             })
 
         })
+        console.log("persons ====",persons);
         persons.map(person => {
             savePerson(abortController, person.person).then(pers => {
                 const relation: Relationship = {
