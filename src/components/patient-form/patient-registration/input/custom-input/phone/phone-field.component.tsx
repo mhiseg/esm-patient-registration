@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../field.scss';
 import formatPhoneNumber from './normlizePhoneNumber';
 import { useTranslation } from 'react-i18next';
 import { TextInput } from 'carbon-components-react';
+import { useField } from 'formik';
 
 
 interface InputProps {
@@ -11,36 +12,32 @@ interface InputProps {
   disabled?: boolean;
   placeholder?: string;
   required?: boolean;
-  setPhoneValue:(fieldName: string, value: string) => void;
-  className?:string;
+  prefix?: string;
+  className?: string;
   value?: string;
+
 }
 
-
 export const PhoneInput: React.FC<InputProps> = (props) => {
-  const prefix = '+(509)';
-  const [val, setVal] = useState(props.value?prefix+props.value:prefix)
-  const [patternText,setPatternText]= useState(null)
-  const [patternState,setPatternState]= useState(null)
+  const [field, meta, helpers] = useField(props.name);
+  const { value } = meta;
+  const { setValue } = helpers;
+  const [patternText, setPatternText] = useState(null)
+  const [patternState, setPatternState] = useState(null)
   let required = false
-
-
-  const handleChange = (e,value) => {
+  const handleChange = (e, value) => {
     e.target.value = formatPhoneNumber(value.substring(6));
-    const number = prefix.replace(/\D/g, "") + e.target.value.replace(/-/g, "")
-    setVal(prefix+" "+ e.target.value)
-    console.log()
-    props.setPhoneValue(props.name, number);
+    const number = props.prefix.replace(/\D/g, "") + e.target.value.replace(/-/g, "")
+    setValue(props.prefix + " " + e.target.value)
   }
 
   const handleError = () => {
-    if (val.length > 6 && val.length < prefix.length + 9){
+    if (value.length > 6 && value.length < props.prefix.length + 9) {
       setPatternState(true);
       setPatternText('Format de telephone non valide');
-    }else{
-      if(val.length == prefix.length){
-        setVal(undefined);
-      }
+    } else {
+      if (value.length == props.prefix.length)
+        setValue(undefined);
       setPatternState(false);
       setPatternText(null);
     }
@@ -52,16 +49,17 @@ export const PhoneInput: React.FC<InputProps> = (props) => {
         type="tel"
         labelText={''}
         {...props}
-        value={val}
+        {...field}
         invalid={patternState}
         invalidText={patternText}
         onChange={(e) => {
           const { value } = e.target;
-          handleChange(e,value)
+          handleChange(e, value)
         }}
         light={true}
         onBlur={handleError}
-        required= {required}
+        required={required}
+        value={value}
       />
     </div>
   );

@@ -8,13 +8,13 @@ interface PhoneFieldProps{
   value?: string;
 }
 
-export const PhoneField: React.FC<PhoneFieldProps> = ({name,value}) => {
+export const PhoneField: React.FC<PhoneFieldProps> = ({name}) => {
   const { t } = useTranslation();
-  const { setFieldValue } = useContext(PatientRegistrationContext);
-  console.log(name, value)
+  const prefix = "+(509)"
+
   return (
     <div>
-      <PhoneInput id={name} value={value} name={name} placeholder={t('phoneNumberInputLabelText', 'Téléphone')} setPhoneValue={setFieldValue}/>
+      <PhoneInput id={name} prefix={prefix} name={name} value={prefix}  placeholder={t('phoneNumberInputLabelText', 'Phone')} />
     </div>
   );
 };

@@ -7,5 +7,7 @@
   "CIN": "Carte d'Identification Nationale (CIN)",
   "NIF": "Numéro d'Identificatioin Fiscale (NIF)",
   "givenNameLabelText":"Prénom",
-  "idFieldLabelText": "Identifiant"
+  "idFieldLabelText": "Identifiant",
+  "phoneNumberInputLabelText": "Téléphone"
+
 }
