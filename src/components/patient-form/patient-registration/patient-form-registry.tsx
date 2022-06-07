@@ -168,10 +168,12 @@ const PatientFormRegistry = () => {
             initialValues={initialV}
             validationSchema={patientSchema}
             onSubmit={
-                async (values, { setSubmitting }) => {
+                async (values, { setSubmitting ,resetForm}) => {
                     setSubmitting(false)
                     const id = await generateIdentifier(sourceUuid, abortController);
                     save(id.data.identifier, values)
+                    resetForm(values);
+                    
                 }
             }
 
