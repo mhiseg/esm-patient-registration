@@ -5,5 +5,6 @@
   "selectIdentifier": "Select the identifier",
   "givenNameLabelText": "Given name",
   "familyNameLabelText": "family name",
-  "idFieldLabelText": "Identifier"
+  "idFieldLabelText": "Identifier",
+  "phoneNumberInputLabelText": "Phone number"
 }
