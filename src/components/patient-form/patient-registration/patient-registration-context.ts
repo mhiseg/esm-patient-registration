@@ -19,6 +19,7 @@ export interface FormValues {
 
 export interface PatientRegistrationContextProps {
   setFieldValue(field: string, value: any, shouldValidate?: boolean): void;
+  // values: any
   // values: FormValues
   // validationSchema: any;
 }

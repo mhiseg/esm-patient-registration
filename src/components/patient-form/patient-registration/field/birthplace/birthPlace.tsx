@@ -16,8 +16,9 @@ const BirthPlace: React.FC = () => {
         return  places.filter(place => place.city.toUpperCase().includes(query.toUpperCase()))
     };
     useEffect(() => {
-        fetchAllLocation().then(res => {
-            setPlaces(res)})
+        try{
+            fetchAllLocation().then(res =>setPlaces(res))
+        }catch(error){}
     }, [places])
 
     return (

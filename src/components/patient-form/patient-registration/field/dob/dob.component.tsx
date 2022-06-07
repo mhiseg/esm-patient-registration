@@ -24,6 +24,7 @@ export const DobField: React.FC = () => {
 
   const onDateChange = ([birthdate]) => {
     setFieldValue('birthdate',{date: birthdate});
+    console.log(birthdate,'=======================')
   };
 
   const onEstimatedAgeChange = (ev) => {
@@ -34,10 +35,11 @@ export const DobField: React.FC = () => {
       setFieldValue('ageEstimate', years);
     }
   };
+  // console.log(birthdate.value==undefined,'++++++++++++++++++++++')
 
   return (
-    <div className={styles.dob}>
-      <div>
+    <Row className={styles.margin_field}>
+      <Column>
         <DatePicker
           className=""
           maxDate={today}
@@ -57,8 +59,8 @@ export const DobField: React.FC = () => {
             size="md"
           />
         </DatePicker>
-      </div>
-      <div >
+      </Column>
+      <Column >
         <NumberInput
           id="carbon-number"
           invalidText="L'age ne doit pas etre inferieur a 0 et superieur 1000"
@@ -71,9 +73,9 @@ export const DobField: React.FC = () => {
           hideSteppers={true}
         />
         {/* <span>ans</span> */}
-      </div>
+      </Column>
 
-      <div >
+      <Column >
         <NumberInput
           id="carbon-number"
           invalidText="Le nombre de mois doit etre compris entre 1 et 12"
@@ -84,11 +86,11 @@ export const DobField: React.FC = () => {
           allowEmpty={true}
           light={true}
           hideSteppers={true}
-          readOnly={true}
+          readOnly={birthdate.value !== undefined}
         />
         {/* <span>mois</span> */}
-      </div >
-    </div>
+      </Column >
+    </Row>
   );
 };
       /* {dobKnown ? (

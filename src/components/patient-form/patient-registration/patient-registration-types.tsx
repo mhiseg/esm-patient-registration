@@ -6,6 +6,10 @@ interface NameValue {
   givenName: string;
   familyName: string;
 }
+export type Person = {
+  names: Array<NameValue>;
+  gender: string;
+};
 
 export interface AttributeValue {
   attributeType: string;
@@ -91,6 +95,12 @@ export interface PatientRegistration {
     patientPhotoConceptUuid: string;
     currentLocation: string;
   };
+}
+export type relationshipType = {
+  givenName: string;
+  familyName: string;
+  contactPhone: string;
+  uuid: string;
 }
 
 export type Relationship = {
