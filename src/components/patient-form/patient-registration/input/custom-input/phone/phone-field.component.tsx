@@ -14,8 +14,6 @@ interface InputProps {
   required?: boolean;
   prefix?: string;
   className?: string;
-  value?: string;
-
 }
 
 export const PhoneInput: React.FC<InputProps> = (props) => {
@@ -24,17 +22,19 @@ export const PhoneInput: React.FC<InputProps> = (props) => {
   const { setValue } = helpers;
   const [patternText, setPatternText] = useState(null)
   const [patternState, setPatternState] = useState(null)
-  let required = false
+  const { t } = useTranslation();
+  
   const handleChange = (e, value) => {
-    e.target.value = formatPhoneNumber(value.substring(6));
+    console.log(value,'=================',e.target.value);
+    e.target.value = formatPhoneNumber(value.substring((props.prefix.length+1)));
     const number = props.prefix.replace(/\D/g, "") + e.target.value.replace(/-/g, "")
     setValue(props.prefix + " " + e.target.value)
   }
 
   const handleError = () => {
-    if (value.length > 6 && value.length < props.prefix.length + 9) {
+    if (value.length > (props.prefix.length+1) && value.length < props.prefix.length + 10 ) {
       setPatternState(true);
-      setPatternText('Format de telephone non valide');
+      setPatternText(t('Format de telephone non valide'));
     } else {
       if (value.length == props.prefix.length)
         setValue(undefined);
@@ -58,7 +58,7 @@ export const PhoneInput: React.FC<InputProps> = (props) => {
         }}
         light={true}
         onBlur={handleError}
-        required={required}
+        required={props.required}
         value={value}
       />
     </div>

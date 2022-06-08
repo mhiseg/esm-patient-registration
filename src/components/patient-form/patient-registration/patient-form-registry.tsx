@@ -28,7 +28,7 @@ const PatientFormRegistry = () => {
         relationships: relationshipType,
         identifierType: "",
         givenName: "",
-        dob: new Date(),
+        dob:{birthdate: null, age:1, months: 4, birthdateEstimated: true},
         status: "",
         gender: "",
         birthPlace: "",
@@ -43,8 +43,9 @@ const PatientFormRegistry = () => {
 
     const patientSchema = Yup.object().shape({
         identifierType: Yup.string(),
-        givenName: Yup.string().required(t("messageErrorGiveName", "Give name can't null")),
-        dob: Yup.date(),
+        givenName: Yup.string()
+          .required(t("messageErrorGiveName", "Give name can't null")),
+        dob: Yup.object(),
         status: Yup.string(),
         gender: Yup.string().required(t("messageErrorGender", "Gender is required")),
         birthPlace: Yup.object(),
@@ -84,7 +85,7 @@ const PatientFormRegistry = () => {
             })
 
         })
-        console.log("persons ====",persons);
+        // console.log("persons ====",persons);
         persons.map(person => {
             savePerson(abortController, person.person).then(pers => {
                 const relation: Relationship = {
@@ -92,7 +93,7 @@ const PatientFormRegistry = () => {
                     personA: patient,
                     personB: pers.data.uuid
                 };
-                console.log('relationships to save', relation)
+                // console.log('relationships to save', relation)
 
                 saveRelationship(abortController, relation).then((r) => {
                     return { test: true, person: pers.data }
@@ -199,89 +200,18 @@ const PatientFormRegistry = () => {
                                     <Column className={styles.firstColSyle} lg={6}>
                                         {FieldForm("idType")}
                                         {FieldForm("givenName")}
-                                        {FieldForm("dob")}
-
-                                        {/* <Row className={styles.marginSelect}>
-                                            <Column sm={4} md={8} lg={6}>
-                                                <DatePicker
-                                                    className=""
-                                                    maxDate={today()}
-                                                    datePickerType="single"
-                                                    locale="fr"
-                                                    dateFormat="d/m/Y"
-                                                    light={true}
-                                                    value={values.dob}
-                                                    onChange={date => setFieldValue('dob', date)}
-                                                >
-                                                    <DatePickerInput
-                                                        id="date-picker-simple"
-                                                        labelText="Date Picker label"
-                                                        hideLabel={true}
-                                                        placeholder="dd/mm/yyyy"
-                                                        size="md"
-                                                    />
-                                                </DatePicker>
-                                            </Column>
-
-                                            <Column sm={4} md={8} lg={6}>
-                                                <Row>
-                                                    <Column >
-                                                        <NumberInput
-                                                            id="carbon-number"
-                                                            invalidText="L'age ne doit pas etre inferieur a 0 et superieur 1000"
-                                                            max={1000}
-                                                            min={0}
-                                                            size="md"
-                                                            value={0}
-                                                            allowEmpty={true}
-                                                            light={true}
-                                                            hideSteppers={true}
-                                                        />
-                                                        <span>ans</span>
-                                                    </Column>
-
-                                                    <Column >
-                                                        <NumberInput
-                                                            id="carbon-number"
-                                                            invalidText="Le nombre de mois doit etre compris entre 1 et 12"
-                                                            max={11}
-                                                            min={1}
-                                                            size="md"
-                                                            value={1}
-                                                            allowEmpty={true}
-                                                            light={true}
-                                                            hideSteppers={true}
-                                                            readOnly={true}
-                                                        />
-                                                        <span>mois</span>
-                                                    </Column >
-                                                </Row>
-                                            </Column>
-                                        </Row> */}
-
+                                        {FieldForm("dob",initialV.dob)}                     
                                         {FieldForm("statu")}
-
                                         {FieldForm("gender")}
-
                                         {FieldForm("residence")}
-
-
                                     </Column>
-
-
                                     <Column className={styles.secondColStyle} lg={6}>
                                         {FieldForm("idValue")}
-
                                         {FieldForm("familyName")}
-
                                         {FieldForm("birthPlace")}
-
                                         {FieldForm("occupation")}
-
                                         {FieldForm("habitat")}
-
                                         {FieldForm("address")}
-
                                         {FieldForm("phone")}
                                     </Column>
 

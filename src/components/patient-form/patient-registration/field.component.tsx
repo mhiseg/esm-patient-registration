@@ -14,7 +14,7 @@ import ResidenceField from './field/residence/residence';
 import { StatuField } from './field/status/status-selection-overlay';
 import { Unknow } from './input/custom-input/unknow-format-component';
 
-const FieldForm = (name: string) => {
+const FieldForm = (name: string, value?) => {
   switch (name) {  
     case 'givenName':
       return <GivenNameField  name={name} className={true} />;
@@ -41,7 +41,7 @@ const FieldForm = (name: string) => {
     case 'birthPlace':
       return <BirthPlace />;
     case 'dob':
-      return <DobField />;
+      return <DobField birthdate={value.birthdate} age={value.age} months={value.months} birthdateEstimated={value.birthdateEstimated} />;
     default:
       return <Unknow />;
   }

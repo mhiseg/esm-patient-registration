@@ -11,10 +11,9 @@ interface PhoneFieldProps{
 export const PhoneField: React.FC<PhoneFieldProps> = ({name}) => {
   const { t } = useTranslation();
   const prefix = "+(509)"
-
   return (
     <div>
-      <PhoneInput id={name} prefix={prefix} name={name} value={prefix}  placeholder={t('phoneNumberInputLabelText', 'Phone')} />
+      <PhoneInput id={name} prefix={prefix} name={name} placeholder={t('phoneNumberInputLabelText', 'Phone')} />
     </div>
   );
 };
