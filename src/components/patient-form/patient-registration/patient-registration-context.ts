@@ -17,9 +17,16 @@ export interface FormValues {
   habitat: string,
 }
 
+export interface state{
+  givennameState:boolean;
+  familyNameState: boolean;
+  relationTypeState: boolean;
+  phoneTypeState: boolean;
+}
+
 export interface PatientRegistrationContextProps {
   setFieldValue(field: string, value: any, shouldValidate?: boolean): void;
-  // values: any
+  state: Array<state>
   // values: FormValues
   // validationSchema: any;
 }
