@@ -24,7 +24,7 @@ const PatientFormRegistry = () => {
         relationships: relationshipType,
         identifierType: "",
         givenName: "",
-        dob: {  },
+        dob: {},
         status: "",
         gender: "",
         birthPlace: "",
@@ -46,7 +46,7 @@ const PatientFormRegistry = () => {
             months: Yup.number(),
             birthdateEstimated: Yup.boolean()
         }).test("validate date ", (t("messageErrorDob", "Tout les champs doit etre remplis")), (value) => {
-            if ((value.birthdate == undefined) && (value.age == undefined))
+            if ((value.birthdate === undefined) && (value.age === undefined))
                 return false;
             else
                 return true;
@@ -67,7 +67,7 @@ const PatientFormRegistry = () => {
                 familyName: Yup.string(),
                 contactPhone: Yup.string().min(9, (t("messageErrorPhoneNumber", "Format de téléphone incorrect"))),
                 uuid: Yup.string(),
-            }).test("valide relationships ", (t("messageErrorRelationships", "Tout les champs doit etre remplis")), (value) => {
+            }).test("valide relationships ", (t("messageErrorRelationships", "Tout les champs doit être remplis")), (value) => {
                 if ((value.contactPhone == undefined) && (value.familyName == undefined) && (value.givenName == undefined) && (value.uuid == undefined))
                     return true;
                 else if (value.contactPhone && value.familyName && value.givenName && value.uuid)
@@ -193,14 +193,17 @@ const PatientFormRegistry = () => {
                                 <Row >
                                     <Column className={styles.firstColSyle} lg={6}>
                                         {FieldForm("idType")}
-
-
-                                        {FieldForm("phone")}
-
-                                        {FieldForm("familyName")}
+                                        {FieldForm("givenName")}
                                         {FieldForm("dob", initialV.dob)}
-                                        {FieldForm("status")}
+                                        {FieldForm("phone")}
                                         {FieldForm("gender")}
+                                        {FieldForm("status")}
+                                    </Column>
+                                    <Column className={styles.secondColStyle} lg={6}>
+                                        {FieldForm("idValue")}
+                                        {FieldForm("familyName")}
+                                        {FieldForm("birthPlace")}
+
                                         <Row>
                                             <Column>
                                                 {FieldForm("residence")}
@@ -209,17 +212,9 @@ const PatientFormRegistry = () => {
                                                 {FieldForm("address")}
                                             </Column>
                                         </Row>
-                                    </Column>
-                                    <Column className={styles.secondColStyle} lg={6}>
-                                        {FieldForm("idValue")}
-                                        {FieldForm("givenName")}
-                                        {FieldForm("birthPlace")}
-                                        {FieldForm("occupation")}
+
                                         {FieldForm("habitat")}
-
-                                        {FieldForm("address")}
-
-                                        {FieldForm("statu")}
+                                        {FieldForm("occupation")}
                                     </Column>
                                     <Column>
                                         <RelationShips values={values} relationships={values.relationships} />

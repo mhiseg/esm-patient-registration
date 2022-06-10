@@ -43,8 +43,12 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
     if (age !== 0 || months !== 0) {
       currentYear.setMonth(currentYear.getMonth() - months);
       currentYear.setFullYear(currentYear.getFullYear() - age);
+      return ({ birthdate: currentYear, age: age, months: months })
+
+    }else{
+      return ({ birthdate: undefined, age: undefined, months: 0 })
+
     }
-    return ({ birthdate: currentYear, age: age, months: months })
   }
 
   const onEstimatedAgeChange = (ev) => {

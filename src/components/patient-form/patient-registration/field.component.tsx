@@ -29,12 +29,12 @@ const FieldForm = (name: string, value?) => {
       return <GenderField className={styles.radio} />;
     case 'habitat':
       return <HabitatField className={styles.radio}/>;
-    case 'statu':
+    case 'status':
       return <StatusField />;
     case 'occupation':
       return <OccupationSelect />;
     case 'phone':
-      return <PhoneField name={name} className={styles.phone_field} />;
+      return <PhoneField name={name} className={styles.margin_field}/>;
     case 'address':
       return <AddressField />;
     case 'residence':

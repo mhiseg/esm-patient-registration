@@ -14,7 +14,11 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({ name, className }) => {
 
   return (
     <div>
-      <PhoneInput id={name} prefix={prefix}  name={name} placeholder={t('phoneNumberInputLabelText', 'Phone')} />
+      <PhoneInput id={name} prefix={prefix}
+        name={name}
+        placeholder={t('phoneNumberInputLabelText', 'Phone')}
+        className={className}
+         />
     </div>
   );
 };
