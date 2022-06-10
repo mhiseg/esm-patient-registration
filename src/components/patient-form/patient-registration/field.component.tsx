@@ -11,7 +11,7 @@ import { FamilyNameField } from './field/name/familyname-field.component';
 import { OccupationSelect } from './field/occupation/occuptation-field-component';
 import { PhoneField } from './field/phone/phone-field.component'
 import ResidenceField from './field/residence/residence';
-import { StatuField } from './field/status/status-selection-overlay';
+import { StatusField } from './field/status/status-selection-overlay';
 import { Unknow } from './input/custom-input/unknow-format-component';
 
 const FieldForm = (name: string, value?) => {
@@ -28,8 +28,8 @@ const FieldForm = (name: string, value?) => {
       return <GenderField />;
     case 'habitat':
       return <HabitatField />;
-    case 'statu':
-      return <StatuField />;
+    case 'status':
+      return <StatusField />;
     case 'occupation':
       return <OccupationSelect />;
     case 'phone':
@@ -41,7 +41,7 @@ const FieldForm = (name: string, value?) => {
     case 'birthPlace':
       return <BirthPlace />;
     case 'dob':
-      return <DobField birthdate={value.birthdate} age={value.age} months={value.months} birthdateEstimated={value.birthdateEstimated} />;
+      return <DobField birthdate={value?.birthdate} age={value?.age} months={value?.months} birthdateEstimated={value.birthdateEstimated} />;
     default:
       return <Unknow />;
   }

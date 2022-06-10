@@ -15,8 +15,6 @@ import { savePatient, generateIdentifier, sourceUuid, uuidIdentifierLocation, uu
 
 
 const PatientFormRegistry = () => {
-
-    //const {state}=useContext(PatientRegistrationContext)
     const abortController = new AbortController();
     const { t } = useTranslation();
     let patient: Patient;
@@ -192,22 +190,15 @@ const PatientFormRegistry = () => {
                     <Form name="form" className={styles.cardForm} onSubmit={handleSubmit}>
                         <Grid fullWidth={true} className={styles.p0}>
                             <PatientRegistrationContext.Provider value={{
-                                setFieldValue: setFieldValue, state: []
+                                setFieldValue: setFieldValue
                             }}>
                                 <Row >
                                     <Column className={styles.firstColSyle} lg={6}>
                                         {FieldForm("idType")}
-<<<<<<< HEAD
                                         {FieldForm("givenName")}
-                                        {FieldForm("dob",initialV.dob)}                     
-=======
-
+                                        {FieldForm("dob",initialV.dob)}                    
                                         {FieldForm("givenName")}
-
-                                        {FieldForm("dob")}
-
->>>>>>> 396dd2bb4c32ef8fe964fdb9b259fa45b506a6dd
-                                        {FieldForm("statu")}
+                                        {FieldForm("status")}
                                         {FieldForm("gender")}
                                         {FieldForm("residence")}
                                     </Column>

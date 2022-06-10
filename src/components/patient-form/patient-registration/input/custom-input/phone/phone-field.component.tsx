@@ -20,9 +20,7 @@ interface InputProps {
 export const PhoneInput: React.FC<InputProps> = (props) => {
   const [field, meta, helpers] = useField(props.name);
   const { value } = meta;
-  const { setValue,setError } = helpers;
-  const [patternText, setPatternText] = useState(null)
-  const [patternState, setPatternState] = useState(null)
+  const { setValue } = helpers;
     
   const handleChange = (e, value) => {
     e.target.value = formatPhoneNumber(value.substring(6));

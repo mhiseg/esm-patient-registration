@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { SelectInput } from '../../input/basic-input/select/select-input.component';
 
 
-export const StatuField: React.FC = () => {
+export const StatusField: React.FC = () => {
   const { t } = useTranslation();
   return (
     <>
