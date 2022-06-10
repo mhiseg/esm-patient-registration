@@ -16,7 +16,7 @@ export const SelectCustom: React.FC<InputSelectProps> = ({ name, options, label,
   const { t } = useTranslation();
 
   const selectOptions = [
-    <SelectItem disabled hidden text={label} key="" value="" />,
+    <SelectItem text={label} key="" value={undefined} />,
     ...options.map((currentOption, index) => <SelectItem text={t(currentOption.display)} value={currentOption.uuid} key={index} />
     // state.push(relationTypeState)
     ),

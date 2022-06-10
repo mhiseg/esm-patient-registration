@@ -8,7 +8,14 @@
   "CIN": "Carte d'Identification Nationale (CIN)",
   "NIF": "Numéro d'Identificatioin Fiscale (NIF)",
   "givenNameLabelText":"Prénom",
+  "familyNameLabelText": "Nom",
   "idFieldLabelText": "Identifiant",
-  "phoneNumberInputLabelText": "Téléphone"
+  "phoneNumberInputLabelText": "Téléphone",
+  "selectRelationships": "Sélectionner une Relation",
+  "residenceLabelText":"Résidence",
+  "genderLabelText":"Sexe",
+  "maleLabelText":"Masculin",
+  "femaleLabelText": "Féminin",
+  "birthPlaceLabelText":"Lieu de Naissance"
 
 }

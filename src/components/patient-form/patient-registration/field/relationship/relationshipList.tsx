@@ -14,9 +14,12 @@ interface RelationTypeprops{
 export const RelationTypeList: React.FC<RelationTypeprops> = ({name}) => {
   const [displayRelationships, setDisplayRelationships] = useState<Array<RelationTypeList>>([]);
   const { t } = useTranslation();
+  
   useEffect(() => {
-    fetchRelationshipType().then(res => setDisplayRelationships(res.data.results))
-  }, [displayRelationships])
+    const unsubscribe = fetchRelationshipType().then(res => setDisplayRelationships(res.data.results))
+    return () => { unsubscribe }
+}, [])
+
 
   return (
     <>

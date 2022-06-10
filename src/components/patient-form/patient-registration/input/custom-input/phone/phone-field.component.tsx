@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import styles from '../field.scss';
+import styles from '../../../field/field.scss';
 import formatPhoneNumber from './normlizePhoneNumber';
 import { useTranslation } from 'react-i18next';
 import { TextInput } from 'carbon-components-react';
 import { useField } from 'formik';
-import { PatientRegistrationContext } from '../../../patient-registration-context';
 
 
 interface InputProps {
@@ -19,15 +18,10 @@ interface InputProps {
 }
 
 export const PhoneInput: React.FC<InputProps> = (props) => {
-  const { state } = useContext(PatientRegistrationContext);
   const [field, meta, helpers] = useField(props.name);
   const { value } = meta;
-  const { setValue,setError } = helpers;
-  const [patternText, setPatternText] = useState(null)
-  const [patternState, setPatternState] = useState(null)
-  let required = false
-
-  
+  const { setValue } = helpers;
+    
   const handleChange = (e, value) => {
     e.target.value = formatPhoneNumber(value.substring(6));
     setValue(e.target.value)
@@ -36,6 +30,10 @@ export const PhoneInput: React.FC<InputProps> = (props) => {
   return (
     <div>
       <TextInput
+        // {props.name == 'phone'?"":"" }
+         className={props.name == "phone"?styles.margin_field:""}
+        // {}}
+
         type="tel"
         labelText={''}
         {...props}

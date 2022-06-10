@@ -26,9 +26,6 @@ export interface state{
 
 export interface PatientRegistrationContextProps {
   setFieldValue(field: string, value: any, shouldValidate?: boolean): void;
-  state: Array<state>
-  // values: FormValues
-  // validationSchema: any;
 }
 
 export const PatientRegistrationContext = createContext<PatientRegistrationContextProps | undefined>(undefined);

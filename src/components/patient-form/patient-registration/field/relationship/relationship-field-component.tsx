@@ -37,11 +37,10 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
                                         <RelationTypeList name={`relationships.[${index}].uuid`} />
                                     </Column>
                                     <Column lg={3} className={styles.pl0}>
-                                        <GivenNameField name={`relationships.[${index}].givenName`} />
-                                    </Column>
-
-                                    <Column lg={3} className={styles.pl0}>
                                         <FamilyNameField name={`relationships.[${index}].familyName`} />
+                                    </Column>
+                                    <Column lg={3} className={styles.pl0}>
+                                        <GivenNameField name={`relationships.[${index}].givenName`} />
                                     </Column>
                                     <Column lg={3} className={styles.pl0}>
                                         <PhoneField name={`relationships.[${index}].contactPhone`} value={r.contactPhone} className={styles.columnMaxSize} />
@@ -57,7 +56,6 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
                                                         height="32"
                                                         color="#699BF7"
                                                         className={`${styles.buttonPlusStyle} ${styles.flexEnd}`}
-                                                        // visibility={visibility}
                                                         onClick={() => {
                                                             arrayHelpers.unshift(relationships)
                                                         }

@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { PhoneInput } from '../../input/custom-input/phone/phone-field.component';
 import { useTranslation } from 'react-i18next';
-import { PatientRegistrationContext } from '../../patient-registration-context';
 
 interface PhoneFieldProps {
   name: string;
@@ -15,13 +14,7 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({ name, className }) => {
 
   return (
     <div>
-      <PhoneInput id={name}
-        prefix={prefix}
-        name={name}
-        value={prefix}
-        placeholder={t('phoneNumberInputLabelText', 'Phone')}
-        className={className}
-      />
+      <PhoneInput id={name} prefix={prefix}  name={name} placeholder={t('phoneNumberInputLabelText', 'Phone')} />
     </div>
   );
 };
