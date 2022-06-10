@@ -30,7 +30,7 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
       var months = Math.trunc((days % 365) / 30);
       return { birthdate: date1, age: years, months: months };
     } else {
-      return { birthdate: date1, age: 0, months: 0 };
+      return { birthdate: today, age: 0, months: 0 };
     }
   }
 
@@ -40,7 +40,7 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
     var currentYear = new Date();
     var age = (y == null) ? 0 : y;
     var months = (m == null) ? 0 : m;
-    if (age !== 0 || months == 0) {
+    if (age !== 0 || months !== 0) {
       currentYear.setMonth(currentYear.getMonth() - months);
       currentYear.setFullYear(currentYear.getFullYear() - age);
     }
@@ -53,9 +53,11 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
       setDob(calculDate(years, dob.months))
     else
       setDob(calculDate(0, dob.months))
-    setFieldValue('dob', { ...dob, birthdateEstimated: true });
   };
 
+ const onChange = () => {
+    setFieldValue('dob', { ...dob, birthdateEstimated: true });
+  }
 
   const onEstimatedMonthChange = (ev) => {
     const months = ev.target.value;
@@ -63,7 +65,6 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
       setDob(calculDate(dob.age, months))
     else
       setDob(calculDate(dob.age, 0))
-    setFieldValue('dob', { ...dob, birthdateEstimated: true });
   };
   return (
     <Row className={styles.margin_field}>
@@ -77,6 +78,7 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
           light={true}
           onChange={onDateChange}
           value={dob.birthdate}
+          
         >
           <DatePickerInput
             id="date-picker-simple"
@@ -99,12 +101,11 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
           allowEmpty={true}
           light={true}
           hideSteppers={true}
-          value={dob?.age}
+          value={dob?.age}  
           onChange={onEstimatedAgeChange}
+          onBlur={onChange}
         />
-        {/* <span>ans</span> */}
       </Column>
-
       <Column >
         <NumberInput
           id="carbon-number"
@@ -118,6 +119,7 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
           hideSteppers={true}
           value={dob?.months}
           onChange={onEstimatedMonthChange}
+          onBlur={onChange}
         />
       </Column >
     </Row>

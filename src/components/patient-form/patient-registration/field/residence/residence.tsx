@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { mockGetSearchResults } from "../../input/custom-input/autosuggest/autocomplete";
 import { Autosuggest } from "../../input/custom-input/autosuggest/autosuggest.component";
 import { PatientRegistrationContext } from "../../patient-registration-context";
 import { fetchAllLocation } from "../../patient-registration.resource";
@@ -15,11 +14,9 @@ const ResidenceField: React.FC = () => {
         return places.filter(place => place.city.toUpperCase().includes(query.toUpperCase()))
     };
     useEffect(() => {
-        try {
-            fetchAllLocation().then(res => setPlaces(res))
-        } catch (error) { }
-
-    }, [places])
+        const unsubscribe = fetchAllLocation().then(res => setPlaces(res))
+        return () => { unsubscribe }
+    }, [])
 
     return (
         <>

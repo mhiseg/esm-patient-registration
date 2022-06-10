@@ -7,5 +7,11 @@
   "givenNameLabelText": "Given name",
   "familyNameLabelText": "Family name",
   "idFieldLabelText": "Identifier",
-  "phoneNumberInputLabelText": "Phone number"
+  "phoneNumberInputLabelText": "Phone number",
+  "selectRelationships": "select Relationships",
+  "residenceLabelText":"Residence",
+  "genderLabelText":"Gender",
+  "maleLabelText":"Male",
+  "femaleLabelText": "Female",
+  "birthPlaceLabelText":"Birthplace"
 }

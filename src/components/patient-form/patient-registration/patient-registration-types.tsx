@@ -123,10 +123,10 @@ export type Patient = {
     uuid?: string;
     names: Array<NameValue>;
     gender: string;
-    birthdate: string;
-    birthdateEstimated: boolean;
+    birthdate?: string;
+    birthdateEstimated?: boolean;
     attributes?: Array<AttributeValue>;
-    addresses: Array<Address>;
+    addresses?: Array<Address>;
     dead?: boolean;
     deathDate?: string;
     causeOfDeath?: string;

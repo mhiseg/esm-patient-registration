@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import styles from '../field.scss';
+import styles from '../../../field/field.scss';
 import formatPhoneNumber from './normlizePhoneNumber';
 import { useTranslation } from 'react-i18next';
 import { TextInput } from 'carbon-components-react';
@@ -30,6 +30,10 @@ export const PhoneInput: React.FC<InputProps> = (props) => {
   return (
     <div>
       <TextInput
+        // {props.name == 'phone'?"":"" }
+         className={props.name == "phone"?styles.margin_field:""}
+        // {}}
+
         type="tel"
         labelText={''}
         {...props}

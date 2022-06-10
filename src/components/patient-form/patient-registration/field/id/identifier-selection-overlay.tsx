@@ -10,8 +10,9 @@ export const IdSelect: React.FC = () => {
   const [identifiers, setIdentifier] = useState<Array<IdentifierSource>>([]);
 
   useEffect(() => {
-    fetchIdentifierType().then(res =>setIdentifier(getIdentifier(res.data.results)))
-  }, [identifiers])
+    const unsubscribe = fetchIdentifierType().then(res =>setIdentifier(getIdentifier(res.data.results)))
+    return () => { unsubscribe }
+}, [])
 
   const getIdentifier = (identifiers) => {
     let ids = [];

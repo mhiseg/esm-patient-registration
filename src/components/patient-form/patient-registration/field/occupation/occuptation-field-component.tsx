@@ -9,7 +9,7 @@ export const OccupationSelect: React.FC = () => {
     return (
         <>
             <SelectInput
-            className={styles.margin_field}
+                className={styles.margin_field}
                 options={[t('occupation-1', 'Informaticien'), t('occupation-2', 'Ing Civil'), t('occupation-3', 'Infirmiere'), t('situation-4', 'Médecin')]}
                 label="Occupation"
                 name="occupation"

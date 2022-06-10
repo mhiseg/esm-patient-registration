@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./form.scss"
-import { NumberInput } from "carbon-components-react/lib/components/NumberInput/NumberInput";
 import * as Yup from 'yup';
 import { Formik } from "formik";
-import { Grid, Row, Column, Button, DatePicker, DatePickerInput, Form } from "carbon-components-react";
+import { Grid, Row, Column, Button, Form } from "carbon-components-react";
 import { useTranslation } from "react-i18next";
 import { showToast } from "@openmrs/esm-framework";
 import { Patient, Relationship, relationshipType } from "./patient-registration-types";
@@ -25,7 +24,7 @@ const PatientFormRegistry = () => {
         relationships: relationshipType,
         identifierType: "",
         givenName: "",
-        dob:{birthdate: null, age:1, months: 4, birthdateEstimated: true},
+        dob: {  },
         status: "",
         gender: "",
         birthPlace: "",
@@ -41,7 +40,17 @@ const PatientFormRegistry = () => {
     const patientSchema = Yup.object().shape({
         identifierType: Yup.string(),
         givenName: Yup.string().required(t("messageErrorGiveName", "Give name can't null")),
-        dob: Yup.object(),
+        dob: Yup.object({
+            birthdate: Yup.date(),
+            age: Yup.number(),
+            months: Yup.number(),
+            birthdateEstimated: Yup.boolean()
+        }).test("validate date ", (t("messageErrorDob", "Tout les champs doit etre remplis")), (value) => {
+            if ((value.birthdate == undefined) && (value.age == undefined))
+                return false;
+            else
+                return true;
+        }),
         status: Yup.string(),
         gender: Yup.string().required(t("messageErrorGender", "Gender is required")),
         birthPlace: Yup.object(),
@@ -59,17 +68,23 @@ const PatientFormRegistry = () => {
                 contactPhone: Yup.string().min(9, (t("messageErrorPhoneNumber", "Format de téléphone incorrect"))),
                 uuid: Yup.string(),
             }).test("valide relationships ", (t("messageErrorRelationships", "Tout les champs doit etre remplis")), (value) => {
-                
-                return !(value.contactPhone || value.familyName || value.givenName || value.uuid);
+                if ((value.contactPhone == undefined) && (value.familyName == undefined) && (value.givenName == undefined) && (value.uuid == undefined))
+                    return true;
+                else if (value.contactPhone && value.familyName && value.givenName && value.uuid)
+                    return true;
+                else
+                    return false;
             }),
         )
+    }).test("valide relationships ", (t("messageErrorRelationships", "Tout les champs doit etre remplis")), (value) => {
+        if ((value.identifierType == undefined) && (value.identifier == undefined) || (value.identifierType && value.identifier))
+            return true;
+        else
+            return false;
     });
     const saveAllRelationships = async (relationships, patient) => {
-        let test;
         let persons = [];
-
-        relationships.map(relation => {
-
+        await relationships.map(relation => {
             persons.push({
                 person: {
                     names: [{ givenName: relation.givenName, familyName: relation.familyName }],
@@ -78,83 +93,67 @@ const PatientFormRegistry = () => {
                 },
                 type: relation.uuid
             })
-
         })
-        persons.map(person => {
-            savePerson(abortController, person.person).then(pers => {
+        await Promise.all(persons.map(async person => {
+            await savePerson(abortController, person.person).then(async pers => {
                 const relation: Relationship = {
                     relationshipType: person.type,
                     personA: patient,
                     personB: pers.data.uuid
                 };
-                console.log('relationships to save', relation)
-
-                saveRelationship(abortController, relation).then((r) => {
-                    return { test: true, person: pers.data }
-                })
+                const relationshp = await saveRelationship(abortController, relation);
             })
+        }))
+        showToast({
+            title: t('successfullyAdded', 'Successfully added'),
+            kind: 'success',
+            description: 'Patient save succesfully',
         })
-        // if (test === true)
-        //     showToast({
-        //         title: t('successfullyAdded', 'Successfully added'),
-        //         kind: 'success',
-        //         description: 'Patient save succesfully',
-        //     })
-        // else{
-        //     showToast({ description: "error" })
-        //     deletePatient(patient, abortController)            
-        // }
-
     }
+
     const save = (id, values) => {
-        console.log(id, '====', values)
         patient = {
-            identifiers: [
-                {
-                    identifier: id,
-                    identifierType: uuidIdentifier,
-                    location: uuidIdentifierLocation,
-                    preferred: true
-                },
-                {
-                    identifier: values.identifier,
-                    identifierType: values.identifierType,
-                }
-            ],
+            identifiers: [{ identifier: id, identifierType: uuidIdentifier, location: uuidIdentifierLocation, preferred: true },],
             person: {
-                names: [
-                    {
-                        givenName: values.givenName,
-                        familyName: values.familyName,
-                    }
-                ],
+                names: [{ givenName: values.givenName, familyName: values.familyName, }],
                 gender: values.gender,
-                birthdate: new Date().toISOString(),//(values.dob).toISOString(),
-                birthdateEstimated: true,
-                // age: 
-                addresses: [
-                    {
-                        address1: values.adress,
-                        cityVillage: values.residence.city,
-                        stateProvince: values.residence.state,
-                        country: countryName,
-                    },
-                ],
-                attributes: [
-                    {
-                        attributeType: uuidBirthPlace,
-                        value: values.birthPlace.display,
-                    },
-                    {
-                        attributeType: uuidPhoneNumber,
-                        value: values.phone,
-                    }
-                ]
+                attributes: [],
             }
         }
-        console.log('to save', patient)
+        if (values.identifierType && values.identifier) {
+            patient.identifiers.push({ identifier: values.identifier, identifierType: values.identifierType, })
+        }
+        if (values.dob.birthdateEstimated) {
+            patient.person.birthdateEstimated = true;
+            patient.person.age = values.dob.age;
+        } else {
+            patient.person.birthdate = new Date(values.dob.birthdate).toISOString();
+        }
+        if (values.birthPlace)
+            patient.person.attributes = [{ attributeType: uuidBirthPlace, value: values.birthPlace.display, }]
+        if (values.phone) {
+            patient.person.attributes.push({ attributeType: uuidPhoneNumber, value: values.phone, })
+        }
+        if (values.residence) {
+            patient.person.addresses = []
+            patient.person.addresses.push({
+                address1: values.adress,
+                cityVillage: values.residence.city,
+                stateProvince: values.residence.state,
+                country: countryName,
+            })
+        }
         savePatient(abortController, patient)
-            .then((res) => saveAllRelationships(values.relationships, res.data.uuid))
+            .then((res) => {
+                if (values.relationships.length == 1 && !values.relationships[0].givenName) {
+                    showToast({
+                        title: t('successfullyAdded', 'Successfully added'),
+                        kind: 'success',
+                        description: 'Patient save succesfully',
+                    })
+                } else
+                    saveAllRelationships(values.relationships, res.data.uuid)
+            })
             .catch(error => showToast({ description: error.message }))
     }
 
@@ -168,12 +167,11 @@ const PatientFormRegistry = () => {
                     const id = await generateIdentifier(sourceUuid, abortController);
                     save(id.data.identifier, values)
                     resetForm(values);
-
                 }
             }
 
         >
-            {(formik,validationSchema) => {
+            {(formik, validationSchema) => {
                 const {
                     values,
                     handleChange,
@@ -195,23 +193,27 @@ const PatientFormRegistry = () => {
                                 <Row >
                                     <Column className={styles.firstColSyle} lg={6}>
                                         {FieldForm("idType")}
-                                        {FieldForm("givenName")}
-                                        {FieldForm("dob",initialV.dob)}                    
-                                        {FieldForm("givenName")}
+                                        {FieldForm("familyName")}
+                                        {FieldForm("dob", initialV.dob)}
                                         {FieldForm("status")}
                                         {FieldForm("gender")}
-                                        {FieldForm("residence")}
+                                        <Row>
+                                            <Column>
+                                                {FieldForm("residence")}
+                                            </Column>
+                                            <Column>
+                                                {FieldForm("address")}
+                                            </Column>
+                                        </Row>
                                     </Column>
                                     <Column className={styles.secondColStyle} lg={6}>
                                         {FieldForm("idValue")}
-                                        {FieldForm("familyName")}
+                                        {FieldForm("givenName")}
                                         {FieldForm("birthPlace")}
                                         {FieldForm("occupation")}
                                         {FieldForm("habitat")}
-                                        {FieldForm("address")}
-                                        {FieldForm("phone",validationSchema)}
+                                        {FieldForm("phone", validationSchema)}
                                     </Column>
-
                                     <Column>
                                         <RelationShips values={values} relationships={values.relationships} />
                                     </Column>
