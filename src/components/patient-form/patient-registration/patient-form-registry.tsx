@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./form.scss"
 import { NumberInput } from "carbon-components-react/lib/components/NumberInput/NumberInput";
 import * as Yup from 'yup';
@@ -16,12 +16,12 @@ import { savePatient, generateIdentifier, sourceUuid, uuidIdentifierLocation, uu
 
 const PatientFormRegistry = () => {
 
-
+    //const {state}=useContext(PatientRegistrationContext)
     const abortController = new AbortController();
     const { t } = useTranslation();
     let patient: Patient;
-    let relationshipType: relationshipType[]=[{
-        givenName: "", familyName: "", contactPhone: "", uuid: "" 
+    let relationshipType: relationshipType[] = [{
+        givenName: "", familyName: "", contactPhone: "", uuid: ""
     }];
     const [initialV, setInitiatV] = useState({
         relationships: relationshipType,
@@ -42,8 +42,7 @@ const PatientFormRegistry = () => {
 
     const patientSchema = Yup.object().shape({
         identifierType: Yup.string(),
-        givenName: Yup.string()
-          .required(t("messageErrorGiveName", "Give name can't null")),
+        givenName: Yup.string().required(t("messageErrorGiveName", "Give name can't null")),
         dob: Yup.object(),
         status: Yup.string(),
         gender: Yup.string().required(t("messageErrorGender", "Gender is required")),
@@ -53,24 +52,18 @@ const PatientFormRegistry = () => {
         occupation: Yup.string(),
         residence: Yup.object(),
         adress: Yup.string(),
-        phone: Yup.string().test(
-            (value)=>{
-                // console.log(value.length,'-==-=-=-');
-                return value? value.length ==7 : false;
-            }
-        ),
+        phone: Yup.string().min(9, (t("messageErrorPhoneNumber", "Format de téléphone incorrect"))),
         habitat: Yup.string(),
         relationships: Yup.array(
             Yup.object({
-                givenNameValue: Yup.boolean(),
-                familyNameValue: Yup.boolean(),
-                phoneValue: Yup.boolean(),
-                uuidValue: Yup.boolean(),
-                givenName: Yup.string().when('givenNameValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') }),
-                familyName: Yup.string().when('familyNameValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') }),
-                contactPhone: Yup.string().when('phoneValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') }),
-                uuid: Yup.string().when('uuidValue', { is: true, then: Yup.string().required('Veuillez renseigner tous les champs de reference du patient') })
-            })
+                givenName: Yup.string(),
+                familyName: Yup.string(),
+                contactPhone: Yup.string().min(9, (t("messageErrorPhoneNumber", "Format de téléphone incorrect"))),
+                uuid: Yup.string(),
+            }).test("valide relationships ", (t("messageErrorRelationships", "Tout les champs doit etre remplis")), (value) => {
+                
+                return !(value.contactPhone || value.familyName || value.givenName || value.uuid);
+            }),
         )
     });
     const saveAllRelationships = async (relationships, patient) => {
@@ -89,7 +82,6 @@ const PatientFormRegistry = () => {
             })
 
         })
-        // console.log("persons ====",persons);
         persons.map(person => {
             savePerson(abortController, person.person).then(pers => {
                 const relation: Relationship = {
@@ -173,10 +165,12 @@ const PatientFormRegistry = () => {
             initialValues={initialV}
             validationSchema={patientSchema}
             onSubmit={
-                async (values, { setSubmitting }) => {
+                async (values, { setSubmitting, resetForm }) => {
                     setSubmitting(false)
                     const id = await generateIdentifier(sourceUuid, abortController);
                     save(id.data.identifier, values)
+                    resetForm(values);
+
                 }
             }
 
@@ -195,16 +189,24 @@ const PatientFormRegistry = () => {
                     setValues,
                 } = formik;
                 return (
-                    <Form className={styles.cardForm} onSubmit={handleSubmit}>
+                    <Form name="form" className={styles.cardForm} onSubmit={handleSubmit}>
                         <Grid fullWidth={true} className={styles.p0}>
                             <PatientRegistrationContext.Provider value={{
-                                setFieldValue: setFieldValue,
+                                setFieldValue: setFieldValue, state: []
                             }}>
                                 <Row >
                                     <Column className={styles.firstColSyle} lg={6}>
                                         {FieldForm("idType")}
+<<<<<<< HEAD
                                         {FieldForm("givenName")}
                                         {FieldForm("dob",initialV.dob)}                     
+=======
+
+                                        {FieldForm("givenName")}
+
+                                        {FieldForm("dob")}
+
+>>>>>>> 396dd2bb4c32ef8fe964fdb9b259fa45b506a6dd
                                         {FieldForm("statu")}
                                         {FieldForm("gender")}
                                         {FieldForm("residence")}

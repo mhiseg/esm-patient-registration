@@ -17,9 +17,15 @@ export interface FormValues {
   habitat: string,
 }
 
+export interface state{
+  givennameState:boolean;
+  familyNameState: boolean;
+  relationTypeState: boolean;
+  phoneTypeState: boolean;
+}
+
 export interface PatientRegistrationContextProps {
   setFieldValue(field: string, value: any, shouldValidate?: boolean): void;
-  // validate?: boolean=
 }
 
 export const PatientRegistrationContext = createContext<PatientRegistrationContextProps | undefined>(undefined);

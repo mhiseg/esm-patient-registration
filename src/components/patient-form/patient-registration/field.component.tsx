@@ -17,9 +17,9 @@ import { Unknow } from './input/custom-input/unknow-format-component';
 const FieldForm = (name: string, value?) => {
   switch (name) {  
     case 'givenName':
-      return <GivenNameField  name={name} className={true} />;
+      return <GivenNameField  name={name} required={true}/>;
     case 'familyName':
-      return <FamilyNameField name={name} className={true} />;
+      return <FamilyNameField name={name} required={true}/>;
     case 'idType':
       return <IdSelect />;
     case 'idValue':
