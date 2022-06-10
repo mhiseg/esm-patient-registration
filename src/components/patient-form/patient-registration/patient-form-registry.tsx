@@ -26,7 +26,7 @@ const PatientFormRegistry = () => {
         givenName: "",
         dob: {},
         status: "",
-        gender: "",
+        gender: "M",
         birthPlace: "",
         identifier: "",
         familyName: "",
@@ -187,23 +187,37 @@ const PatientFormRegistry = () => {
                 return (
                     <Form name="form" className={styles.cardForm} onSubmit={handleSubmit}>
                         <Grid fullWidth={true} className={styles.p0}>
-                            <PatientRegistrationContext.Provider value={{
-                                setFieldValue: setFieldValue
-                            }}>
-                                <Row >
+                            <PatientRegistrationContext.Provider value={{ setFieldValue: setFieldValue }}>
+                                <Row>
                                     <Column className={styles.firstColSyle} lg={6}>
                                         {FieldForm("idType")}
-                                        {FieldForm("givenName")}
-                                        {FieldForm("dob", initialV.dob)}
-                                        {FieldForm("phone")}
-                                        {FieldForm("gender")}
-                                        {FieldForm("status")}
                                     </Column>
                                     <Column className={styles.secondColStyle} lg={6}>
                                         {FieldForm("idValue")}
+                                    </Column>
+                                </Row>
+                                <Row>
+                                    <Column className={styles.firstColSyle} lg={6}>
+                                        {FieldForm("givenName")}
+                                    </Column>
+                                    <Column className={styles.secondColStyle} lg={6}>
                                         {FieldForm("familyName")}
+                                    </Column>
+                                </Row>
+                                <Row>
+                                    <Column className={styles.firstColSyle} lg={6}>
+                                        {FieldForm("dob", initialV.dob)}
+                                    </Column>
+                                    <Column className={styles.secondColStyle} lg={6}>
                                         {FieldForm("birthPlace")}
+                                    </Column>
+                                </Row>
 
+                                <Row>
+                                    <Column className={styles.firstColSyle} lg={6}>
+                                        {FieldForm("phone")}
+                                    </Column>
+                                    <Column className={styles.secondColStyle} lg={6}>
                                         <Row>
                                             <Column>
                                                 {FieldForm("residence")}
@@ -212,10 +226,26 @@ const PatientFormRegistry = () => {
                                                 {FieldForm("address")}
                                             </Column>
                                         </Row>
-
+                                    </Column>
+                                </Row>
+                                <Row>
+                                    <Column className={styles.firstColSyle} lg={6}>
+                                        {FieldForm("gender")}
+                                    </Column>
+                                    <Column className={styles.secondColStyle} lg={6}>
                                         {FieldForm("habitat")}
+                                    </Column>
+                                </Row>
+                                <Row >
+                                    <Column className={styles.firstColSyle} lg={6}>
+                                        {FieldForm("status")}
+                                    </Column>
+                                    <Column className={styles.secondColStyle} lg={6}>
                                         {FieldForm("occupation")}
                                     </Column>
+                                </Row>
+
+                                <Row>
                                     <Column>
                                         <RelationShips values={values} relationships={values.relationships} />
                                     </Column>

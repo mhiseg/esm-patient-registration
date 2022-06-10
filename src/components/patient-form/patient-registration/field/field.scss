@@ -8,14 +8,18 @@
 
 .dob {
   padding-top: 15px;
-  // border: 2px solid red;
   display: flex;
-  // overflow: hidden;
 }
 
 .radio{
  margin-top: 30px;
  margin-left: 15px;
- //margin-bottom: 30px;
+}
+
+.radioFieldError{
+  color: red;
+  margin-left: 15px;
+  margin-top: 10px;
+  font-size: 12px;
 }
 

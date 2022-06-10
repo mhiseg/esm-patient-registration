@@ -23,7 +23,7 @@ export const GenderField: React.FC<GenderFieldProps> = ({className}) => {
       <RadioButtonGroup
         className={className}
         labelPosition="right"
-        legendText={t('genderLabelText', 'Sexe*')}
+        legendText={t('genderLabelText'+" *", 'Sexe *')}
         name="gender"
         valueSelected={field.value}
         onChange={setGender}
@@ -32,9 +32,9 @@ export const GenderField: React.FC<GenderFieldProps> = ({className}) => {
         <RadioButton labelText={t('maleLabelText', 'Masculin')} value="M" id="male" />
         <RadioButton labelText={t('femaleLabelText', 'Feminin')} value="F" id="female" />
       </RadioButtonGroup>
-      {meta.touched && meta.error && (
-        <div className={styles.radioFieldError}>{t(meta.error, 'Gender is required')}</div>
-      )}
+      {/* {meta.error && (
+        <div className={styles.radioFieldError}>{t(messageError, 'Le patient doit avoir un genre')}</div>
+      )} */}
 
     </>
   );
