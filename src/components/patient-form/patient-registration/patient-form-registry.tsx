@@ -193,10 +193,6 @@ const PatientFormRegistry = () => {
                                 <Row >
                                     <Column className={styles.firstColSyle} lg={6}>
                                         {FieldForm("idType")}
-
-
-                                        {FieldForm("phone")}
-
                                         {FieldForm("familyName")}
                                         {FieldForm("dob", initialV.dob)}
                                         {FieldForm("status")}
@@ -216,10 +212,7 @@ const PatientFormRegistry = () => {
                                         {FieldForm("birthPlace")}
                                         {FieldForm("occupation")}
                                         {FieldForm("habitat")}
-
-                                        {FieldForm("address")}
-
-                                        {FieldForm("statu")}
+                                        {FieldForm("phone", validationSchema)}
                                     </Column>
                                     <Column>
                                         <RelationShips values={values} relationships={values.relationships} />
