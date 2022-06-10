@@ -9,12 +9,10 @@
 
 .secondColStyle {
     padding-left: 2.5%;
-    //padding-right: 0;
 }
 
 .firstColSyle {
-     padding-right: 2.5%;
-    //padding-left: 0;
+    padding-right: 2.5%;
 }
 
 .radioStyle {
@@ -47,7 +45,7 @@
     padding: 20px;
 
     // &:hover{
-    //     background: rgba(78, 203, 113, 1); 
+        
     // }
 }
 
@@ -71,7 +69,7 @@
 
 .buttonPlusStyle {
     margin-top: 2.5px;
-    margin-left: 10px;
+    margin-left: 0px;
 }
 
 .pl0 {
@@ -97,13 +95,12 @@
 }
 
 .columnMaxSize{
-    padding: 0;
     margin:0;
     width:95%;
 }
 
 .buttonPosition{
     position: absolute;
-    right: 20px;
+    right: 37px;
     margin-top: 21px;
 }

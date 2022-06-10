@@ -5,7 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { PatientRegistrationContext } from '../../patient-registration-context';
 import { useField } from 'formik';
 
-export const GenderField: React.FC = () => {
+export interface GenderFieldProps{
+  className?: string;
+}
+
+export const GenderField: React.FC<GenderFieldProps> = ({className}) => {
   const { t } = useTranslation();
   const [field, meta] = useField('gender');
   const { setFieldValue } = useContext(PatientRegistrationContext);
@@ -17,7 +21,7 @@ export const GenderField: React.FC = () => {
   return (
     <>
       <RadioButtonGroup
-        className={styles.margin_field}
+        className={className}
         labelPosition="right"
         legendText={t('genderLabelText', 'Sexe*')}
         name="gender"

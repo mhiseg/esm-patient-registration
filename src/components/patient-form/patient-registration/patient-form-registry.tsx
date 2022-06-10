@@ -61,9 +61,6 @@ const PatientFormRegistry = () => {
                 familyName: Yup.string(),
                 contactPhone: Yup.string().min(9, (t("messageErrorPhoneNumber", "Format de téléphone incorrect"))),
                 uuid: Yup.string(),
-            }).test("valide relationships ", (t("messageErrorRelationships", "Tout les champs doit etre remplis")), (value) => {
-                
-                return !(value.contactPhone || value.familyName || value.givenName || value.uuid);
             }),
         )
     });
@@ -204,7 +201,7 @@ const PatientFormRegistry = () => {
 
                                         {FieldForm("dob")}
 
-                                        {FieldForm("statu")}
+                                        {FieldForm("phone")}
 
                                         {FieldForm("gender")}
 
@@ -227,7 +224,7 @@ const PatientFormRegistry = () => {
 
                                         {FieldForm("address")}
 
-                                        {FieldForm("phone")}
+                                        {FieldForm("statu")}
                                     </Column>
 
                                     <Column>

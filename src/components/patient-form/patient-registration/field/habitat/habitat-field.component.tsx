@@ -5,7 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { PatientRegistrationContext } from '../../patient-registration-context';
 import { useField } from 'formik';
 
-export const HabitatField: React.FC = () => {
+export interface HabitatProps{
+  className?: string;
+}
+export const HabitatField: React.FC<HabitatProps> = ({className}) => {
   const { t } = useTranslation();
   const [field, meta] = useField('habitat');
   const { setFieldValue } = useContext(PatientRegistrationContext);
@@ -17,7 +20,7 @@ export const HabitatField: React.FC = () => {
   return (
     <>
       <RadioButtonGroup
-        className={styles.margin_field}
+        className={className}
         labelPosition="right"
         legendText={t('habitatLabelText', 'Habitat')}
         name="habitat"

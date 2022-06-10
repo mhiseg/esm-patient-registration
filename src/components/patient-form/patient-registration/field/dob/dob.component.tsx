@@ -6,7 +6,11 @@ import { PatientRegistrationContext } from '../../patient-registration-context';
 import { generateFormatting } from '../date-util';
 import styles from '../../field/field.scss';
 
-export const DobField: React.FC = () => {
+interface DobFiedlProps{
+  className?: string;
+}
+
+export const DobField: React.FC = (className) => {
   const { t } = useTranslation();
   const [dobUnknown] = useField('birthdateEstimated');
   const dobKnown = !dobUnknown.value;
