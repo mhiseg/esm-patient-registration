@@ -33,7 +33,7 @@ const FieldForm = (name: string, value?) => {
     case 'occupation':
       return <OccupationSelect />;
     case 'phone':
-      return <PhoneField name={name}/>;
+      return <PhoneField name={name} value={value} />;;
     case 'address':
       return <AddressField />;
     case 'residence':

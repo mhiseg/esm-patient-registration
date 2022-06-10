@@ -23,7 +23,6 @@ const PatientFormRegistry = () => {
     let relationshipType: relationshipType[]=[{
         givenName: "", familyName: "", contactPhone: "", uuid: "" 
     }];
-
     const [initialV, setInitiatV] = useState({
         relationships: relationshipType,
         identifierType: "",
@@ -54,7 +53,12 @@ const PatientFormRegistry = () => {
         occupation: Yup.string(),
         residence: Yup.object(),
         adress: Yup.string(),
-        phone: Yup.string(),
+        phone: Yup.string().test(
+            (value)=>{
+                // console.log(value.length,'-==-=-=-');
+                return value? value.length ==7 : false;
+            }
+        ),
         habitat: Yup.string(),
         relationships: Yup.array(
             Yup.object({
@@ -93,7 +97,7 @@ const PatientFormRegistry = () => {
                     personA: patient,
                     personB: pers.data.uuid
                 };
-                // console.log('relationships to save', relation)
+                console.log('relationships to save', relation)
 
                 saveRelationship(abortController, relation).then((r) => {
                     return { test: true, person: pers.data }
@@ -177,7 +181,7 @@ const PatientFormRegistry = () => {
             }
 
         >
-            {(formik) => {
+            {(formik,validationSchema) => {
                 const {
                     values,
                     handleChange,
@@ -212,7 +216,7 @@ const PatientFormRegistry = () => {
                                         {FieldForm("occupation")}
                                         {FieldForm("habitat")}
                                         {FieldForm("address")}
-                                        {FieldForm("phone")}
+                                        {FieldForm("phone",validationSchema)}
                                     </Column>
 
                                     <Column>
