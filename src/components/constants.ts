@@ -7,7 +7,7 @@ export const encounterRepresentation =
 
 // registration concept
 export const maritalStatusConcept = '1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
-
+export const occupationConcept = '1542AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 
 // Encounter types
 export const htsRetrospectiveEncounterType = '79c1f50f-f77d-42e2-ad2a-d29304dde2fe';

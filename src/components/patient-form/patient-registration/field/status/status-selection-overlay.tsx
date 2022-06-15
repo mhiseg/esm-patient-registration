@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { skip } from 'rxjs/operators';
 import { maritalStatusConcept } from '../../../../constants';
-import { SelectInput } from '../../input/basic-input/select/select-input.component';
 import { SelectCustom } from '../../input/custom-input/custom-select/custom-selected-component';
-import { Concept } from '../../patient-registration-types';
 import { fetchConceptByUuid } from '../../patient-registration.resource';
 import styles from '../field.scss';
 
@@ -12,29 +9,28 @@ import styles from '../field.scss';
 export const StatusField: React.FC = () => {
   const { t } = useTranslation();
   const [answers, setAnswers] = useState([])
-  const [question, setOptions] = useState([]);
+  const [question, setQuestion] = useState("");
 
   useEffect(() => {
-    const unsubscribe = fetchConceptByUuid(maritalStatusConcept,localStorage.getItem("i18nextLng")).then(res => setAnswers(getConceptAnswer(res.data)))
+    const unsubscribe = fetchConceptByUuid(maritalStatusConcept, localStorage.getItem("i18nextLng")).then(res => {
+      setAnswers(getConceptAnswer(res.data))})
     return () => { unsubscribe }
   }, [])
 
   const getConceptAnswer = (concept) => {
-    let answers = [];
-
-    answers = concept.answers.map(answer => {
-      return ({ uuid: answer.uuid, name: answer.name, display: name })
+    setQuestion(concept.display)
+    return (concept.answers).map(answer => {
+      return ({ uuid: answer.uuid, name: answer.display, display: answer.display })
     })
-    console.log(answers, '==========')
-    return answers;
   }
 
   return (
     <>
       <SelectCustom
+        className={styles.margin_field}
         options={[...answers]}
-        label={t("selectIdentifier", "Select identifer")}
-        name="identifierType"
+        label={t('Select')+' '+question}
+        name="status"
       />
     </>
   );
