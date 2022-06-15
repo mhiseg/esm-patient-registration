@@ -24,7 +24,7 @@ const FieldForm = (name: string, value?) => {
     case 'idType':
       return <IdSelect />;
     case 'idValue':
-      return <IdField />;
+      return <IdField/>;
     case 'gender':
       return <GenderField className={styles.radio} />;
     case 'habitat':

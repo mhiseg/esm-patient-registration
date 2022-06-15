@@ -30,10 +30,7 @@ export const PhoneInput: React.FC<InputProps> = (props) => {
   return (
     <div>
       <TextInput
-        // {props.name == 'phone'?"":"" }
          className={props.name == "phone"?styles.margin_field:""}
-        // {}}
-
         type="tel"
         labelText={''}
         {...props}

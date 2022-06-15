@@ -1,21 +1,17 @@
 import React from 'react';
-import { Input } from '../../input/basic-input/input/input.component';
 import { useTranslation } from 'react-i18next';
-
+import { IdentInput } from '../../input/custom-input/idenfiersInput/identifersInput';
 
 
 export const IdField: React.FC = () => {
   const { t } = useTranslation();
 
-  return(
+  return (
     <>
-      <Input
+      <IdentInput
         id="identifier"
         name="identifier"
-        labelText="Identifiant"
-        light={true}
         placeholder={t("idFieldLabelText", "Identifier")}
-        hideLabel={true}
       />
     </>
   );
