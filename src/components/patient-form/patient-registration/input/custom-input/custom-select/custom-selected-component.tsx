@@ -18,7 +18,6 @@ export const SelectCustom: React.FC<InputSelectProps> = ({ name, options, label,
   const selectOptions = [
     <SelectItem text={label} key="" value={undefined} />,
     ...options.map((currentOption, index) => <SelectItem text={t(currentOption.display)} value={currentOption.uuid} key={index} />
-    // state.push(relationTypeState)
     ),
 
   ];
