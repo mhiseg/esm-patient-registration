@@ -11,7 +11,7 @@ interface FamilyNameFieldProps{
 export const FamilyNameField: React.FC<FamilyNameFieldProps> = ({name, className,required}) => {
   const { t } = useTranslation();
   let star = "";
-  required == true ? star ="*":star="";
+  required == true ? star =" *":star="";
   return(
     <>
       <Input

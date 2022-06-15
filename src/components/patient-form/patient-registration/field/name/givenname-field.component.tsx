@@ -13,7 +13,7 @@ interface GivenNameFieldProps{
 export const GivenNameField:React.FC<GivenNameFieldProps> = ({name, className,required}) => {
   const { t } = useTranslation();
   let star = "";
-  required == true ? star ="*":star="";
+  required == true ? star =" *":star="";
   return(
     <>
       <Input

@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { Column, ContentSwitcher, DatePicker, DatePickerInput, NumberInput, Row } from 'carbon-components-react';
+import { Column,  DatePicker, DatePickerInput, NumberInput, Row } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
 import { PatientRegistrationContext } from '../../patient-registration-context';
 import styles from '../../field/field.scss';
+import { useField } from 'formik';
 
 
 interface DobFieldProps {
@@ -16,7 +17,11 @@ const today: Date = new Date();
 export const DobField: React.FC<DobFieldProps> = (props) => {
   const { t } = useTranslation();
   const [dob, setDob] = useState(calculDate(props.age, props.months, props.birthdate));
-  const { setFieldValue, errors } = useContext(PatientRegistrationContext);
+  const { setFieldValue } = useContext(PatientRegistrationContext);
+  const [birthdate, birthdateMeta] = useField('dob');
+  // const { t } = useTranslation();
+  // const [dob, setDob] = useState(calculDate(props.age, props.months, props.birthdate));
+  // const { setFieldValue, errors } = useContext(PatientRegistrationContext);
   // const { meta } = useField("birthdate")
   const onDateChange = ([birthdate]) => {
     setDob(dateDiff(new Date(birthdate), today));
@@ -86,11 +91,13 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
           
         >
           <DatePickerInput
-            id="date-picker-simple"
+            id="birthdate"
             labelText="Date Picker label"
             hideLabel={true}
-            placeholder="dd/mm/yyyy"
+            placeholder={"dd/mm/yyyy"+" *"}
             size="md"
+            invalid={!!(birthdateMeta.touched && birthdateMeta.error)}
+            invalidText={birthdateMeta.error}
           />
         </DatePicker>
       </Column>
@@ -109,6 +116,7 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
           value={dob?.age}  
           onChange={onEstimatedAgeChange}
           onBlur={onChange}
+          placeholder="Ans"
         />
       </Column>
       <Column >
@@ -125,6 +133,7 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
           value={dob?.months}
           onChange={onEstimatedMonthChange}
           onBlur={onChange}
+          placeholder="Mois"
         />
       </Column >
       {/* <span>{errors.birthdate?errors.gender:""}</span> */}
