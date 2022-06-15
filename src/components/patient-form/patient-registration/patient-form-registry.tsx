@@ -24,7 +24,7 @@ const PatientFormRegistry = () => {
         relationships: relationshipType,
         identifierType: "",
         givenName: "",
-        dob: {birthdate: new Date()},
+        dob: {},
         status: "",
         gender: "M",
         birthPlace: "",

@@ -114,8 +114,8 @@ export async function fetchAllLocation() {
   } catch (error) { }
 }
 
-export async function  fetchConceptByUuid(conceptUuid: string) {
-  return openmrsFetch(`/ws/rest/v1/concept/${conceptUuid}?v=full`, {
+export async function  fetchConceptByUuid(conceptUuid: string, lang: string) {
+  return openmrsFetch(`/ws/rest/v1/concept/${conceptUuid}?v=full&lang=${lang}`, {
     method: "GET",
   });
 }

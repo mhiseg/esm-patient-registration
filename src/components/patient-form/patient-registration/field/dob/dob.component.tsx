@@ -19,10 +19,7 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
   const [dob, setDob] = useState(calculDate(props.age, props.months, props.birthdate));
   const { setFieldValue } = useContext(PatientRegistrationContext);
   const [birthdate, birthdateMeta] = useField('dob');
-  // const { t } = useTranslation();
-  // const [dob, setDob] = useState(calculDate(props.age, props.months, props.birthdate));
-  // const { setFieldValue, errors } = useContext(PatientRegistrationContext);
-  // const { meta } = useField("birthdate")
+  
   const onDateChange = ([birthdate]) => {
     setDob(dateDiff(new Date(birthdate), today));
     setFieldValue('dob', { ...dob, birthdateEstimated: false });
@@ -66,7 +63,6 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
 
  const onChange = () => {
     setFieldValue('dob', { ...dob, birthdateEstimated: true });
-    console.log('erro',errors)
   }
 
   const onEstimatedMonthChange = (ev) => {
