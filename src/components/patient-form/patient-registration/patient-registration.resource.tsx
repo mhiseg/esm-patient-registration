@@ -12,7 +12,6 @@ export const countryName = "Haiti";
 function dataURItoFile(dataURI: string) {
   const byteString = atob(dataURI.split(',')[1]);
   const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-  // write the bytes of the string to a typed array
   const buffer = new Uint8Array(byteString.length);
 
   for (let i = 0; i < byteString.length; i++) {
@@ -113,6 +112,12 @@ export async function fetchAllLocation() {
     await Promise.all(placesTables.map(async (tables) => tables.map(t => places.push(t))))
     return places
   } catch (error) { }
+}
+
+export async function  fetchConceptByUuid(conceptUuid: string, lang: string) {
+  return openmrsFetch(`/ws/rest/v1/concept/${conceptUuid}?v=full&lang=${lang}`, {
+    method: "GET",
+  });
 }
 
 

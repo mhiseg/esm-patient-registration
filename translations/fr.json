@@ -16,6 +16,7 @@
   "genderLabelText":"Sexe",
   "maleLabelText":"Masculin",
   "femaleLabelText": "Féminin",
-  "birthPlaceLabelText":"Lieu de Naissance"
+  "birthPlaceLabelText":"Lieu de Naissance",
+  "Select":"Sélectionner"
 
 }

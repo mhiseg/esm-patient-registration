@@ -59,7 +59,7 @@ export interface PatientIdentifierType extends FetchedPatientIdentifierType {
 export interface IdentifierSource {
   uuid: string;
   name: string;
-  description: string;
+  description?: string;
   autoGenerationOption?: IdentifierSourceAutoGenerationOption;
 }
 
@@ -114,6 +114,11 @@ export type Address = {
   cityVillage: string,
   stateProvince: string,
   country: string,
+}
+export interface Concept {
+  uuid: string;
+  display: string;
+  answers?: Concept[];
 }
 
 export type Patient = {

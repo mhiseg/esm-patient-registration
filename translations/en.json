@@ -14,5 +14,7 @@
   "genderLabelText":"Gender",
   "maleLabelText":"Male",
   "femaleLabelText": "Female",
-  "birthPlaceLabelText":"Birthplace"
+  "birthPlaceLabelText":"Birthplace",
+  "Select":"Select"
+
 }
