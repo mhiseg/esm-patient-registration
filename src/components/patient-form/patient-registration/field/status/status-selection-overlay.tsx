@@ -1,8 +1,9 @@
+import { createErrorHandler } from '@openmrs/esm-framework';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { maritalStatusConcept } from '../../../../constants';
+import { maritalStatusConcept, occupationConcept } from '../../../../constants';
 import { SelectCustom } from '../../input/custom-input/custom-select/custom-selected-component';
-import { fetchConceptByUuid } from '../../patient-registration.resource';
+import { fetchConceptByUuid, getSynchronizedCurrentUser } from '../../patient-registration.resource';
 import styles from '../field.scss';
 
 
@@ -12,11 +13,16 @@ export const StatusField: React.FC = () => {
   const [question, setQuestion] = useState("");
 
   useEffect(() => {
-    const unsubscribe = fetchConceptByUuid(maritalStatusConcept, localStorage.getItem("i18nextLng")).then(res => {
-      setAnswers(getConceptAnswer(res.data))})
-    return () => { unsubscribe }
-  }, [])
+    const currentUserSub = getSynchronizedCurrentUser({ includeAuthStatus: true }).subscribe(async user => {
+     await fetchConceptByUuid(maritalStatusConcept, localStorage.getItem("i18nextLng")).then(res => {
+        setAnswers(getConceptAnswer(res.data))
+      })
+    });
 
+    return () => {
+      currentUserSub;
+    };
+  }, []);
   const getConceptAnswer = (concept) => {
     setQuestion(concept.display)
     return (concept.answers).map(answer => {

@@ -9,17 +9,24 @@ import { Patient, Relationship, relationshipType } from "./patient-registration-
 import FieldForm from "./field.component";
 import { RelationShips } from "./field/relationship/relationship-field-component";
 import { PatientRegistrationContext } from "./patient-registration-context";
-import { savePatient, generateIdentifier, sourceUuid, uuidIdentifierLocation, uuidIdentifier, uuidPhoneNumber, uuidBirthPlace, savePerson, saveRelationship, countryName, deletePatient } from "./patient-registration.resource";
+import {
+    savePatient, generateIdentifier, sourceUuid, uuidIdentifierLocation,
+    uuidIdentifier, uuidPhoneNumber, uuidBirthPlace, savePerson, saveRelationship,
+    countryName, deletePatient
+} from "./patient-registration.resource";
 
 
 
 const PatientFormRegistry = () => {
+    const [identifiertype, setIdentifierType] = useState("CIN")
     const abortController = new AbortController();
     const { t } = useTranslation();
     let patient: Patient;
     let relationshipType: relationshipType[] = [{
         givenName: "", familyName: "", contactPhone: "", uuid: ""
     }];
+
+
     const [initialV, setInitiatV] = useState({
         relationships: relationshipType,
         identifierType: "",
@@ -52,9 +59,9 @@ const PatientFormRegistry = () => {
                 return true;
         }),
         status: Yup.string(),
-        gender: Yup.string().required(t("messageErrorGender", "Gender is required")),
+        gender: Yup.string(),
         birthPlace: Yup.object(),
-        identifier: Yup.number(),
+        identifier: Yup.string(),
         familyName: Yup.string().required(t("messageErrorFamilyName", "Family Name is required")),
         occupation: Yup.string(),
         residence: Yup.object(),
@@ -67,21 +74,45 @@ const PatientFormRegistry = () => {
                 familyName: Yup.string(),
                 contactPhone: Yup.string().min(9, (t("messageErrorPhoneNumber", "Format de téléphone incorrect"))),
                 uuid: Yup.string(),
-            }).test("valide relationships ", (t("messageErrorRelationships", "Tout les champs doit être remplis")), (value) => {
+            }).test("valide relationships ", (value, { createError }) => {
                 if ((value.contactPhone == undefined) && (value.familyName == undefined) && (value.givenName == undefined) && (value.uuid == undefined))
                     return true;
                 else if (value.contactPhone && value.familyName && value.givenName && value.uuid)
                     return true;
                 else
-                    return false;
+                    return createError({
+                        path: 'uuid',
+                        message: (t("messageErrorRelationships", "Tout les champs doit être remplis")),
+                    });
             }),
         )
-    }).test("valide relationships ", (t("messageErrorRelationships", "Tout les champs doit etre remplis")), (value) => {
-        if ((value.identifierType == undefined) && (value.identifier == undefined) || (value.identifierType && value.identifier))
+    }).test("valide relationships ", (value, { createError }) => {
+        console.log(value.identifierType, "==========", value.identifier);
+        if ((value.identifierType == undefined) && (value.identifier == undefined) || (value.identifierType && value.identifier)) {
             return true;
-        else
-            return false;
+        }
+        else if (!value.identifierType && value.identifier) {
+            console.log(value.identifierType, "==========", value.identifier);
+            return createError({
+                path: 'identifierType',
+                message: "Vous devriez choisir le type d'identifiant",
+            });
+        }
+        else if (value.identifierType && !value.identifier) {
+            console.log(value.identifierType, "==========", value.identifier);
+            return createError({
+                path: 'identifier',
+                message: "Vous devriez fournir une valeur a l'identifiant",
+            });
+        }else if (value.identifier && value.identifier[0]=='3' && value.identifier.length==10)
+        return createError({
+            path: 'identifier',
+            message: "Format de CIN invalide",
+        });
     });
+
+
+
     const saveAllRelationships = async (relationships, patient) => {
         let persons = [];
         await relationships.map(relation => {
@@ -171,23 +202,20 @@ const PatientFormRegistry = () => {
             }
 
         >
-            {(formik, validationSchema) => {
+            {(formik) => {
                 const {
                     values,
-                    handleChange,
                     handleSubmit,
                     errors,
                     touched,
-                    handleBlur,
                     setFieldValue,
                     isValid,
                     dirty,
-                    setValues,
                 } = formik;
                 return (
                     <Form name="form" className={styles.cardForm} onSubmit={handleSubmit}>
                         <Grid fullWidth={true} className={styles.p0}>
-                            <PatientRegistrationContext.Provider value={{ setFieldValue: setFieldValue }}>
+                            <PatientRegistrationContext.Provider value={{ setFieldValue: setFieldValue, identifierType: values.identifierType }}>
                                 <Row>
                                     <Column className={styles.firstColSyle} lg={6}>
                                         {FieldForm("idType")}

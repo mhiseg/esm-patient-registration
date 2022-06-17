@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { createErrorHandler } from '@openmrs/esm-framework';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { occupationConcept } from '../../../../constants';
 import { SelectCustom } from '../../input/custom-input/custom-select/custom-selected-component';
-import { fetchConceptByUuid } from '../../patient-registration.resource';
+import { fetchConceptByUuid, getSynchronizedCurrentUser } from '../../patient-registration.resource';
 import styles from '../field.scss';
-
 
 export const OccupationSelect: React.FC = () => {
   const { t } = useTranslation();
@@ -12,13 +12,18 @@ export const OccupationSelect: React.FC = () => {
   const [question, setQuestion] = useState("");
 
   useEffect(() => {
-    const unsubscribe = fetchConceptByUuid(occupationConcept, localStorage.getItem("i18nextLng")).then(res => {
-      setAnswers(getConceptAnswer(res.data))})
-    return () => { unsubscribe }
-  }, [])
+    const currentUserSub = getSynchronizedCurrentUser({ includeAuthStatus: true }).subscribe(async user => {
+     await fetchConceptByUuid(occupationConcept, localStorage.getItem("i18nextLng")).then(res => {
+        setAnswers(getConceptAnswer(res.data))
+      })
+    });
+
+    return () => {
+      currentUserSub;
+    };
+  }, []);
 
   const getConceptAnswer = (concept) => {
-      console.log("getConceptAnswer",concept)
     setQuestion(concept.display)
     return (concept.answers).map(answer => {
       return ({ uuid: answer.uuid, name: answer.display, display: answer.display })
@@ -30,9 +35,10 @@ export const OccupationSelect: React.FC = () => {
       <SelectCustom
         className={styles.margin_field}
         options={[...answers]}
-        label={t('Select')+' '+question}
+        label={t('Select') + ' ' + question}
         name="occupation"
       />
     </>
   );
+
 };

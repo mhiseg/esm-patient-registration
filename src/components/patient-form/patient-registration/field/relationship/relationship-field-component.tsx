@@ -9,7 +9,6 @@ import { GivenNameField } from "../name/givenname-field.component";
 import { RelationTypeList } from "./relationshipList";
 import { relationshipType } from "../../patient-registration-types";
 import { useTranslation } from 'react-i18next';
-import { state } from "../../patient-registration-context";
 
 
 export interface RelationshipsProps {

@@ -1,6 +1,7 @@
 import useSWR from 'swr';
-import { openmrsFetch, useConfig, openmrsObservableFetch } from '@openmrs/esm-framework';
+import { openmrsFetch, useConfig, openmrsObservableFetch, getCurrentUser } from '@openmrs/esm-framework';
 import { Patient, Relationship, PatientIdentifier, Person } from './patient-registration-types';
+import { mergeMap } from 'rxjs/operators';
 
 export const uuidIdentifier = '05a29f94-c0ed-11e2-94be-8c13b969e334';
 export const uuidIdentifierLocation = '8d6c993e-c2cc-11de-8d13-0010c6dffd0f';
@@ -119,7 +120,13 @@ export async function  fetchConceptByUuid(conceptUuid: string, lang: string) {
     method: "GET",
   });
 }
-
+export function getSynchronizedCurrentUser(opts: any) {
+  return getCurrentUser(opts).pipe(
+    mergeMap(async user => {
+      return user;
+    }),
+  );
+}
 
 export async function savePatientPhoto(
   patientUuid: string,
