@@ -23,5 +23,7 @@
   "maleLabelText":"Masculin",
   "femaleLabelText": "Féminin",
   "birthPlaceLabelText":"Lieu de Naissance",
-  "adresseLabelText":"Adresse"
+  "adresseLabelText":"Adresse",
+  "Select":"Sélectionner"
+
 }

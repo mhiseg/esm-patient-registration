@@ -1,6 +1,7 @@
 import useSWR from 'swr';
-import { openmrsFetch, useConfig, openmrsObservableFetch } from '@openmrs/esm-framework';
+import { openmrsFetch, useConfig, openmrsObservableFetch, getCurrentUser } from '@openmrs/esm-framework';
 import { Patient, Relationship, PatientIdentifier, Person } from './patient-registration-types';
+import { mergeMap } from 'rxjs/operators';
 
 export const uuidIdentifier = '05a29f94-c0ed-11e2-94be-8c13b969e334';
 export const uuidIdentifierLocation = '8d6c993e-c2cc-11de-8d13-0010c6dffd0f';
@@ -12,7 +13,6 @@ export const countryName = "Haiti";
 function dataURItoFile(dataURI: string) {
   const byteString = atob(dataURI.split(',')[1]);
   const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-  // write the bytes of the string to a typed array
   const buffer = new Uint8Array(byteString.length);
 
   for (let i = 0; i < byteString.length; i++) {
@@ -115,6 +115,18 @@ export async function fetchAllLocation() {
   } catch (error) { }
 }
 
+export async function  fetchConceptByUuid(conceptUuid: string, lang: string) {
+  return openmrsFetch(`/ws/rest/v1/concept/${conceptUuid}?v=full&lang=${lang}`, {
+    method: "GET",
+  });
+}
+export function getSynchronizedCurrentUser(opts: any) {
+  return getCurrentUser(opts).pipe(
+    mergeMap(async user => {
+      return user;
+    }),
+  );
+}
 
 export async function savePatientPhoto(
   patientUuid: string,

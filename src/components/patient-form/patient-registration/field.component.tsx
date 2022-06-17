@@ -13,20 +13,19 @@ import { PhoneField } from './field/phone/phone-field.component'
 import ResidenceField from './field/residence/residence';
 import { StatusField } from './field/status/status-selection-overlay';
 import { Unknow } from './input/custom-input/unknow-format-component';
-import styles from "./field/field.scss";
-
+import styles from './field/field.scss';
 const FieldForm = (name: string, value?) => {
   switch (name) {  
     case 'givenName':
-      return <GivenNameField  name={name} required={true} className={styles.margin_field} />;
+      return <GivenNameField  name={name} required={true}/>;
     case 'familyName':
-      return <FamilyNameField name={name} required={true} className={styles.margin_field} />;
+      return <FamilyNameField name={name} required={true}/>;
     case 'idType':
       return <IdSelect />;
     case 'idValue':
       return <IdField/>;
     case 'gender':
-      return <GenderField className={styles.radio} />;
+      return <GenderField className={styles.radio}/>;
     case 'habitat':
       return <HabitatField className={styles.radio}/>;
     case 'status':

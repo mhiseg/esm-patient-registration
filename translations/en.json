@@ -21,5 +21,7 @@
   "maleLabelText":"Male",
   "femaleLabelText": "Female",
   "birthPlaceLabelText":"Birthplace",
-  "adresseLabelText":"Adress"
+  "adresseLabelText":"Adress",
+  "Select":"Select"
+
 }
