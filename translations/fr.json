@@ -4,6 +4,12 @@
   "messageErrorGender": "Le patient doit avoir un genre",
   "messageErrorFamilyName": "Le nom ne peut pas être vide",
   "messageErrorPhoneNumber": "Le format du téléphone est incorrect",
+  "messageErrorRelationships": "Tout les champs doit être remplis",
+  "messageErrorIdentifierType": "Vous devriez choisir le type d'identifiant",
+  "messageErrorIdentifier": "L'identifiant ne peut pas être vide",
+  "messageErrorCIN":"Format de CIN invalide",
+  "messageErrorNIF":"Format de NIF invalide",
+  "messageErrorDOB": "La date d'anniversaire ne peut pas être vide",
   "selectIdentifier": "Sélectionner l'identifiant",
   "CIN": "Carte d'Identification Nationale (CIN)",
   "NIF": "Numéro d'Identificatioin Fiscale (NIF)",
@@ -16,6 +22,6 @@
   "genderLabelText":"Sexe",
   "maleLabelText":"Masculin",
   "femaleLabelText": "Féminin",
-  "birthPlaceLabelText":"Lieu de Naissance"
-
+  "birthPlaceLabelText":"Lieu de Naissance",
+  "adresseLabelText":"Adresse"
 }

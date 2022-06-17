@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styles from '../../../field/field.scss';
-import {formatCin,formatNif} from './id-utils';
+import { formatCin, formatNif } from './id-utils';
 import { TextInput } from 'carbon-components-react';
 import { useField } from 'formik';
 import { PatientRegistrationContext } from '../../../patient-registration-context';
+import { useTranslation } from 'react-i18next';
 
 interface InputProps {
     id: string;
@@ -15,16 +16,17 @@ interface InputProps {
 
 export const IdentInput: React.FC<InputProps> = (props) => {
     const [field, meta, helpers] = useField(props.name);
-    const { setValue,setError } = helpers;
+    const { setValue, setError } = helpers;
     const [mask, setMask] = useState(props.placeholder);
-    const [required,setRequired]=useState(false)
-    const {identifierType}= useContext(PatientRegistrationContext);
+    const [required, setRequired] = useState(false)
+    const { identifierType } = useContext(PatientRegistrationContext);
+    const { t } = useTranslation();
 
-    
+
     const handleChange = (e, value) => {
         if (identifierType[0] == '3') {
             setMask("0000000000");
-            setValue(formatCin(e.target.value));           
+            setValue(formatCin(e.target.value));
         }
         else {
             e.target.value = formatNif(value);
@@ -40,8 +42,8 @@ export const IdentInput: React.FC<InputProps> = (props) => {
                 labelText={''}
                 {...props}
                 {...field}
-                invalid={!!(meta.touched && meta.error)}
-                invalidText={meta.error}
+                invalid={!!(meta.error)}
+                invalidText={t(meta.error)}
                 onChange={(e) => {
                     const { value } = e.target;
                     handleChange(e, value)

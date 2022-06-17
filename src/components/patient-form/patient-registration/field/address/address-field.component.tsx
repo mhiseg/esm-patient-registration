@@ -13,9 +13,9 @@ export const AddressField: React.FC = () => {
         className={styles.margin_field}
         id="adress"
         name="adress"
-        labelText={t('addressHeader', 'Address')}
+        labelText={t('adresseLabelText', 'Address')}
         light={true}
-        placeholder={t('addressHeader', 'Address')}
+        placeholder={t('adresseLabelText', 'Address')}
         hideLabel={true}
       />
     </>

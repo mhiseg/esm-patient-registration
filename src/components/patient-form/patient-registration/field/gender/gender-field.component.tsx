@@ -32,9 +32,9 @@ export const GenderField: React.FC<GenderFieldProps> = ({className}) => {
         <RadioButton labelText={t('maleLabelText', 'Masculin')} value="M" id="male" />
         <RadioButton labelText={t('femaleLabelText', 'Feminin')} value="F" id="female" />
       </RadioButtonGroup>
-      {/* {meta.error && (
-        <div className={styles.radioFieldError}>{t(messageError, 'Le patient doit avoir un genre')}</div>
-      )} */}
+      {meta.error && (
+        <div className={styles.radioFieldError}>{t("messageErrorGender", 'Le patient doit avoir un genre')}</div>
+      )}
 
     </>
   );

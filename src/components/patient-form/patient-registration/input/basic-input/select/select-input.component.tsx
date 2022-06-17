@@ -19,13 +19,13 @@ export const SelectInput: React.FC<SelectInputProps> = ({ name, options, label,c
   return (
     <div>
       <Select 
-      id="identifier" {...field} 
+      id="identifier"
+      {...field} 
       labelText={label} 
       light={true} size="md" 
       className = {className}
       hideLabel={true}>
-      
-        {selectOptions}
+      {selectOptions}
       </Select>
     </div>
   );

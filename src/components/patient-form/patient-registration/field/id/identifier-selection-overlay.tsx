@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SelectCustom } from '../../input/custom-input/custom-select/custom-selected-component';
-import { PatientRegistrationContext } from '../../patient-registration-context';
+import { SelectCustom } from '../../input/custom-input/idenfiersInput/identifer-overlay';
 import { IdentifierSource } from '../../patient-registration-types';
 import { fetchIdentifierType } from './patient-identifier-ressource';
 

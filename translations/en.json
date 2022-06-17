@@ -4,6 +4,12 @@
   "messageErrorFamilyName": "Family name can't be null",
   "messageErrorGender":"The patient must have a gender",
   "messageErrorPhoneNumber": "The phone number format is invalid",
+  "messageErrorRelationships": "All fields are required",
+  "messageErrorIdentifierType": "You should choose the ID type",
+  "messageErrorIdentifier": "ID cannot be empty",
+  "messageErrorCIN":"Invalid CIN format",
+  "messageErrorNIF":"Invalid NIF format",
+  "messageErrorDOB": "Birth date cannot be empty",
   "selectIdentifier": "Select the identifier",
   "givenNameLabelText": "Given name",
   "familyNameLabelText": "Family name",
@@ -14,5 +20,6 @@
   "genderLabelText":"Gender",
   "maleLabelText":"Male",
   "femaleLabelText": "Female",
-  "birthPlaceLabelText":"Birthplace"
+  "birthPlaceLabelText":"Birthplace",
+  "adresseLabelText":"Adress"
 }

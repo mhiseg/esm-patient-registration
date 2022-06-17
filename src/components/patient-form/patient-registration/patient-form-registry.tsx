@@ -14,7 +14,7 @@ import {
     uuidIdentifier, uuidPhoneNumber, uuidBirthPlace, savePerson, saveRelationship,
     countryName, deletePatient
 } from "./patient-registration.resource";
-
+import { dob, validateId, validateRelationShips } from "./validation/validation-utils";
 
 
 const PatientFormRegistry = () => {
@@ -33,7 +33,7 @@ const PatientFormRegistry = () => {
         givenName: "",
         dob: {},
         status: "",
-        gender: "M",
+        gender: "",
         birthPlace: "",
         identifier: "",
         familyName: "",
@@ -46,70 +46,36 @@ const PatientFormRegistry = () => {
 
     const patientSchema = Yup.object().shape({
         identifierType: Yup.string(),
-        givenName: Yup.string().required(t("messageErrorGiveName", "Give name can't null")),
+        givenName: Yup.string().required("messageErrorGiveName"),
         dob: Yup.object({
             birthdate: Yup.date(),
             age: Yup.number(),
             months: Yup.number(),
             birthdateEstimated: Yup.boolean()
-        }).test("validate date ", (t("messageErrorDob", "Tout les champs doit etre remplis")), (value) => {
-            if ((value.birthdate === undefined) && (value.age === undefined))
-                return false;
-            else
-                return true;
+        }).test("validate date ", ("messageErrorDob"), (value,{createError}) => {
+            return dob(value,createError);   
         }),
         status: Yup.string(),
-        gender: Yup.string(),
+        gender: Yup.string().required("messageErrorGender"),
         birthPlace: Yup.object(),
         identifier: Yup.string(),
-        familyName: Yup.string().required(t("messageErrorFamilyName", "Family Name is required")),
+        familyName: Yup.string().required("messageErrorFamilyName"),
         occupation: Yup.string(),
         residence: Yup.object(),
         adress: Yup.string(),
-        phone: Yup.string().min(9, (t("messageErrorPhoneNumber", "Format de téléphone incorrect"))),
+        phone: Yup.string().min(9, ("messageErrorPhoneNumber")),
         habitat: Yup.string(),
         relationships: Yup.array(
             Yup.object({
                 givenName: Yup.string(),
                 familyName: Yup.string(),
-                contactPhone: Yup.string().min(9, (t("messageErrorPhoneNumber", "Format de téléphone incorrect"))),
+                contactPhone: Yup.string().min(9, ("messageErrorPhoneNumber")),
                 uuid: Yup.string(),
             }).test("valide relationships ", (value, { createError }) => {
-                if ((value.contactPhone == undefined) && (value.familyName == undefined) && (value.givenName == undefined) && (value.uuid == undefined))
-                    return true;
-                else if (value.contactPhone && value.familyName && value.givenName && value.uuid)
-                    return true;
-                else
-                    return createError({
-                        path: 'uuid',
-                        message: (t("messageErrorRelationships", "Tout les champs doit être remplis")),
-                    });
+                return validateRelationShips(value,createError);
             }),
         )
-    }).test("valide relationships ", (value, { createError }) => {
-        console.log(value.identifierType, "==========", value.identifier);
-        if ((value.identifierType == undefined) && (value.identifier == undefined) || (value.identifierType && value.identifier)) {
-            return true;
-        }
-        else if (!value.identifierType && value.identifier) {
-            console.log(value.identifierType, "==========", value.identifier);
-            return createError({
-                path: 'identifierType',
-                message: "Vous devriez choisir le type d'identifiant",
-            });
-        }
-        else if (value.identifierType && !value.identifier) {
-            console.log(value.identifierType, "==========", value.identifier);
-            return createError({
-                path: 'identifier',
-                message: "Vous devriez fournir une valeur a l'identifiant",
-            });
-        }else if (value.identifier && value.identifier[0]=='3' && value.identifier.length==10)
-        return createError({
-            path: 'identifier',
-            message: "Format de CIN invalide",
-        });
-    });
+    }).test("valide relationships ",(value, { createError }) => { return validateId(value,createError);});
 
 
 
