@@ -1,14 +1,12 @@
 import useSWR from 'swr';
 import { openmrsFetch, useConfig, openmrsObservableFetch, getCurrentUser } from '@openmrs/esm-framework';
-import { Patient, Relationship, PatientIdentifier, Person } from './patient-registration-types';
+import { Patient, Relationship, PatientIdentifier, Person, Encounter, Concept } from './patient-registration-types';
 import { mergeMap } from 'rxjs/operators';
+import { countryName, encounterTypeCheckIn, unknowLocation, uuidPhoneNumber } from '../../constants';
 
-export const uuidIdentifier = '05a29f94-c0ed-11e2-94be-8c13b969e334';
-export const uuidIdentifierLocation = '8d6c993e-c2cc-11de-8d13-0010c6dffd0f';
-export const uuidPhoneNumber = '14d4f066-15f5-102d-96e4-000c29c2a5d7';
-export const sourceUuid = "691eed12-c0f1-11e2-94be-8c13b969e334";
-export const uuidBirthPlace = "8d8718c2-c2cc-11de-8d13-0010c6dffd0f";
-export const countryName = "Haiti";
+
+const BASE_WS_API_URL = '/ws/rest/v1/';
+const BASE_FHIR_API_URL = '/ws/fhir2/R4/';
 
 function dataURItoFile(dataURI: string) {
   const byteString = atob(dataURI.split(',')[1]);
@@ -24,16 +22,48 @@ function dataURItoFile(dataURI: string) {
 }
 
 export function savePatient(abortController: AbortController, patient: Patient, updatePatientUuid?: string) {
-  return openmrsFetch('/ws/rest/v1/patient', {
+  return openmrsFetch(`${BASE_WS_API_URL}patient`, {
     method: 'POST',
     body: patient,
     headers: { 'Content-Type': 'application/json' },
     signal: abortController.signal
   });
 }
+export async function saveAllRelationships (relationships, patient, abortController: AbortController)  {
+  let persons = [];
+  await relationships.map(relation => {
+      persons.push({
+          person: {
+              names: [{ givenName: relation.givenName, familyName: relation.familyName }],
+              gender: null,
+              attributes: [{ attributeType: uuidPhoneNumber, value: relation.contactPhone, }]
+          },
+          type: relation.uuid
+      })
+  })
+  await Promise.all(persons.map(async person => {
+      await savePerson(abortController, person.person).then(async pers => {
+          const relation: Relationship = {
+              relationshipType: person.type,
+              personA: patient,
+              personB: pers.data.uuid
+          };
+          const relationshp = await saveRelationship(abortController, relation);
+      })
+  }))
+}
+
+export async function saveAllConcepts(concepts:Concept[], person: string, abortController: AbortController){
+  const toDay = new Date().toISOString();
+  saveEncounter({patient: person,encounterDatetime:toDay,encounterType: encounterTypeCheckIn,location: unknowLocation }, abortController).then(async encounter=>{
+    await Promise.all(concepts.map(async concept=>{
+       await saveObs(person,toDay,encounter.data.uuid,concept.uuid,concept.answer,abortController)
+    }))
+  })
+}
 
 export function generateIdentifier(source: string, abortController: AbortController) {
-  return openmrsFetch(`/ws/rest/v1/idgen/identifiersource/${source}/identifier`, {
+  return openmrsFetch(`${BASE_WS_API_URL}idgen/identifiersource/${source}/identifier`, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -47,15 +77,45 @@ export function generateIdentifier(source: string, abortController: AbortControl
   });
 }
 
+export async function saveEncounter(encounter: Encounter  ,abortController: AbortController) {
+  return openmrsFetch(`${BASE_WS_API_URL}encounter`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    body: encounter,
+    signal: abortController.signal,
+  });
+}
+
+
+export function saveObs(person: string, obsDatetime: string, encounter: string, concept: string, value: string, abortController: AbortController) {
+  return openmrsFetch(`${BASE_WS_API_URL}obs`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    body: {
+      person: person,
+      obsDatetime: obsDatetime,
+      encounter: encounter,
+      location: unknowLocation,
+      concept: concept,
+      value: value,
+    },
+    signal: abortController.signal,
+  });
+}
+
 export function deletePersonName(nameUuid: string, personUuid: string, abortController: AbortController) {
-  return openmrsFetch(`/ws/rest/v1/person/${personUuid}/name/${nameUuid}`, {
+  return openmrsFetch(`${BASE_WS_API_URL}person/${personUuid}/name/${nameUuid}`, {
     method: 'DELETE',
     signal: abortController.signal,
   });
 }
 
 export function saveRelationship(abortController: AbortController, relationship: Relationship) {
-  return openmrsFetch('/ws/rest/v1/relationship', {
+  return openmrsFetch(`${BASE_WS_API_URL}relationship`, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -70,7 +130,7 @@ export function updateRelationship(
   relationshipUuid,
   relationship: { relationshipType: string },
 ) {
-  return openmrsFetch(`/ws/rest/v1/relationship/${relationshipUuid}`, {
+  return openmrsFetch(`${BASE_WS_API_URL}relationship/${relationshipUuid}`, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -81,7 +141,7 @@ export function updateRelationship(
 }
 
 export function deleteRelationship(abortController: AbortController, relationshipUuid) {
-  return openmrsFetch(`/ws/rest/v1/relationship/${relationshipUuid}`, {
+  return openmrsFetch(`${BASE_WS_API_URL}relationship/${relationshipUuid}`, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -116,7 +176,7 @@ export async function fetchAllLocation() {
 }
 
 export async function  fetchConceptByUuid(conceptUuid: string, lang: string) {
-  return openmrsFetch(`/ws/rest/v1/concept/${conceptUuid}?v=full&lang=${lang}`, {
+  return openmrsFetch(`${BASE_WS_API_URL}concept/${conceptUuid}?v=full&lang=${lang}`, {
     method: "GET",
   });
 }
@@ -183,7 +243,7 @@ export function usePatientPhoto(patientUuid: string): UsePatientPhotoResult {
   const {
     concepts: { patientPhotoUuid },
   } = useConfig();
-  const url = `/ws/rest/v1/obs?patient=${patientUuid}&concept=${patientPhotoUuid}&v=full`;
+  const url = `${BASE_WS_API_URL}obs?patient=${patientUuid}&concept=${patientPhotoUuid}&v=full`;
 
   const { data, error } = useSWR<{ data: ObsFetchResponse }, Error>(patientUuid ? url : null, openmrsFetch);
 
@@ -202,7 +262,7 @@ export function usePatientPhoto(patientUuid: string): UsePatientPhotoResult {
 }
 
 export async function fetchPerson(query: string, abortController: AbortController) {
-  return openmrsFetch(`/ws/rest/v1/person?q=${query}`, {
+  return openmrsFetch(`${BASE_WS_API_URL}person?q=${query}`, {
     signal: abortController.signal,
   });
 }
@@ -212,7 +272,7 @@ export async function addPatientIdentifier(
   patientIdentifier: PatientIdentifier,
   abortController: AbortController,
 ) {
-  return openmrsFetch(`/ws/rest/v1/patient/${patientUuid}/identifier/`, {
+  return openmrsFetch(`${BASE_WS_API_URL}patient/${patientUuid}/identifier/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -228,7 +288,7 @@ export async function updatePatientIdentifier(
   identifier: string,
   abortController: AbortController,
 ) {
-  return openmrsFetch(`/ws/rest/v1/patient/${patientUuid}/identifier/${identifierUuid}`, {
+  return openmrsFetch(`${BASE_WS_API_URL}patient/${patientUuid}/identifier/${identifierUuid}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -243,7 +303,7 @@ export async function deletePatientIdentifier(
   patientIdentifierUuid: string,
   abortController: AbortController,
 ) {
-  return openmrsFetch(`/ws/rest/v1/patient/${patientUuid}/identifier/${patientIdentifierUuid}?purge`, {
+  return openmrsFetch(`${BASE_WS_API_URL}patient/${patientUuid}/identifier/${patientIdentifierUuid}?purge`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -256,7 +316,7 @@ export async function deletePatient(
   patientUuid: string,
   abortController: AbortController,
 ) {
-  return openmrsFetch(`/ws/rest/v1/patient/${patientUuid}?purge=true`, {
+  return openmrsFetch(`${BASE_WS_API_URL}patient/${patientUuid}?purge=true`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -275,7 +335,7 @@ export function savePerson(abortController: AbortController, person: Person) {
 
 
 export async function fetchRelationshipType() {
-  return openmrsFetch(`/ws/rest/v1/relationshiptype`, {
+  return openmrsFetch(`${BASE_WS_API_URL}relationshiptype`, {
     method: "GET",
   });
 }

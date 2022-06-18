@@ -13,7 +13,7 @@ export const OccupationSelect: React.FC = () => {
 
   useEffect(() => {
     const currentUserSub = getSynchronizedCurrentUser({ includeAuthStatus: true }).subscribe(async user => {
-     await fetchConceptByUuid(occupationConcept, localStorage.getItem("i18nextLng")).then(res => {
+      await fetchConceptByUuid(occupationConcept, localStorage.getItem("i18nextLng")).then(res => {
         setAnswers(getConceptAnswer(res.data))
       })
     });

@@ -5,20 +5,16 @@ import { Formik } from "formik";
 import { Grid, Row, Column, Button, Form } from "carbon-components-react";
 import { useTranslation } from "react-i18next";
 import { showToast } from "@openmrs/esm-framework";
-import { Patient, Relationship, relationshipType } from "./patient-registration-types";
+import { Concept, Patient, relationshipType } from "./patient-registration-types";
 import FieldForm from "./field.component";
 import { RelationShips } from "./field/relationship/relationship-field-component";
 import { PatientRegistrationContext } from "./patient-registration-context";
-import {
-    savePatient, generateIdentifier, sourceUuid, uuidIdentifierLocation,
-    uuidIdentifier, uuidPhoneNumber, uuidBirthPlace, savePerson, saveRelationship,
-    countryName, deletePatient
-} from "./patient-registration.resource";
+import { savePatient, generateIdentifier, saveAllConcepts, saveAllRelationships } from "./patient-registration.resource";
+import { countryName, maritalStatusConcept, occupationConcept, sourceUuid, uuidBirthPlace, uuidIdentifier, uuidIdentifierLocation, uuidPhoneNumber } from "../../constants";
 
 
 
 const PatientFormRegistry = () => {
-    const [identifiertype, setIdentifierType] = useState("CIN")
     const abortController = new AbortController();
     const { t } = useTranslation();
     let patient: Patient;
@@ -87,62 +83,29 @@ const PatientFormRegistry = () => {
             }),
         )
     }).test("valide relationships ", (value, { createError }) => {
-        console.log(value.identifierType, "==========", value.identifier);
         if ((value.identifierType == undefined) && (value.identifier == undefined) || (value.identifierType && value.identifier)) {
             return true;
         }
         else if (!value.identifierType && value.identifier) {
-            console.log(value.identifierType, "==========", value.identifier);
             return createError({
                 path: 'identifierType',
                 message: "Vous devriez choisir le type d'identifiant",
             });
         }
         else if (value.identifierType && !value.identifier) {
-            console.log(value.identifierType, "==========", value.identifier);
             return createError({
                 path: 'identifier',
                 message: "Vous devriez fournir une valeur a l'identifiant",
             });
-        }else if (value.identifier && value.identifier[0]=='3' && value.identifier.length==10)
-        return createError({
-            path: 'identifier',
-            message: "Format de CIN invalide",
-        });
+        } else if (value.identifier && value.identifier[0] == '3' && value.identifier.length == 10)
+            return createError({
+                path: 'identifier',
+                message: "Format de CIN invalide",
+            });
     });
 
-
-
-    const saveAllRelationships = async (relationships, patient) => {
-        let persons = [];
-        await relationships.map(relation => {
-            persons.push({
-                person: {
-                    names: [{ givenName: relation.givenName, familyName: relation.familyName }],
-                    gender: null,
-                    attributes: [{ attributeType: uuidPhoneNumber, value: relation.contactPhone, }]
-                },
-                type: relation.uuid
-            })
-        })
-        await Promise.all(persons.map(async person => {
-            await savePerson(abortController, person.person).then(async pers => {
-                const relation: Relationship = {
-                    relationshipType: person.type,
-                    personA: patient,
-                    personB: pers.data.uuid
-                };
-                const relationshp = await saveRelationship(abortController, relation);
-            })
-        }))
-        showToast({
-            title: t('successfullyAdded', 'Successfully added'),
-            kind: 'success',
-            description: 'Patient save succesfully',
-        })
-    }
-
     const save = (id, values) => {
+        let concepts: Concept[]=[];
         patient = {
             identifiers: [{ identifier: id, identifierType: uuidIdentifier, location: uuidIdentifierLocation, preferred: true },],
             person: {
@@ -174,16 +137,25 @@ const PatientFormRegistry = () => {
                 country: countryName,
             })
         }
+        if (values.status) {
+            concepts.push({ uuid: maritalStatusConcept, answer: values.status });
+        }
+        if (values.occupation) {
+            concepts.push({ uuid: occupationConcept, answer: values.occupation });
+        }
+
         savePatient(abortController, patient)
-            .then((res) => {
-                if (values.relationships.length == 1 && !values.relationships[0].givenName) {
-                    showToast({
-                        title: t('successfullyAdded', 'Successfully added'),
-                        kind: 'success',
-                        description: 'Patient save succesfully',
-                    })
-                } else
-                    saveAllRelationships(values.relationships, res.data.uuid)
+            .then(async (res) => {
+                const person = res.data.uuid;
+                if (values.relationships.length >= 1 && values.relationships[0].givenName) {
+                    await saveAllRelationships(values.relationships, person, abortController)
+                }
+                await saveAllConcepts(concepts, person, abortController)
+                showToast({
+                    title: t('successfullyAdded', 'Successfully added'),
+                    kind: 'success',
+                    description: 'Patient save succesfully',
+                })
             })
             .catch(error => showToast({ description: error.message }))
     }

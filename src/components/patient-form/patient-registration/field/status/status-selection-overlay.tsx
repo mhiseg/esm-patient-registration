@@ -14,7 +14,7 @@ export const StatusField: React.FC = () => {
 
   useEffect(() => {
     const currentUserSub = getSynchronizedCurrentUser({ includeAuthStatus: true }).subscribe(async user => {
-     await fetchConceptByUuid(maritalStatusConcept, localStorage.getItem("i18nextLng")).then(res => {
+      await fetchConceptByUuid(maritalStatusConcept, localStorage.getItem("i18nextLng")).then(res => {
         setAnswers(getConceptAnswer(res.data))
       })
     });
@@ -35,7 +35,7 @@ export const StatusField: React.FC = () => {
       <SelectCustom
         className={styles.margin_field}
         options={[...answers]}
-        label={t('Select')+' '+question}
+        label={t('Select') + ' ' + question}
         name="status"
       />
     </>

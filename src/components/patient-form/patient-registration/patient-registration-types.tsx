@@ -16,9 +16,7 @@ export interface AttributeValue {
   value: string;
 }
 
-/**
- * Patient Identifier data as it is fetched and composed from the APIs.
- */
+
 export interface FetchedPatientIdentifierType {
   name: string;
   required?: boolean;
@@ -117,8 +115,9 @@ export type Address = {
 }
 export interface Concept {
   uuid: string;
-  display: string;
+  display?: string;
   answers?: Concept[];
+  answer?: string;
 }
 
 export type Patient = {
@@ -137,7 +136,14 @@ export type Patient = {
     causeOfDeath?: string;
     age?: number;
   };
-};
+}
+
+export type Encounter = {
+  patient: string;
+  encounterDatetime: string;
+  encounterType: string;
+  location: string;
+}
 
 export interface RelationshipValue {
   relatedPersonName?: string;
