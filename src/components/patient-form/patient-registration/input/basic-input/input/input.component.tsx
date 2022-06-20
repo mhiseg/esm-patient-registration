@@ -2,6 +2,7 @@ import React from 'react';
 import TextInput from 'carbon-components-react/es/components/TextInput';
 import { useField } from 'formik';
 import styles from "../../../input/input.scss";
+import { useTranslation } from 'react-i18next';
 
 interface InputProps {
   id: string;
@@ -18,7 +19,7 @@ interface InputProps {
 
 export const Input: React.FC<InputProps> = props => {
   const [field, meta] = useField(props.name);
-
+  const { t } = useTranslation();
   return (
     <div>
       <TextInput

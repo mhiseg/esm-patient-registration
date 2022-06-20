@@ -92,8 +92,8 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
             hideLabel={true}
             placeholder={"dd/mm/yyyy"+" *"}
             size="md"
-            invalid={!!(birthdateMeta.touched && birthdateMeta.error)}
-            invalidText={birthdateMeta.error}
+            invalid={!!(birthdateMeta.error)}
+            invalidText={t(birthdateMeta.error)}
           />
         </DatePicker>
       </Column>

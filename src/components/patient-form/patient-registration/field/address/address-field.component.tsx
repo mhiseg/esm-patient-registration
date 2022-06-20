@@ -20,7 +20,7 @@ export const AddressField: React.FC<AddressProps> = ({value, className, name}) =
         name={name}
         labelText={t('addressHeader', 'Address')}
         light={true}
-        placeholder={t('addressHeader', 'Address')}
+        placeholder={t('adresseLabelText', 'Address')}
         hideLabel={true}
         value={value}
       />

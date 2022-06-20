@@ -11,6 +11,7 @@ import { RelationShips } from "./field/relationship/relationship-field-component
 import { PatientRegistrationContext } from "./patient-registration-context";
 import { savePatient, generateIdentifier, saveAllConcepts, saveAllRelationships, formAddres, formatRelationship } from "./patient-registration.resource";
 import { countryName, habitatConcept, maritalStatusConcept, occupationConcept, sourceUuid, uuidBirthPlace, uuidIdentifier, uuidIdentifierLocation, uuidPhoneNumber } from "../../constants";
+import { dob } from "./validation/validation-utils";
 
 export interface PatientProps {
     patient?: Patient,
@@ -43,33 +44,30 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
     const patientSchema = Yup.object().shape({
         uuid: Yup.string(),
         identifierType: Yup.string(),
-        givenName: Yup.string().required(t("messageErrorGiveName", "Give name can't null")),
+        givenName: Yup.string().required("messageErrorGiveName"),
         dob: Yup.object({
             birthdate: Yup.date(),
             age: Yup.number(),
             months: Yup.number(),
             birthdateEstimated: Yup.boolean()
-        }).test("validate date ", (t("messageErrorDob", "Tout les champs doit etre remplis")), (value) => {
-            if ((value.birthdate === undefined) && (value.age === undefined))
-                return false;
-            else
-                return true;
+        }).test("validate date ", ("messageErrorDob"), (value,{createError}) => {
+            return dob(value,createError);   
         }),
         status: Yup.string(),
-        gender: Yup.string(),
+        gender: Yup.string().required("messageErrorGender"),
         birthPlace: Yup.object(),
         identifier: Yup.string(),
-        familyName: Yup.string().required(t("messageErrorFamilyName", "Family Name is required")),
+        familyName: Yup.string().required("messageErrorFamilyName"),
         occupation: Yup.string(),
         residence: Yup.object(),
         adress: Yup.string(),
-        phone: Yup.string().min(9, (t("messageErrorPhoneNumber", "Format de téléphone incorrect"))),
+        phone: Yup.string().min(9, ("messageErrorPhoneNumber")),
         habitat: Yup.string(),
         relationships: Yup.array(
             Yup.object({
                 givenName: Yup.string(),
                 familyName: Yup.string(),
-                contactPhone: Yup.string().min(9, (t("messageErrorPhoneNumber", "Format de téléphone incorrect"))),
+                contactPhone: Yup.string().min(9, ("messageErrorPhoneNumber")),
                 type: Yup.string(),
                 personUuid: Yup.string(),
                 relationUuid: Yup.string(),
