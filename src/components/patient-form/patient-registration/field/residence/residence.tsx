@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Autosuggest } from "../../input/custom-input/autosuggest/autosuggest.component";
 import { PatientRegistrationContext } from "../../patient-registration-context";
 import { Address } from "../../patient-registration-types";
-import { fetchAllLocation } from "../../patient-registration.resource";
+import { fetchAllLocation } from "../../patient-registration.ressources";
 import { AddressField } from "../address/address-field.component";
 import styles from '../field.scss';
 
@@ -51,4 +51,3 @@ const ResidenceField: React.FC<ResidenceProps> = ({value}) => {
 };
 
 export default ResidenceField;
-

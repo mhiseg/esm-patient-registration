@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next';
 
 
 export interface RelationshipsProps {
-    values: any,
     relationships: relationshipType[];
 }
 

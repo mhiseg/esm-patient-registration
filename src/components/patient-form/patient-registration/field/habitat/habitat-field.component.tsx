@@ -4,7 +4,7 @@ import styles from '../field.scss';
 import { useTranslation } from 'react-i18next';
 import { PatientRegistrationContext } from '../../patient-registration-context';
 import { useField } from 'formik';
-import { fetchConceptByUuid, getConceptAnswer, getSynchronizedCurrentUser } from '../../patient-registration.resource';
+import { fetchConceptByUuid, getConceptAnswer, getSynchronizedCurrentUser } from '../../patient-registration.ressources';
 import { habitatConcept } from '../../../../constants';
 
 export interface HabitatProps{

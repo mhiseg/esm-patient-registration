@@ -50,13 +50,6 @@
          route: "death",
          privilege: "App: death.management"
        },
-      //  {
-      //   load: getAsyncLifecycle(() => import("./patient-registration-component"), options),
-      //   route: "death/declare-a-death",
-      //   privilege: "App: death.management",
-      //   online: { patient: "" },
-      //   offline: { patient: "" },
-      // },
      ]
    };
  }

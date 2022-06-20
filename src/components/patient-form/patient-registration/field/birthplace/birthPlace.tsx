@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Autosuggest } from "../../input/custom-input/autosuggest/autosuggest.component";
 import { PatientRegistrationContext } from "../../patient-registration-context";
 import { Address } from "../../patient-registration-types";
-import { fetchAllLocation } from "../../patient-registration.resource";
+import { fetchAllLocation } from "../../patient-registration.ressources";
 
 interface BirthPlaceProps {
     value?: Address;

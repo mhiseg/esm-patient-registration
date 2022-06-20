@@ -9,40 +9,48 @@ import { Concept, Patient, PatientIdentifier, Relationships, relationshipType } 
 import FieldForm from "./field.component";
 import { RelationShips } from "./field/relationship/relationship-field-component";
 import { PatientRegistrationContext } from "./patient-registration-context";
-import { savePatient, generateIdentifier, saveAllConcepts, saveAllRelationships, formAddres, formatRelationship } from "./patient-registration.resource";
+import { savePatient, generateIdentifier, saveAllConcepts, saveAllRelationships, formAddres, formatRelationship } from "./patient-registration.ressources";
 import { countryName, habitatConcept, maritalStatusConcept, occupationConcept, sourceUuid, uuidBirthPlace, uuidIdentifier, uuidIdentifierLocation, uuidPhoneNumber } from "../../constants";
 import { dob } from "./validation/validation-utils";
 
 export interface PatientProps {
-    patient?: Patient,
+    patient?: Patient;
     relationships?: Relationships[];
+    obs?: any[];
 }
 
-export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relationships }) => {
+export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relationships, obs }) => {
     const abortController = new AbortController();
     const { t } = useTranslation();
-
-    console.log(patient, '=========', formatRelationship(relationships))
-    const [initialV, setInitiatV] = useState({
-        uuid: patient?.uuid,
-        relationships: formatRelationship(relationships),
-        identifierType: patient?.identifiers[1]?.identifierType?.uuid || "",
-        givenName: patient?.person?.names[0]?.givenName,
-        dob: { birthdate: patient?.person?.birthdate, age: patient?.person?.age },
-        status: "1056AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        gender: patient?.person?.gender,
-        birthPlace: formAddres(patient?.person?.attributes.find((attribute) => attribute?.attributeType?.uuid == uuidBirthPlace)?.value) || "",
-        identifier: patient?.identifiers[1]?.identifier,
-        familyName: patient?.person?.names[0]?.familyName,
-        occupation: "",
-        residence: formAddres(patient?.person?.addresses[0]),
-        adress: formAddres(patient?.person?.addresses[0])?.address1 || "",
-        phone: patient?.person?.attributes.find((attribute) => attribute.attributeType.uuid == uuidPhoneNumber)?.value || "",
-        habitat: "3b57fc7a-5d28-431a-b78c-54b12cda9bdd",
-    });
+    const formatInialValue = (patient) => {
+        return {
+            uuid: patient?.uuid,
+            openmrsId: patient?.identifiers[0]?.identifier || "",
+            relationships: formatRelationship(relationships),
+            identifierType: patient?.identifiers[1]?.identifierType?.uuid || "",
+            givenName: patient?.person?.names[0]?.givenName,
+            dob: { birthdate: patient?.person?.birthdate, age: patient?.person?.age },
+            status: getAnswerObs(maritalStatusConcept, obs),
+            gender: patient?.person?.gender,
+            birthPlace: formAddres(patient?.person?.attributes.find((attribute) => attribute?.attributeType?.uuid == uuidBirthPlace)?.value) || "",
+            identifier: patient?.identifiers[1]?.identifier,
+            familyName: patient?.person?.names[0]?.familyName,
+            occupation: getAnswerObs(occupationConcept, obs),
+            residence: formAddres(patient?.person?.addresses[0]),
+            adress: formAddres(patient?.person?.addresses[0])?.address1 || "",
+            phone: patient?.person?.attributes.find((attribute) => attribute.attributeType.uuid == uuidPhoneNumber)?.value || "",
+            habitat: getAnswerObs(habitatConcept, obs),
+        }
+    }
+    const getAnswerObs = (question: string, obs: any[]) => {
+        return obs?.find((o) => o.concept.uuid === question)?.answer?.uuid || undefined;
+    }
+    
+    const [initialV, setInitiatV] = useState(formatInialValue(patient));
 
     const patientSchema = Yup.object().shape({
         uuid: Yup.string(),
+        openmrsId: Yup.string(),
         identifierType: Yup.string(),
         givenName: Yup.string().required("messageErrorGiveName"),
         dob: Yup.object({
@@ -50,8 +58,8 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             age: Yup.number(),
             months: Yup.number(),
             birthdateEstimated: Yup.boolean()
-        }).test("validate date ", ("messageErrorDob"), (value,{createError}) => {
-            return dob(value,createError);   
+        }).test("validate date ", ("messageErrorDob"), (value, { createError }) => {
+            return dob(value, createError);
         }),
         status: Yup.string(),
         gender: Yup.string().required("messageErrorGender"),
@@ -105,10 +113,12 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             });
     });
 
-    const save = (id, values) => {
+    const save = async (values) => {
         let patient: Patient;
         let concepts: Concept[] = [];
+        const id = values.openmrsId ? values.openmrsId : await generateIdentifier(sourceUuid, abortController);
         patient = {
+
             identifiers: [{ identifier: id, identifierType: uuidIdentifier, location: uuidIdentifierLocation, preferred: true },],
             person: {
                 names: [{ givenName: values.givenName, familyName: values.familyName, }],
@@ -149,8 +159,6 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
 
         savePatient(abortController, patient, values.uuid)
             .then(async (res) => {
-                alert(0)
-
                 const person = res.data.uuid;
                 if (values.relationships.length >= 1 && values.relationships[0].givenName)
                     await saveAllRelationships(values.relationships, person, abortController)
@@ -162,7 +170,6 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                 })
             })
             .catch(error => {
-                alert(3)
                 showToast({ description: error.message })
             })
     }
@@ -174,10 +181,9 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             onSubmit={
                 async (values, { setSubmitting, resetForm }) => {
                     setSubmitting(false)
-                    const id = await generateIdentifier(sourceUuid, abortController);
-                    save(id.data.identifier, values)
+                    save(values)
                     resetForm(values);
-                    setInitiatV(null);
+                    setInitiatV(formatInialValue(patient));
                 }
             }
 
@@ -226,7 +232,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                                         {FieldForm("phone")}
                                     </Column>
                                     <Column className={styles.secondColStyle} lg={6}>
-                                        {FieldForm("residence", values.residence)}
+                                        {FieldForm("residence", values?.residence)}
                                     </Column>
                                 </Row>
                                 <Row>
@@ -248,7 +254,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
 
                                 <Row>
                                     <Column>
-                                        <RelationShips values={undefined} relationships={values.relationships} />
+                                        <RelationShips relationships={values.relationships} />
                                     </Column>
                                 </Row>
                                 <Row>
