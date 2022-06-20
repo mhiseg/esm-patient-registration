@@ -1,9 +1,8 @@
 import useSWR from 'swr';
-import { openmrsFetch, useConfig, openmrsObservableFetch, getCurrentUser } from '@openmrs/esm-framework';
-import { Patient, Relationship, PatientIdentifier, Person, Encounter, Concept } from './patient-registration-types';
+import { openmrsFetch, useConfig, openmrsObservableFetch, getCurrentUser, navigate, useSession } from '@openmrs/esm-framework';
+import { Patient, Relationships, PatientIdentifier, Person, Encounter, Concept, ObsFetchResponse, UsePatientPhotoResult, Address, relationshipType } from './patient-registration-types';
 import { mergeMap } from 'rxjs/operators';
-import { countryName, encounterTypeCheckIn, unknowLocation, uuidPhoneNumber } from '../../constants';
-
+import { countryName, encounterTypeCheckIn, unknowLocation, uuidIdentifier, uuidPhoneNumber } from '../../constants';
 
 const BASE_WS_API_URL = '/ws/rest/v1/';
 const BASE_FHIR_API_URL = '/ws/fhir2/R4/';
@@ -20,44 +19,87 @@ function dataURItoFile(dataURI: string) {
   const blob = new Blob([buffer], { type: mimeString });
   return new File([blob], 'patient-photo.png');
 }
+export const getConceptAnswer = (concept, setQuestion) => {
+  setQuestion(concept.display)
+  return (concept.answers).map(answer => {
+    return ({ uuid: answer.uuid, name: answer.display, display: answer.display })
+  })
+}
 
-export function savePatient(abortController: AbortController, patient: Patient, updatePatientUuid?: string) {
-  return openmrsFetch(`${BASE_WS_API_URL}patient`, {
+export function fetchRelationships(patientUuid) {
+  if (patientUuid) {
+    return openmrsFetch(`${BASE_WS_API_URL}/relationship?v=full&person=${patientUuid}`, { method: 'GET' });
+  }
+  return Promise.resolve(null);
+}
+
+export function fetchPatient(patientUuid) {
+  if (patientUuid) {
+    return openmrsFetch(`${BASE_WS_API_URL}/patient/${patientUuid}?v=full`, { method: 'GET' });
+  }
+  return Promise.resolve(null);
+}
+
+export function savePatient(abortController: AbortController, patient: Patient, uuid?: string) {
+  console.log('saving patient', `{BASE_WS_API_URL}patient/${uuid?uuid:''}`)
+  return openmrsFetch(`${BASE_WS_API_URL}patient/${uuid?uuid:''}`, {
     method: 'POST',
     body: patient,
     headers: { 'Content-Type': 'application/json' },
     signal: abortController.signal
   });
 }
-export async function saveAllRelationships (relationships, patient, abortController: AbortController)  {
+export async function saveAllRelationships(relationships: relationshipType[], patient, abortController: AbortController) {
   let persons = [];
   await relationships.map(relation => {
-      persons.push({
-          person: {
-              names: [{ givenName: relation.givenName, familyName: relation.familyName }],
-              gender: null,
-              attributes: [{ attributeType: uuidPhoneNumber, value: relation.contactPhone, }]
-          },
-          type: relation.uuid
-      })
+    persons.push({
+      person: {
+        uuid: relation.personUuid,
+        names: [{ givenName: relation.givenName, familyName: relation.familyName }],
+        gender: null,
+        attributes: [{ attributeType: uuidPhoneNumber, value: relation.contactPhone, }]
+      },
+      type: relation.type,
+      uuid: relation.relationUuid
+    })
   })
   await Promise.all(persons.map(async person => {
-      await savePerson(abortController, person.person).then(async pers => {
-          const relation: Relationship = {
-              relationshipType: person.type,
-              personA: patient,
-              personB: pers.data.uuid
-          };
-          const relationshp = await saveRelationship(abortController, relation);
-      })
+    await savePerson(abortController, person.person, person.person.uuid).then(async (pers) => {
+      console.log(pers, 'person after save');
+      const relation: Relationships = {
+        relationshipType: person.type,
+        personA: patient,
+        personB: pers.data.uuid,
+      };
+      const relationshp = await saveRelationship(abortController, relation, person.uuid);
+      console.log(relationshp, 'relationship after save');
+      return relationshp;
+    })
   }))
 }
-
-export async function saveAllConcepts(concepts:Concept[], person: string, abortController: AbortController){
+export function formatRelationship(values): relationshipType[] {
+  let relationships;
+  if (values) {
+    relationships = (values.map(value => {
+      return {
+        relationUuid: value?.uuid,
+        personUuid: value?.personB?.uuid,
+        givenName: value?.personB?.display.split(" ")[0],
+        familyName: value?.personB?.display.split(" ")[1],
+        contactPhone: value?.personB?.attributes[0]?.display.split(" = ")[1],
+        type: value?.relationshipType?.uuid
+      }
+    }))
+    return relationships;
+  }
+  return [{ relationUuid: '', personUuid: '', givenName: '', familyName: '', contactPhone: '', type: '' }];
+}
+export async function saveAllConcepts(concepts: Concept[], person: string, abortController: AbortController) {
   const toDay = new Date().toISOString();
-  saveEncounter({patient: person,encounterDatetime:toDay,encounterType: encounterTypeCheckIn,location: unknowLocation }, abortController).then(async encounter=>{
-    await Promise.all(concepts.map(async concept=>{
-       await saveObs(person,toDay,encounter.data.uuid,concept.uuid,concept.answer,abortController)
+  console.log(concepts,person);
+  saveEncounter({ patient: person, encounterDatetime: toDay, encounterType: encounterTypeCheckIn, location: unknowLocation }, abortController).then(async encounter => {
+    await Promise.all(concepts.map(async concept => {
+      await saveObs(person, toDay, encounter.data.uuid, concept.uuid, concept.answer, abortController)
     }))
   })
 }
@@ -77,7 +119,7 @@ export function generateIdentifier(source: string, abortController: AbortControl
   });
 }
 
-export async function saveEncounter(encounter: Encounter  ,abortController: AbortController) {
+export async function saveEncounter(encounter: Encounter, abortController: AbortController) {
   return openmrsFetch(`${BASE_WS_API_URL}encounter`, {
     headers: {
       'Content-Type': 'application/json',
@@ -114,8 +156,8 @@ export function deletePersonName(nameUuid: string, personUuid: string, abortCont
   });
 }
 
-export function saveRelationship(abortController: AbortController, relationship: Relationship) {
-  return openmrsFetch(`${BASE_WS_API_URL}relationship`, {
+export function saveRelationship(abortController: AbortController, relationship: Relationships, uuid?: string) {
+  return openmrsFetch(`${BASE_WS_API_URL}relationship/${uuid?uuid:''}`, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -162,11 +204,13 @@ export async function fetchAllLocation() {
         'Content-Type': 'application/json',
       },
     }));
-    let places = []
-    let placesTables = await Promise.all(
+    let places: Address[] = [];
+    let placesTables;
+    let locs: Address[] = [];
+    placesTables = await Promise.all(
       states.data.map(async state => {
         let cities = await cityVillages(state.name)
-        let locs = await Promise.all(cities.data.map((city) => ({ state: state.name, city: city.name, display: `${city.name}, ${state.name}` })))
+        locs = await Promise.all(cities.data.map((city) => ({ country: countryName, stateProvince: state.name, cityVillage: city.name, display: `${city.name}, ${state.name}` })))
         return locs;
       })
     )
@@ -175,7 +219,7 @@ export async function fetchAllLocation() {
   } catch (error) { }
 }
 
-export async function  fetchConceptByUuid(conceptUuid: string, lang: string) {
+export async function fetchConceptByUuid(conceptUuid: string, lang: string) {
   return openmrsFetch(`${BASE_WS_API_URL}concept/${conceptUuid}?v=full&lang=${lang}`, {
     method: "GET",
   });
@@ -187,7 +231,17 @@ export function getSynchronizedCurrentUser(opts: any) {
     }),
   );
 }
-
+export function formAddres(address): Address {
+  if (address) {
+    if (typeof address === "string")
+      return { country: countryName, stateProvince: address.split(", ")[1], cityVillage: address.split(", ")[0], address1: "", display: address }
+    else
+      return { country: address.country, stateProvince: address.stateProvince, cityVillage: address.cityVillage, address1: address.address1, display: address.cityVillage + " ," + address.stateProvince }
+  }
+  else {
+    return null;
+  }
+}
 export async function savePatientPhoto(
   patientUuid: string,
   content: string,
@@ -216,28 +270,6 @@ export async function savePatientPhoto(
   });
 }
 
-interface ObsFetchResponse {
-  results: Array<PhotoObs>;
-}
-
-interface PhotoObs {
-  display: string;
-  obsDatetime: string;
-  uuid: string;
-  value: {
-    display: string;
-    links: {
-      rel: string;
-      uri: string;
-    };
-  };
-}
-
-interface UsePatientPhotoResult {
-  data: { dateTime: string; imageSrc: string } | null;
-  isError: Error;
-  isLoading: boolean;
-}
 
 export function usePatientPhoto(patientUuid: string): UsePatientPhotoResult {
   const {
@@ -324,8 +356,9 @@ export async function deletePatient(
     signal: abortController.signal,
   });
 }
-export function savePerson(abortController: AbortController, person: Person) {
-  return openmrsFetch('/ws/rest/v1/person', {
+export function savePerson(abortController: AbortController, person: Person, uuid?: string) {
+  console.log(`person to save url: /ws/rest/v1/person/${uuid?uuid:''} ||| person`,person);
+  return openmrsFetch(`/ws/rest/v1/person/${uuid?uuid:''}`, {
     method: 'POST',
     body: person,
     headers: { 'Content-Type': 'application/json' },
@@ -333,6 +366,18 @@ export function savePerson(abortController: AbortController, person: Person) {
   });
 }
 
+export function killPatient(abortController: AbortController, patient: string, date: Date, causeOfDeath: string) {
+  return openmrsFetch('/ws/rest/v1/person', {
+    method: 'POST',
+    body: {
+      dead: true,
+      deathDate: date.toISOString(),
+      causeOfDeath: causeOfDeath
+    },
+    headers: { 'Content-Type': 'application/json' },
+    signal: abortController.signal
+  });
+}
 
 export async function fetchRelationshipType() {
   return openmrsFetch(`${BASE_WS_API_URL}relationshiptype`, {

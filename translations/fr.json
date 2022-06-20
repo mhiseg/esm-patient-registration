@@ -17,6 +17,6 @@
   "maleLabelText":"Masculin",
   "femaleLabelText": "Féminin",
   "birthPlaceLabelText":"Lieu de Naissance",
-  "Select":"Sélectionner"
-
+  "Select":"Sélectionner",
+  "editPatientTitle": "Modifier un patient"
 }

@@ -8,6 +8,7 @@ import { Search, TextInput } from 'carbon-components-react';
 interface AutosuggestProps {
   name: string;
   placeholder: string;
+  value?:string ;
   getDisplayValue: Function;
   getFieldValue: Function;
   getSearchResults: (query: string) => Promise<any>;
@@ -19,8 +20,10 @@ export const Autosuggest: React.FC<AutosuggestProps> = ({
   placeholder,
   getDisplayValue,
   getFieldValue,
+  value,
   getSearchResults,
   onSuggestionSelected,
+  
 }) => {
   const [suggestions, setSuggestions] = useState([]);
   const searchBox = useRef(null);
@@ -29,7 +32,7 @@ export const Autosuggest: React.FC<AutosuggestProps> = ({
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutsideComponent);
-
+    searchBox.current.input.value= value || '';
     return () => {
       document.removeEventListener('mousedown', handleClickOutsideComponent);
     };

@@ -15,7 +15,9 @@ export const encounterTypeCheckIn = "67a71486-1a54-468f-ac3e-7091a9a79584"
 export const countryName = "Haiti";
 // registration concept
 export const maritalStatusConcept = '1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
-export const occupationConcept = '1542AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+export const occupationConcept = '1542AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
+export const habitatConcept = "965014a7-644d-4df8-898b-33cb4d76c326";
+
 
 // Encounter types
 export const htsRetrospectiveEncounterType = '79c1f50f-f77d-42e2-ad2a-d29304dde2fe';

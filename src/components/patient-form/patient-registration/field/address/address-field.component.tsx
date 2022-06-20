@@ -1,22 +1,28 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '../../input/basic-input/input/input.component';
-import styles from '../field.scss';
 
 
-export const AddressField: React.FC = () => {
+interface AddressProps {
+  value?: string;
+  className?: string;
+  name?: string;
+}
+
+export const AddressField: React.FC<AddressProps> = ({value, className, name}) => {
   const { t } = useTranslation();
 
   return (
     <>
       <Input
-        className={styles.margin_field}
+        className={className}
         id="adress"
-        name="adress"
+        name={name}
         labelText={t('addressHeader', 'Address')}
         light={true}
         placeholder={t('addressHeader', 'Address')}
         hideLabel={true}
+        value={value}
       />
     </>
   );

@@ -21,16 +21,16 @@ export const PhoneInput: React.FC<InputProps> = (props) => {
   const [field, meta, helpers] = useField(props.name);
   const { value } = meta;
   const { setValue } = helpers;
-    
+
   const handleChange = (e, value) => {
     e.target.value = formatPhoneNumber(value.substring(6));
-    setValue(e.target.value)
+    setValue((e.target.value) === undefined ? '' : (e.target.value))
   }
 
   return (
     <div>
       <TextInput
-         className={props.name == "phone"?styles.margin_field:""}
+        className={props.name == "phone" ? styles.margin_field : ""}
         type="tel"
         labelText={''}
         {...props}
@@ -42,7 +42,7 @@ export const PhoneInput: React.FC<InputProps> = (props) => {
           handleChange(e, value)
         }}
         light={true}
-        value={props.prefix + " "+formatPhoneNumber(field.value)}
+        value={props.prefix + " " + formatPhoneNumber(field.value ||'')}
       />
     </div>
   );

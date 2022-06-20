@@ -34,14 +34,12 @@ const FieldForm = (name: string, value?) => {
       return <OccupationSelect />;
     case 'phone':
       return <PhoneField name={name} className={styles.margin_field}/>;
-    case 'address':
-      return <AddressField />;
     case 'residence':
-      return <ResidenceField />;
+      return <ResidenceField value={value}/>;
     case 'birthPlace':
-      return <BirthPlace />;
+      return <BirthPlace value={value} />;
     case 'dob':
-      return <DobField birthdate={value?.birthdate} age={value?.age} months={value?.months} birthdateEstimated={value.birthdateEstimated} />;
+      return <DobField birthdate={value?.birthdate} age={value?.age} months={value?.months} birthdateEstimated={value?.birthdateEstimated} />;
     default:
       return <Unknow />;
   }

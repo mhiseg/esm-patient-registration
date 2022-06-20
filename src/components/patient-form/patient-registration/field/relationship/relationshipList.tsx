@@ -9,9 +9,10 @@ interface RelationTypeList {
 }
 
 interface RelationTypeprops{
-   name:string;
+   name:string; 
+   value:string;
 }
-export const RelationTypeList: React.FC<RelationTypeprops> = ({name}) => {
+export const RelationTypeList: React.FC<RelationTypeprops> = ({name,value}) => {
   const [displayRelationships, setDisplayRelationships] = useState<Array<RelationTypeList>>([]);
   const { t } = useTranslation();
   
@@ -20,7 +21,7 @@ export const RelationTypeList: React.FC<RelationTypeprops> = ({name}) => {
     return () => { unsubscribe }
 }, [])
 
-
+console.log(name,'********************',)
   return (
     <>
       <SelectCustom
