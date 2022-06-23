@@ -75,16 +75,7 @@ const PatientFormRegistry = () => {
                 return validateRelationShips(value,createError);
             }),
         )
-    }).test("valide relationships ",(value, { createError }) => {
-        if(value.adress && !value.residence){
-            return createError({
-                path: 'residence',
-                message: ("messageErrorAdress"),
-            });
-        }
-        else return true;
-        return validateId(value,createError);
-    });
+    }).test("valide relationships ",(value, { createError }) => { return validateId(value,createError);});
 
 
 
@@ -265,7 +256,7 @@ const PatientFormRegistry = () => {
                                                         size="sm"
                                                         isSelected={true}
                                                     >
-                                                        {t("cancelButton", "Annuler")}
+                                                        Annuler
                                                     </Button>
                                                     <Button
                                                         className={styles.buttonStyle1}
@@ -275,7 +266,7 @@ const PatientFormRegistry = () => {
                                                         isSelected={true}
                                                         disabled={!(dirty && isValid)}
                                                     >
-                                                         {t("confirmButton", "Enregistrer")}
+                                                        Enregistrer
                                                     </Button>
                                                 </div>
                                             </Column>
