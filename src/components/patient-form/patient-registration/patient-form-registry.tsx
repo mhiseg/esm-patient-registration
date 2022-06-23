@@ -36,8 +36,8 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             identifier: patient?.identifiers[1]?.identifier,
             familyName: patient?.person?.names[0]?.familyName,
             occupation: getAnswerObs(occupationConcept, obs),
-            residence: formAddres(patient?.person?.addresses[0]),
-            adress: formAddres(patient?.person?.addresses[0])?.address1 || "",
+            residence: null,//formAddres(patient?.person?.addresses[0]),
+            address: formAddres(patient?.person?.addresses[0])?.address1 || "",
             phone: patient?.person?.attributes.find((attribute) => attribute.attributeType.uuid == uuidPhoneNumber)?.value || "",
             habitat: getAnswerObs(habitatConcept, obs),
         }
@@ -113,12 +113,10 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             });
     });
 
-    const save = async (values) => {
+    const save = async (id,values) => {
         let patient: Patient;
         let concepts: Concept[] = [];
-        const id = values.openmrsId ? values.openmrsId : await generateIdentifier(sourceUuid, abortController);
         patient = {
-
             identifiers: [{ identifier: id, identifierType: uuidIdentifier, location: uuidIdentifierLocation, preferred: true },],
             person: {
                 names: [{ givenName: values.givenName, familyName: values.familyName, }],
@@ -156,7 +154,6 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
         if (values.habitat) {
             concepts.push({ uuid: habitatConcept, answer: values.habitat });
         }
-
         savePatient(abortController, patient, values.uuid)
             .then(async (res) => {
                 const person = res.data.uuid;
@@ -181,7 +178,8 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             onSubmit={
                 async (values, { setSubmitting, resetForm }) => {
                     setSubmitting(false)
-                    save(values)
+                    const id = await generateIdentifier(sourceUuid, abortController);
+                    save(id.data.identifier, values)
                     resetForm(values);
                     setInitiatV(formatInialValue(patient));
                 }

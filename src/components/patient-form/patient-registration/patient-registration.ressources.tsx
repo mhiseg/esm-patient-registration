@@ -57,7 +57,7 @@ export function fetchPatient(patientUuid) {
 }
 
 export function savePatient(abortController: AbortController, patient: Patient, uuid?: string) {
-  return openmrsFetch(`${BASE_WS_API_URL}patient/${uuid ? uuid : ''}`, {
+  return openmrsFetch(`${BASE_WS_API_URL}patient/${uuid  ? uuid : ''}`, {
     method: 'POST',
     body: patient,
     headers: { 'Content-Type': 'application/json' },
@@ -96,7 +96,7 @@ export async function saveAllRelationships(relationships: relationshipType[], pa
 }
 
 export function formatRelationship(values): relationshipType[] {
-  if (values.length > 0) {
+  if (values?.length > 0) {
     return (values.map(value => {
       return {
         relationUuid: value?.uuid,
@@ -121,7 +121,7 @@ export async function saveAllConcepts(concepts: Concept[], person: string, abort
 }
 
 export function generateIdentifier(source: string, abortController: AbortController) {
-  return openmrsFetch(`${BASE_WS_API_URL}idgen/identifiersource/${source}identifier`, {
+  return openmrsFetch(`${BASE_WS_API_URL}idgen/identifiersource/${source}/identifier`, {
     headers: {
       'Content-Type': 'application/json',
     },
