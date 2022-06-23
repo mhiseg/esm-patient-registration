@@ -10,6 +10,7 @@
   "messageErrorCIN":"Invalid CIN format",
   "messageErrorNIF":"Invalid NIF format",
   "messageErrorDOB": "Birth date cannot be empty",
+  "messageErrorAdress": "Residence field can't be empty",
   "selectIdentifier": "Select the identifier",
   "givenNameLabelText": "Given name",
   "familyNameLabelText": "Family name",
@@ -22,6 +23,7 @@
   "femaleLabelText": "Female",
   "birthPlaceLabelText":"Birthplace",
   "adresseLabelText":"Adress",
-  "Select":"Select"
-
+  "Select":"Select",
+  "cancelButton": "Cancel",
+  "confirmButton": "Confirm"
 }

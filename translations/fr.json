@@ -10,6 +10,7 @@
   "messageErrorCIN":"Format de CIN invalide",
   "messageErrorNIF":"Format de NIF invalide",
   "messageErrorDOB": "La date d'anniversaire ne peut pas être vide",
+  "messageErrorAdress": "Le champ résidence ne peut pas être vide",
   "selectIdentifier": "Sélectionner l'identifiant",
   "CIN": "Carte d'Identification Nationale (CIN)",
   "NIF": "Numéro d'Identificatioin Fiscale (NIF)",
@@ -24,6 +25,7 @@
   "femaleLabelText": "Féminin",
   "birthPlaceLabelText":"Lieu de Naissance",
   "adresseLabelText":"Adresse",
-  "Select":"Sélectionner"
-
+  "Select":"Sélectionner",
+  "cancelButton": "Annuler",
+  "confirmButton": "Enregistrer"
 }
