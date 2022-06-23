@@ -35,7 +35,7 @@ const FieldForm = (name: string, value?) => {
     case 'phone':
       return <PhoneField name={name} className={styles.margin_field}/>;
     case 'residence':
-      return <ResidenceField value={value}/>;
+      return <ResidenceField />;
     case 'birthPlace':
       return <BirthPlace value={value} />;
     case 'dob':

@@ -36,7 +36,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             identifier: patient?.identifiers[1]?.identifier,
             familyName: patient?.person?.names[0]?.familyName,
             occupation: getAnswerObs(occupationConcept, obs),
-            residence: null,//formAddres(patient?.person?.addresses[0]),
+            residence: null,
             address: formAddres(patient?.person?.addresses[0])?.address1 || "",
             phone: patient?.person?.attributes.find((attribute) => attribute.attributeType.uuid == uuidPhoneNumber)?.value || "",
             habitat: getAnswerObs(habitatConcept, obs),
@@ -52,7 +52,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
         uuid: Yup.string(),
         openmrsId: Yup.string(),
         identifierType: Yup.string(),
-        givenName: Yup.string().required("messageErrorGiveName"),
+        givenName: Yup.string().required("messageErrorGivenName"),
         dob: Yup.object({
             birthdate: Yup.date(),
             age: Yup.number(),
@@ -67,7 +67,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
         identifier: Yup.string(),
         familyName: Yup.string().required("messageErrorFamilyName"),
         occupation: Yup.string(),
-        residence: Yup.object(),
+        residence: Yup.object().nullable(),
         adress: Yup.string(),
         phone: Yup.string().min(9, ("messageErrorPhoneNumber")),
         habitat: Yup.string(),
@@ -261,7 +261,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                                             <Column className={styles.marginTop} lg={12} >
                                                 <div className={styles.flexEnd}>
                                                     <Button
-                                                        className={styles.buttonStyle}
+                                                       className={styles.buttonStyle}
                                                         kind="danger--tertiary"
                                                         type="reset"
                                                         size="sm"

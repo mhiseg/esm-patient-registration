@@ -29,7 +29,7 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
                 (arrayHelpers) => (
                     <Column lg={12} className={styles.marginTop} >
                         <Grid className={styles.pm0} fullWidth={true}>
-                            {values.relationships.map((r, index) => (
+                            {values.relationships?.map((r, index) => (
                                 <Row key={index} className={styles.pl0} >
                                     <input id={`relationships.[${index}].relationUuid`} name={`relationships.[${index}].relationUuid`} value={r.relationUuid} hidden={true} />
                                     <input id={`relationships.[${index}].personUuid`} name={`relationships.[${index}].personUuid`} value={r.personUuid} hidden={true} />
