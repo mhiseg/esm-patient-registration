@@ -17,9 +17,9 @@ import styles from './field/field.scss';
 const FieldForm = (name: string, value?) => {
   switch (name) {  
     case 'givenName':
-      return <GivenNameField  name={name} required={true}/>;
+      return <GivenNameField  name={name} className={styles.margin_field}/>;
     case 'familyName':
-      return <FamilyNameField name={name} required={true}/>;
+      return <FamilyNameField name={name} className={styles.margin_field}/>;
     case 'idType':
       return <IdSelect />;
     case 'idValue':

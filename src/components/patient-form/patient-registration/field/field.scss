@@ -17,9 +17,15 @@
 }
 
 .radioFieldError{
-  color: red;
+  color: rgb(196, 2, 2);
   margin-left: 15px;
   margin-top: 10px;
+  font-size: 12px;
+}
+
+.fieldError{
+  color: rgb(196, 2, 2);
+  margin-top: 7px;
   font-size: 12px;
 }
 
