@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next';
 
 
 export interface RelationshipsProps {
-    values: any,
     relationships: relationshipType[];
 }
 
@@ -21,7 +20,7 @@ export interface RelationshipsProps {
 export const RelationShips: React.FC<RelationshipsProps> = (values) => {
     const { t } = useTranslation();
     const relationships: relationshipType = {
-        givenName: "", familyName: "", contactPhone: "", uuid: "",
+        givenName: "", familyName: "", contactPhone: "", type: "", personUuid: "",   relationUuid: ""
     };
 
     return (
@@ -30,10 +29,12 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
                 (arrayHelpers) => (
                     <Column lg={12} className={styles.marginTop} >
                         <Grid className={styles.pm0} fullWidth={true}>
-                            {values.relationships.map((r, index) => (
+                            {values.relationships?.map((r, index) => (
                                 <Row key={index} className={styles.pl0} >
+                                    <input id={`relationships.[${index}].relationUuid`} name={`relationships.[${index}].relationUuid`} value={r.relationUuid} hidden={true} />
+                                    <input id={`relationships.[${index}].personUuid`} name={`relationships.[${index}].personUuid`} value={r.personUuid} hidden={true} />
                                     <Column lg={3} className={styles.pl0}>
-                                        <RelationTypeList name={`relationships.[${index}].uuid`} />
+                                        <RelationTypeList name={`relationships.[${index}].type`} value={null} />
                                     </Column>
                                     <Column lg={3} className={styles.pl0}>
                                         <FamilyNameField name={`relationships.[${index}].familyName`} />
@@ -46,7 +47,7 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
                                     </Column>
                                     <div className={styles.buttonPosition}>
                                         {
-                                            (index == 0 && values.relationships[0].givenName && values.relationships[0].familyName && values.relationships[0].uuid && values.relationships[0].contactPhone?.length == 9)
+                                            (index == 0 && values.relationships[0].givenName && values.relationships[0].familyName && values.relationships[0].type && values.relationships[0].contactPhone?.length == 9)
                                                 ? (
                                                     <Icon
                                                         icon="akar-icons:circle-plus-fill"
@@ -85,7 +86,5 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
         </div>
     );
 }
-function PatientRegistrationContext(PatientRegistrationContext: any): { state: any; } {
-    throw new Error("Function not implemented.");
-}
+
 

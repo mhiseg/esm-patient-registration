@@ -17,20 +17,33 @@ interface InputProps {
 export const IdentInput: React.FC<InputProps> = (props) => {
     const [field, meta, helpers] = useField(props.name);
     const { setValue, setError } = helpers;
-    const [mask, setMask] = useState(props.placeholder);
     const [required, setRequired] = useState(false)
     const { identifierType } = useContext(PatientRegistrationContext);
     const { t } = useTranslation();
 
+    const handleMaskChange = (identifierType)=>{
+        let mask;
+        if (!identifierType) {
+            mask="Identifiant";
+            return mask;
+        }
 
+        if (identifierType[0] == '3') {
+            mask="0000000000";
+            return mask;
+        }
+        if (identifierType[0] == '2'){
+            mask="000-000-000-0";
+            return mask;   
+        }
+    }
+    
     const handleChange = (e, value) => {
         if (identifierType[0] == '3') {
-            setMask("0000000000");
             setValue(formatCin(e.target.value));
         }
         else {
             e.target.value = formatNif(value);
-            setMask("000-000-000-0");
             setValue(e.target.value)
         }
     }
@@ -50,7 +63,7 @@ export const IdentInput: React.FC<InputProps> = (props) => {
                 }}
                 light={true}
                 value={field.value}
-                placeholder={mask}
+                placeholder={handleMaskChange(identifierType)}
                 required={required}
             />
         </div>

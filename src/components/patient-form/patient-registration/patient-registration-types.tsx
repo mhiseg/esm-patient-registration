@@ -7,18 +7,27 @@ interface NameValue {
   familyName: string;
 }
 export type Person = {
-  names: Array<NameValue>;
-  gender: string;
+  
+    uuid?: string;
+    names: Array<NameValue>;
+    gender: string;
+    birthdate?: string;
+    birthdateEstimated?: boolean;
+    attributes?: Array<AttributeValue>;
+    addresses?: Array<Address>;
+    dead?: boolean;
+    deathDate?: string;
+    causeOfDeath?: string;
+    age?: number;
 };
 
 export interface AttributeValue {
-  attributeType: string;
+  attributeType: string | any;
   value: string;
+  uuid?: string;
 }
 
-/**
- * Patient Identifier data as it is fetched and composed from the APIs.
- */
+
 export interface FetchedPatientIdentifierType {
   name: string;
   required?: boolean;
@@ -71,7 +80,7 @@ export interface IdentifierSourceAutoGenerationOption {
 export interface PatientIdentifier {
   uuid?: string;
   identifier: string;
-  identifierType: string;
+  identifierType: string | any;
   location?: string;
   preferred?: boolean;
 }
@@ -100,44 +109,67 @@ export type relationshipType = {
   givenName: string;
   familyName: string;
   contactPhone: string;
-  uuid: string;
+  type: string;
+  personUuid?: string;
+  relationUuid?: string;
 }
 
-export type Relationship = {
+export type Relationships = {
+  uuid?: string;
   relationshipType: string;
-  personA: string;
-  personB: string;
+  personA: string | Person;
+  personB: string | relationshipType;
 };
 
 export type Address = {
-  address1: string,
+  address1?: string,
   cityVillage: string,
   stateProvince: string,
   country: string,
+  display?: string,
 }
 export interface Concept {
   uuid: string;
-  display: string;
+  display?: string;
   answers?: Concept[];
+  answer?: string;
 }
 
 export type Patient = {
   uuid?: string;
   identifiers: Array<PatientIdentifier>;
-  person: {
-    uuid?: string;
-    names: Array<NameValue>;
-    gender: string;
-    birthdate?: string;
-    birthdateEstimated?: boolean;
-    attributes?: Array<AttributeValue>;
-    addresses?: Array<Address>;
-    dead?: boolean;
-    deathDate?: string;
-    causeOfDeath?: string;
-    age?: number;
+  person: Person;
+  voided?: boolean;
+}
+export interface ObsFetchResponse {
+  results: Array<PhotoObs>;
+}
+
+export interface PhotoObs {
+  display: string;
+  obsDatetime: string;
+  uuid: string;
+  value: {
+    display: string;
+    links: {
+      rel: string;
+      uri: string;
+    };
   };
-};
+}
+
+export interface UsePatientPhotoResult {
+  data: { dateTime: string; imageSrc: string } | null;
+  isError: Error;
+  isLoading: boolean;
+}
+
+export type Encounter = {
+  patient: string;
+  encounterDatetime: string;
+  encounterType: string;
+  location: string;
+}
 
 export interface RelationshipValue {
   relatedPersonName?: string;

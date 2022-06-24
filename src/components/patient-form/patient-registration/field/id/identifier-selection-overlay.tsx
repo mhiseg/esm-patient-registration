@@ -7,7 +7,6 @@ import { fetchIdentifierType } from './patient-identifier-ressource';
 export const IdSelect: React.FC = () => {
   const { t } = useTranslation();
   const [identifiers, setIdentifier] = useState<Array<IdentifierSource>>([]);
-  let ids = [];
 
   useEffect(() => {
     const unsubscribe = fetchIdentifierType().then(res =>getIdentifier(res.data.results))

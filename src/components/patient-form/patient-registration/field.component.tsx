@@ -35,11 +35,11 @@ const FieldForm = (name: string, value?) => {
     case 'phone':
       return <PhoneField name={name} className={styles.margin_field}/>;
     case 'address':
-      return <AddressField />;
+      return <AddressField className={styles.margin_field}/>;
     case 'residence':
       return <ResidenceField />;
     case 'birthPlace':
-      return <BirthPlace />;
+      return <BirthPlace value={value} />;
     case 'dob':
       return <DobField birthdate={value?.birthdate} age={value?.age} months={value?.months} birthdateEstimated={value.birthdateEstimated} />;
     default:

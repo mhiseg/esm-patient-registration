@@ -42,13 +42,13 @@ export function validateId(value, createError) {
 }
 
 export function validateRelationShips(value, createError) {
-    if ((value.contactPhone == undefined) && (value.familyName == undefined) && (value.givenName == undefined) && (value.uuid == undefined))
+    if ((value.contactPhone == undefined) && (value.familyName == undefined) && (value.givenName == undefined) && (value.type == undefined))
         return true;
-    else if (value.contactPhone && value.familyName && value.givenName && value.uuid)
+    else if (value.contactPhone && value.familyName && value.givenName && value.type)
         return true;
     else
         return createError({
-            path: 'uuid',
+            path: 'type',
             message: ("messageErrorRelationships"),
         });
 }

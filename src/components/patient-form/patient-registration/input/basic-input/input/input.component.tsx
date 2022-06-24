@@ -13,6 +13,8 @@ interface InputProps {
   placeholder?: string;
   hideLabel?: boolean;
   className?: string;
+  value?:string;
+  hidden?: boolean;
 }
 
 export const Input: React.FC<InputProps> = props => {

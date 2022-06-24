@@ -5,46 +5,55 @@ import { Formik } from "formik";
 import { Grid, Row, Column, Button, Form } from "carbon-components-react";
 import { useTranslation } from "react-i18next";
 import { showToast } from "@openmrs/esm-framework";
-import { Patient, Relationship, relationshipType } from "./patient-registration-types";
+import { Concept, Patient, PatientIdentifier, Relationships, relationshipType } from "./patient-registration-types";
 import FieldForm from "./field.component";
 import { RelationShips } from "./field/relationship/relationship-field-component";
 import { PatientRegistrationContext } from "./patient-registration-context";
-import {
-    savePatient, generateIdentifier, sourceUuid, uuidIdentifierLocation,
-    uuidIdentifier, uuidPhoneNumber, uuidBirthPlace, savePerson, saveRelationship,
-    countryName, deletePatient
-} from "./patient-registration.resource";
-import { dob, validateId, validateRelationShips } from "./validation/validation-utils";
+import { savePatient, generateIdentifier, saveAllConcepts, saveAllRelationships, formAddres, formatRelationship } from "./patient-registration.ressources";
+import { countryName, habitatConcept, maritalStatusConcept, occupationConcept, sourceUuid, uuidBirthPlace, uuidIdentifier, uuidIdentifierLocation, uuidPhoneNumber } from "../../constants";
+import { dob, validateRelationShips, validateId } from "./validation/validation-utils";
 
 
-const PatientFormRegistry = () => {
-    const [identifiertype, setIdentifierType] = useState("CIN")
+export interface PatientProps {
+    patient?: Patient;
+    relationships?: Relationships[];
+    obs?: any[];
+}
+
+export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relationships, obs }) => {
     const abortController = new AbortController();
     const { t } = useTranslation();
-    let patient: Patient;
-    let relationshipType: relationshipType[] = [{
-        givenName: "", familyName: "", contactPhone: "", uuid: ""
-    }];
 
+    const getAnswerObs = (question: string, obs: any[]) => {
+        return obs?.find((o) => o.concept.uuid === question)?.answer?.uuid || undefined;
+    }
 
-    const [initialV, setInitiatV] = useState({
-        relationships: relationshipType,
-        identifierType: "",
-        givenName: "",
-        dob: {},
-        status: "",
-        gender: "",
-        birthPlace: "",
-        identifier: "",
-        familyName: "",
-        occupation: "",
-        residence: "",
-        adress: "",
-        phone: "",
-        habitat: "",
-    });
+    const formatInialValue = (patient) => {
+        return {
+            uuid: patient?.uuid,
+            openmrsId: patient?.identifiers[0]?.identifier || "",
+            relationships: formatRelationship(relationships),
+            identifierType: patient?.identifiers[1]?.identifierType?.uuid || "",
+            givenName: patient?.person?.names[0]?.givenName,
+            dob: { birthdate: patient?.person?.birthdate, age: patient?.person?.age },
+            status: getAnswerObs(maritalStatusConcept, obs),
+            gender: patient?.person?.gender,
+            birthPlace: formAddres(patient?.person?.attributes.find((attribute) => attribute?.attributeType?.uuid == uuidBirthPlace)?.value) || "",
+            identifier: patient?.identifiers[1]?.identifier,
+            familyName: patient?.person?.names[0]?.familyName,
+            occupation: getAnswerObs(occupationConcept, obs),
+            residence: null,
+            address: formAddres(patient?.person?.addresses[0])?.address1 || "",
+            phone: patient?.person?.attributes.find((attribute) => attribute.attributeType.uuid == uuidPhoneNumber)?.value || "",
+            habitat: getAnswerObs(habitatConcept, obs),
+        }
+    }
+
+    const [initialV, setInitiatV] = useState(formatInialValue(patient));
 
     const patientSchema = Yup.object().shape({
+        uuid: Yup.string(),
+        openmrsId: Yup.string(),
         identifierType: Yup.string(),
         givenName: Yup.string().required("messageErrorGiveName"),
         dob: Yup.object({
@@ -52,8 +61,8 @@ const PatientFormRegistry = () => {
             age: Yup.number(),
             months: Yup.number(),
             birthdateEstimated: Yup.boolean()
-        }).test("validate date ", ("messageErrorDob"), (value,{createError}) => {
-            return dob(value,createError);   
+        }).test("validate date ", ("messageErrorDob"), (value, { createError }) => {
+            return dob(value, createError);
         }),
         status: Yup.string(),
         gender: Yup.string().required("messageErrorGender"),
@@ -61,8 +70,8 @@ const PatientFormRegistry = () => {
         identifier: Yup.string(),
         familyName: Yup.string().required("messageErrorFamilyName"),
         occupation: Yup.string(),
-        residence: Yup.object(),
-        adress: Yup.string(),
+        residence: Yup.object().nullable(),
+        address: Yup.string(),
         phone: Yup.string().min(9, ("messageErrorPhoneNumber")),
         habitat: Yup.string(),
         relationships: Yup.array(
@@ -70,52 +79,27 @@ const PatientFormRegistry = () => {
                 givenName: Yup.string(),
                 familyName: Yup.string(),
                 contactPhone: Yup.string().min(9, ("messageErrorPhoneNumber")),
-                uuid: Yup.string(),
+                type: Yup.string(),
+                personUuid: Yup.string(),
+                relationUuid: Yup.string(),
             }).test("valide relationships ", (value, { createError }) => {
-                return validateRelationShips(value,createError);
+                return validateRelationShips(value, createError);
             }),
         )
-    }).test("valide relationships ",(value, { createError }) => { 
-        if(value.adress && !value.residence){
+    }).test("valide relationships ", (value, { createError }) => {
+        if (value.address && !value.residence) {
             return createError({
                 path: 'residence',
                 message: ("messageErrorResidence"),
             });
         }
-        return validateId(value,createError);});
+        return validateId(value, createError);
+    });
 
-
-
-    const saveAllRelationships = async (relationships, patient) => {
-        let persons = [];
-        await relationships.map(relation => {
-            persons.push({
-                person: {
-                    names: [{ givenName: relation.givenName, familyName: relation.familyName }],
-                    gender: null,
-                    attributes: [{ attributeType: uuidPhoneNumber, value: relation.contactPhone, }]
-                },
-                type: relation.uuid
-            })
-        })
-        await Promise.all(persons.map(async person => {
-            await savePerson(abortController, person.person).then(async pers => {
-                const relation: Relationship = {
-                    relationshipType: person.type,
-                    personA: patient,
-                    personB: pers.data.uuid
-                };
-                const relationshp = await saveRelationship(abortController, relation);
-            })
-        }))
-        showToast({
-            title: t('successfullyAdded', 'Successfully added'),
-            kind: 'success',
-            description: 'Patient save succesfully',
-        })
-    }
-
-    const save = (id, values) => {
+    /*************************Save patient****************************/
+    const save = async (id,values) => {
+        let patient: Patient;
+        let concepts: Concept[] = [];
         patient = {
             identifiers: [{ identifier: id, identifierType: uuidIdentifier, location: uuidIdentifierLocation, preferred: true },],
             person: {
@@ -141,25 +125,37 @@ const PatientFormRegistry = () => {
         if (values.residence) {
             patient.person.addresses = []
             patient.person.addresses.push({
-                address1: values.adress,
-                cityVillage: values.residence.city,
-                stateProvince: values.residence.state,
+                ...values.residence,
                 country: countryName,
             })
         }
-        savePatient(abortController, patient)
-            .then((res) => {
-                if (values.relationships.length == 1 && !values.relationships[0].givenName) {
-                    showToast({
-                        title: t('successfullyAdded', 'Successfully added'),
-                        kind: 'success',
-                        description: 'Patient save succesfully',
-                    })
-                } else
-                    saveAllRelationships(values.relationships, res.data.uuid)
+        if (values.status) {
+            concepts.push({ uuid: maritalStatusConcept, answer: values.status });
+        }
+        if (values.occupation) {
+            concepts.push({ uuid: occupationConcept, answer: values.occupation });
+        }
+        if (values.habitat) {
+            concepts.push({ uuid: habitatConcept, answer: values.habitat });
+        }
+        savePatient(abortController, patient, values.uuid)
+            .then(async (res) => {
+                const person = res.data.uuid;
+                if (values.relationships.length >= 1 && values.relationships[0].givenName)
+                    await saveAllRelationships(values.relationships, person, abortController)
+                await saveAllConcepts(concepts, person, abortController)
+                showToast({
+                    title: t('successfullyAdded', 'Successfully added'),
+                    kind: 'success',
+                    description: 'Patient save succesfully',
+                })
             })
-            .catch(error => showToast({ description: error.message }))
+            .catch(error => {
+                showToast({ description: error.message })
+            })
     }
+    /******************************End*********************************/
+
 
     return (
         <Formik
@@ -167,10 +163,12 @@ const PatientFormRegistry = () => {
             validationSchema={patientSchema}
             onSubmit={
                 async (values, { setSubmitting, resetForm }) => {
+                    console.log(values);
                     setSubmitting(false)
                     const id = await generateIdentifier(sourceUuid, abortController);
                     save(id.data.identifier, values)
                     resetForm(values);
+                    setInitiatV(formatInialValue(patient));
                 }
             }
 
@@ -210,7 +208,7 @@ const PatientFormRegistry = () => {
                                         {FieldForm("dob", initialV.dob)}
                                     </Column>
                                     <Column className={styles.secondColStyle} lg={6}>
-                                        {FieldForm("birthPlace")}
+                                        {FieldForm("birthPlace", values?.birthPlace)}
                                     </Column>
                                 </Row>
 
@@ -219,14 +217,7 @@ const PatientFormRegistry = () => {
                                         {FieldForm("phone")}
                                     </Column>
                                     <Column className={styles.secondColStyle} lg={6}>
-                                        <Row>
-                                            <Column>
-                                                {FieldForm("residence")}
-                                            </Column>
-                                            <Column>
-                                                {FieldForm("address")}
-                                            </Column>
-                                        </Row>
+                                        {FieldForm("residence", values?.residence)}
                                     </Column>
                                 </Row>
                                 <Row>
@@ -248,7 +239,7 @@ const PatientFormRegistry = () => {
 
                                 <Row>
                                     <Column>
-                                        <RelationShips values={values} relationships={values.relationships} />
+                                        <RelationShips relationships={values.relationships} />
                                     </Column>
                                 </Row>
                                 <Row>
@@ -263,7 +254,7 @@ const PatientFormRegistry = () => {
                                                         size="sm"
                                                         isSelected={true}
                                                     >
-                                                       {t("cancelButton", "Annuler")}
+                                                        {t("cancelButton", "Annuler")}
                                                     </Button>
                                                     <Button
                                                         className={styles.buttonStyle1}
@@ -273,7 +264,7 @@ const PatientFormRegistry = () => {
                                                         isSelected={true}
                                                         disabled={!(dirty && isValid)}
                                                     >
-                                                       {t("confirmButton", "Enregistrer")}
+                                                        {t("confirmButton", "Enregistrer")}
                                                     </Button>
                                                 </div>
                                             </Column>
