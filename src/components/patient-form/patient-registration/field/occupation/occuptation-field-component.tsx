@@ -3,7 +3,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { occupationConcept } from '../../../../constants';
 import { SelectCustom } from '../../input/custom-input/custom-select/custom-selected-component';
-import { getSynchronizedCurrentUser, fetchConceptByUuid } from '../../patient-registration.ressources';
+import { fetchConceptByUuid, getConceptAnswer, getSynchronizedCurrentUser } from '../../patient-registration.ressources';
 import styles from '../field.scss';
 
 export const OccupationSelect: React.FC = () => {
@@ -13,8 +13,8 @@ export const OccupationSelect: React.FC = () => {
 
   useEffect(() => {
     const currentUserSub = getSynchronizedCurrentUser({ includeAuthStatus: true }).subscribe(async user => {
-     await fetchConceptByUuid(occupationConcept, localStorage.getItem("i18nextLng")).then(res => {
-        setAnswers(getConceptAnswer(res.data))
+      await fetchConceptByUuid(occupationConcept, localStorage.getItem("i18nextLng")).then(res => {
+        setAnswers(getConceptAnswer(res.data,setQuestion))
       })
     });
 
@@ -23,12 +23,7 @@ export const OccupationSelect: React.FC = () => {
     };
   }, []);
 
-  const getConceptAnswer = (concept) => {
-    setQuestion(concept.display)
-    return (concept.answers).map(answer => {
-      return ({ uuid: answer.uuid, name: answer.display, display: answer.display })
-    })
-  }
+
 
   return (
     <>

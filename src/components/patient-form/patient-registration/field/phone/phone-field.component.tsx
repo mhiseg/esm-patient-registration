@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next';
 
 interface PhoneFieldProps {
   name: string;
-  value?: string;
+  value?: any;
   className?: string;
 }
 
-export const PhoneField: React.FC<PhoneFieldProps> = ({ name, className }) => {
+export const PhoneField: React.FC<PhoneFieldProps> = ({ name, className,value }) => {
   const { t } = useTranslation();
   const prefix = "+(509)"
 

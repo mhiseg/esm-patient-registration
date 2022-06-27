@@ -22,7 +22,6 @@
 //         const unsubscribe = fetchAllLocation().then(res => setPlaces(res))
 //         return () => { unsubscribe }
 //     }, [])
-
 //     return (
 //         <>
 //             <Autosuggest
@@ -58,7 +57,7 @@ interface ResidenceProps {
     value?: Address;
     className?: string;
 }
-const ResidenceField: React.FC<ResidenceProps> = ({ value }) => {
+const ResidenceField: React.FC<ResidenceProps> = ({value}) => {
     const [places, setPlaces] = useState<Address[]>([]);
     const { t } = useTranslation();
     const [field, meta] = useField('residence');

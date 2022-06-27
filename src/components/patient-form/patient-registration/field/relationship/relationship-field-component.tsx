@@ -11,7 +11,7 @@ import { relationshipType } from "../../patient-registration-types";
 import { useTranslation } from 'react-i18next';
 import { deletePerson, deleteRelationship } from "../../patient-registration.ressources";
 import { showToast } from "@openmrs/esm-framework";
-import ConfirmationModal from "../../confimation-modal";
+// import ConfirmationModal from "../../confimation-modal";
 
 
 export interface RelationshipsProps {
@@ -24,7 +24,7 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
     const { t } = useTranslation();
     const abortController = new AbortController();
     const relationships: relationshipType = {
-        givenName: "", familyName: "", contactPhone: "", type: "", personUuid: "", relationUuid: ""
+        givenName: "", familyName: "", contactPhone: "", type: "", personUuid: "",   relationUuid: ""
     };
 
     return (
@@ -77,7 +77,7 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
                                                 color="#699BF7"
                                                 className={`${styles.buttonPlusStyle} ${styles.flexEnd}`}
                                                 onClick={() => {
-                                                    <ConfirmationModal/>
+                                                    // <ConfirmationModal/>
                                                     if (!relationships[index]?.personUuid && !relationships[index]?.relationUuid){
                                                         alert("Removed succesfully");
                                                         arrayHelpers.remove(index);
@@ -96,7 +96,6 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
                                                             showToast({ description: error.message })
                                                         })
                                                     }
-                                                    // <ConfirmationModal />
                                                 }}
                                             />
                                         ) : ""

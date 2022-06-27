@@ -1,6 +1,6 @@
 {
   "savePatientTitle": "Enregistrer un  nouveau Patient",
-  "messageErrorGiveName": "Le prénom ne peut pas être vide",
+  "messageErrorGivenName": "Le prénom ne peut pas être vide",
   "messageErrorGender": "Le patient doit avoir un genre",
   "messageErrorFamilyName": "Le nom ne peut pas être vide",
   "messageErrorPhoneNumber": "Le format du téléphone est incorrect",
@@ -11,7 +11,6 @@
   "messageErrorNIF":"Format de NIF invalide",
   "messageErrorDOB": "La date d'anniversaire ne peut pas être vide",
   "messageErrorResidence": "Le champ résidence ne peut pas être null",
-  "messageSuccessRelationShip": "Effacer avec succès",
   "selectIdentifier": "Sélectionner l'identifiant",
   "CIN": "Carte d'Identification Nationale (CIN)",
   "NIF": "Numéro d'Identificatioin Fiscale (NIF)",

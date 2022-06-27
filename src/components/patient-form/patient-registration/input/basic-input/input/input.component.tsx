@@ -27,7 +27,7 @@ export const Input: React.FC<InputProps> = props => {
         {...field}
         invalid={!!(meta.error)}
         invalidText={t(meta.error)}
-        value={field.value || ''}
+        value={field.value || props.value || ''}
         size="lg"
       />
     </div>

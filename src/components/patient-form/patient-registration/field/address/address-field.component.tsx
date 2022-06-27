@@ -16,9 +16,9 @@ export const AddressField: React.FC<AddressProps> = ({value, className, name}) =
     <>
       <Input
         className={className}
-        id='address'
-        name='address'
-        labelText={t('adresseLabelText', 'Address')}
+        id="adress"
+        name={name}
+        labelText={t('addressHeader', 'Address')}
         light={true}
         placeholder={t('adresseLabelText', 'Address')}
         hideLabel={true}

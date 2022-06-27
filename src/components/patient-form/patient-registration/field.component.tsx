@@ -41,7 +41,7 @@ const FieldForm = (name: string, value?) => {
     case 'birthPlace':
       return <BirthPlace value={value} />;
     case 'dob':
-      return <DobField birthdate={value?.birthdate} age={value?.age} months={value?.months} birthdateEstimated={value.birthdateEstimated} />;
+      return <DobField birthdate={value?.birthdate} age={value?.age} months={value?.months} birthdateEstimated={value?.birthdateEstimated} />;
     default:
       return <Unknow />;
   }

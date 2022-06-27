@@ -13,7 +13,6 @@ import { savePatient, generateIdentifier, saveAllConcepts, saveAllRelationships,
 import { countryName, habitatConcept, maritalStatusConcept, occupationConcept, sourceUuid, uuidBirthPlace, uuidIdentifier, uuidIdentifierLocation, uuidPhoneNumber } from "../../constants";
 import { dob, validateRelationShips, validateId } from "./validation/validation-utils";
 
-
 export interface PatientProps {
     patient?: Patient;
     relationships?: Relationships[];
@@ -23,11 +22,6 @@ export interface PatientProps {
 export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relationships, obs }) => {
     const abortController = new AbortController();
     const { t } = useTranslation();
-
-    const getAnswerObs = (question: string, obs: any[]) => {
-        return obs?.find((o) => o.concept.uuid === question)?.answer?.uuid || undefined;
-    }
-
     const formatInialValue = (patient) => {
         return {
             uuid: patient?.uuid,
@@ -48,14 +42,17 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             habitat: getAnswerObs(habitatConcept, obs),
         }
     }
-
+    const getAnswerObs = (question: string, obs: any[]) => {
+        return obs?.find((o) => o.concept.uuid === question)?.answer?.uuid || undefined;
+    }
+    
     const [initialV, setInitiatV] = useState(formatInialValue(patient));
 
     const patientSchema = Yup.object().shape({
         uuid: Yup.string(),
         openmrsId: Yup.string(),
         identifierType: Yup.string(),
-        givenName: Yup.string().required("messageErrorGiveName"),
+        givenName: Yup.string().required("messageErrorGivenName"),
         dob: Yup.object({
             birthdate: Yup.date(),
             age: Yup.number(),
@@ -205,7 +202,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                                 </Row>
                                 <Row>
                                     <Column className={styles.firstColSyle} lg={6}>
-                                        {FieldForm("dob", initialV.dob)}
+                                        {FieldForm("dob", initialV?.dob)}
                                     </Column>
                                     <Column className={styles.secondColStyle} lg={6}>
                                         {FieldForm("birthPlace", values?.birthPlace)}
@@ -248,7 +245,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                                             <Column className={styles.marginTop} lg={12} >
                                                 <div className={styles.flexEnd}>
                                                     <Button
-                                                        className={styles.buttonStyle}
+                                                       className={styles.buttonStyle}
                                                         kind="danger--tertiary"
                                                         type="reset"
                                                         size="sm"
@@ -280,4 +277,3 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
     );
 }
 
-export default PatientFormRegistry;
