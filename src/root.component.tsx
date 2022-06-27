@@ -4,6 +4,7 @@ import PatientRegistration from './patient-registration-component';
 
 
 const RootComponent: React.FC = () => {
+  alert(0)
   return (
     <BrowserRouter basename={`${window.spaBase}/death`}>
       <Route exact path="/patient"  component={PatientRegistration} />

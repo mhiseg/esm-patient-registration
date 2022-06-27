@@ -15,8 +15,8 @@ const PatientRegistration = () => {
     const to: NavigateOptions = { to: window.spaBase + "/death/patient" };
 
     const toNewPatient = (patient)=>{
-        if(!patientToEdit?.data)
-            navigate(to);
+        // if(!patientToEdit?.data)
+        //     navigate(to);
     }
 
     const getFormPatient = () => {

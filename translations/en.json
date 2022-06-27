@@ -11,6 +11,7 @@
   "messageErrorNIF":"Invalid NIF format",
   "messageErrorDOB": "Birth date cannot be empty",
   "messageErrorResidence": "Residence field can't be null",
+  "messageSuccessRelationShip" : "Successfully removed",
   "selectIdentifier": "Select the identifier",
   "givenNameLabelText": "Given name",
   "familyNameLabelText": "Family name",

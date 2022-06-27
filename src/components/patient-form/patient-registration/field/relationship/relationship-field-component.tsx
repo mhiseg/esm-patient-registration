@@ -9,6 +9,9 @@ import { GivenNameField } from "../name/givenname-field.component";
 import { RelationTypeList } from "./relationshipList";
 import { relationshipType } from "../../patient-registration-types";
 import { useTranslation } from 'react-i18next';
+import { deletePerson, deleteRelationship } from "../../patient-registration.ressources";
+import { showToast } from "@openmrs/esm-framework";
+import ConfirmationModal from "../../confimation-modal";
 
 
 export interface RelationshipsProps {
@@ -19,8 +22,9 @@ export interface RelationshipsProps {
 
 export const RelationShips: React.FC<RelationshipsProps> = (values) => {
     const { t } = useTranslation();
+    const abortController = new AbortController();
     const relationships: relationshipType = {
-        givenName: "", familyName: "", contactPhone: "", type: "", personUuid: "",   relationUuid: ""
+        givenName: "", familyName: "", contactPhone: "", type: "", personUuid: "", relationUuid: ""
     };
 
     return (
@@ -72,7 +76,28 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
                                                 height="32"
                                                 color="#699BF7"
                                                 className={`${styles.buttonPlusStyle} ${styles.flexEnd}`}
-                                                onClick={() => arrayHelpers.remove(index)}
+                                                onClick={() => {
+                                                    <ConfirmationModal/>
+                                                    if (!relationships[index]?.personUuid && !relationships[index]?.relationUuid){
+                                                        alert("Removed succesfully");
+                                                        arrayHelpers.remove(index);
+                                                    }
+                                                    else{
+                                                        alert("About to remove a relationship");
+                                                        deleteRelationship(abortController,relationships[index].relationUuid).then(async () => {
+                                                            await deletePerson(abortController, relationships[index].personUuid)
+                                                            arrayHelpers.remove(index);
+                                                            showToast({
+                                                                title: t('successfullyRemoved', 'Successfully removed'),
+                                                                kind: 'success',
+                                                                description: 'Relationship removed succesfully',
+                                                            })
+                                                        }).catch(error => {
+                                                            showToast({ description: error.message })
+                                                        })
+                                                    }
+                                                    // <ConfirmationModal />
+                                                }}
                                             />
                                         ) : ""
                                         }
