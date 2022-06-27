@@ -90,7 +90,7 @@ const ResidenceField: React.FC<ResidenceProps> = ({value}) => {
                     )}
                 </Column>
                 <Column>
-                    <AddressField value={value?.address1} name="address" className={styles.margin_field} />
+                    <AddressField value={value?.address1} name="residence.address1" className={styles.margin_field} />
                 </Column>
             </Row>
         </>

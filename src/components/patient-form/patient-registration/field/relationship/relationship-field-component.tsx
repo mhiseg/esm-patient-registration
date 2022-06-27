@@ -24,7 +24,7 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
     const { t } = useTranslation();
     const abortController = new AbortController();
     const relationships: relationshipType = {
-        givenName: "", familyName: "", contactPhone: "", type: "", personUuid: "",   relationUuid: ""
+        givenName: "", familyName: "", contactPhone: "", type: "", personUuid: "", relationUuid: ""
     };
 
     return (
@@ -77,15 +77,13 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
                                                 color="#699BF7"
                                                 className={`${styles.buttonPlusStyle} ${styles.flexEnd}`}
                                                 onClick={() => {
-                                                    // <ConfirmationModal/>
-                                                    if (!relationships[index]?.personUuid && !relationships[index]?.relationUuid){
-                                                        alert("Removed succesfully");
+                                                    if (!values.relationships[index]?.personUuid && !values.relationships[index]?.relationUuid) {
                                                         arrayHelpers.remove(index);
                                                     }
-                                                    else{
+                                                    else {
                                                         alert("About to remove a relationship");
-                                                        deleteRelationship(abortController,relationships[index].relationUuid).then(async () => {
-                                                            await deletePerson(abortController, relationships[index].personUuid)
+                                                        deleteRelationship(abortController, values.relationships[index].relationUuid).then(async () => {
+                                                            await deletePerson(abortController, values.relationships[index].personUuid)
                                                             arrayHelpers.remove(index);
                                                             showToast({
                                                                 title: t('successfullyRemoved', 'Successfully removed'),

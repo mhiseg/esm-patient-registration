@@ -36,8 +36,8 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             identifier: patient?.identifiers[1]?.identifier,
             familyName: patient?.person?.names[0]?.familyName,
             occupation: getAnswerObs(occupationConcept, obs),
-            residence: null,
-            address: formAddres(patient?.person?.addresses[0])?.address1 || "",
+            residence:formAddres(patient?.person?.addresses[0]) || "",
+            //address: formAddres(patient?.person?.addresses[0])?.address1 || "",
             phone: patient?.person?.attributes.find((attribute) => attribute.attributeType.uuid == uuidPhoneNumber)?.value || "",
             habitat: getAnswerObs(habitatConcept, obs),
         }
@@ -94,7 +94,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
     });
 
     /*************************Save patient****************************/
-    const save = async (id,values) => {
+    const save = async (id,values,resetForm) => {
         let patient: Patient;
         let concepts: Concept[] = [];
         patient = {
@@ -135,6 +135,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
         if (values.habitat) {
             concepts.push({ uuid: habitatConcept, answer: values.habitat });
         }
+        console.log(patient)
         savePatient(abortController, patient, values.uuid)
             .then(async (res) => {
                 const person = res.data.uuid;
@@ -146,6 +147,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                     kind: 'success',
                     description: 'Patient save succesfully',
                 })
+                resetForm(values);
             })
             .catch(error => {
                 showToast({ description: error.message })
@@ -160,12 +162,9 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             validationSchema={patientSchema}
             onSubmit={
                 async (values, { setSubmitting, resetForm }) => {
-                    console.log(values);
                     setSubmitting(false)
                     const id = await generateIdentifier(sourceUuid, abortController);
-                    save(id.data.identifier, values)
-                    resetForm(values);
-                    setInitiatV(formatInialValue(patient));
+                    save(id.data.identifier, values,resetForm)
                 }
             }
 

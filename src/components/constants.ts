@@ -17,6 +17,6 @@ export const countryName = "Haiti";
 export const maritalStatusConcept = '1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
 export const occupationConcept = '1542AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
 export const habitatConcept = "965014a7-644d-4df8-898b-33cb4d76c326";
-export const cinUuid = "3e420daa-46bb-4453-8d83-77ab3cb1f136";
-export const nifUuid = "2fe4542f-2b08-4591-8b79-d3e645ac1e19";
+export const cinUuid = "72242d84-1e2c-4991-b523-4f86ad115b31";
+export const nifUuid = "f013b1b6-23bd-4fde-a913-4b0d6c81d2d4";
 
