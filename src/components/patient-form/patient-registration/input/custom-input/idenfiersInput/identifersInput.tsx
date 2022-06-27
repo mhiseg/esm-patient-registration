@@ -5,6 +5,7 @@ import { TextInput } from 'carbon-components-react';
 import { useField } from 'formik';
 import { PatientRegistrationContext } from '../../../patient-registration-context';
 import { useTranslation } from 'react-i18next';
+import { cinUuid, nifUuid } from '../../../../../constants';
 
 interface InputProps {
     id: string;
@@ -28,18 +29,18 @@ export const IdentInput: React.FC<InputProps> = (props) => {
             return mask;
         }
 
-        if (identifierType[0] == '3') {
+        if (identifierType == cinUuid) {
             mask="0000000000";
             return mask;
         }
-        if (identifierType[0] == '2'){
+        if (identifierType == nifUuid){
             mask="000-000-000-0";
             return mask;   
         }
     }
     
     const handleChange = (e, value) => {
-        if (identifierType[0] == '3') {
+        if (identifierType == cinUuid) {
             setValue(formatCin(e.target.value));
         }
         else {

@@ -1,3 +1,5 @@
+import { cinUuid, nifUuid } from "../../../constants";
+
 export function dob(value, createError) {
     if ((value.birthdate === undefined) && (value.age === undefined)) {
         return createError({
@@ -27,13 +29,13 @@ export function validateId(value, createError) {
     }
 
     if (value.identifierType && value.identifier)
-        if (value.identifierType[0] == '3' && value.identifier.length != 10) {
+        if (value.identifierType == cinUuid && value.identifier.length != 10) {
             return createError({
                 path: 'identifier',
                 message: ("messageErrorCIN"),
             });
         }
-    if (value.identifierType[0] == '2' && value.identifier.length != 13) {
+    if (value.identifierType == nifUuid && value.identifier.length != 13) {
         return createError({
             path: 'identifier',
             message: ("messageErrorNIF"),
