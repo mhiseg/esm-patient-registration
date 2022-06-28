@@ -42,7 +42,7 @@
     "url": "https://github.com/openmrs/openmrs-esm-template-app/issues"
   },
   "dependencies": {
-    "@carbon/icons-react": "^10.18.0",
+    "@carbon/icons-react": "^11.4.0",
     "carbon-components-react": "^7.25.0",
     "formik": "^2.2.9",
     "jest": "^28.1.0",

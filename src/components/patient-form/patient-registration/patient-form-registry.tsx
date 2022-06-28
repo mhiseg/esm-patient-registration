@@ -147,6 +147,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                     kind: 'success',
                     description: 'Patient save succesfully',
                 })
+                console.log(res);
                 resetForm(values);
             })
             .catch(error => {

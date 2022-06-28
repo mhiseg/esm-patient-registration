@@ -11,6 +11,7 @@
   "messageErrorNIF":"Invalid NIF format",
   "messageErrorDOB": "Birth date cannot be empty",
   "messageErrorResidence": "Residence field can't be null",
+  "messageErrorModalRelationShips":"Attention! You are about to delete a relationship for this patient. This action is irreversible, do you want to continue?",
   "selectIdentifier": "Select the identifier",
   "givenNameLabelText": "Given name",
   "familyNameLabelText": "Family name",
@@ -26,5 +27,8 @@
   "Select":"Select",
   "cancelButton": "Cancel",
   "confirmButton": "Confirm",
-  "editPatientTitle": "Edit patient"
+  "editPatientTitle": "Edit patient",
+  "relationShipsModal": "Delete a relation",
+  "confirmModalButton": "Delete",
+  "cancelModalButton": "Cancel" 
 }

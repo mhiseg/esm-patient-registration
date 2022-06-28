@@ -11,6 +11,7 @@
   "messageErrorNIF":"Format de NIF invalide",
   "messageErrorDOB": "La date d'anniversaire ne peut pas être vide",
   "messageErrorResidence": "Le champ résidence ne peut pas être null",
+  "messageErrorModalRelationShips": "Attention! Vous etes sur le point de supprimer une relation pour ce patient. Cette action est irreversible, voulez vous continuer?",
   "selectIdentifier": "Sélectionner l'identifiant",
   "CIN": "Carte d'Identification Nationale (CIN)",
   "NIF": "Numéro d'Identificatioin Fiscale (NIF)",
@@ -27,5 +28,9 @@
   "adresseLabelText":"Adresse",
   "Select":"Sélectionner",
   "cancelButton": "Annuler",
-  "confirmButton": "Enregistrer"
+  "confirmButton": "Enregistrer",
+  "relationShipsModal": "Supprimer une relation",
+  "editPatientTitle": "Modifier un patient",
+  "confirmModalButton" : "Supprimer",
+  "cancelModalButton": "Annuler"
 }

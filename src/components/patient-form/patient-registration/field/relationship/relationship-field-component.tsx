@@ -9,9 +9,9 @@ import { GivenNameField } from "../name/givenname-field.component";
 import { RelationTypeList } from "./relationshipList";
 import { relationshipType } from "../../patient-registration-types";
 import { useTranslation } from 'react-i18next';
-import { deletePerson, deleteRelationship } from "../../patient-registration.ressources";
+import { ConfirmationModal } from "../../widget/confirmation-modal";
 import { showToast } from "@openmrs/esm-framework";
-// import ConfirmationModal from "../../confimation-modal";
+import { deletePerson, deleteRelationship } from "../../patient-registration.ressources";
 
 
 export interface RelationshipsProps {
@@ -26,6 +26,26 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
     const relationships: relationshipType = {
         givenName: "", familyName: "", contactPhone: "", type: "", personUuid: "", relationUuid: ""
     };
+
+    function removeRelationShip(values,index, arrayHelpers){
+        if (!values.relationships[index]?.personUuid && !values.relationships[index]?.relationUuid) {
+            arrayHelpers.remove(index);
+        }
+        else {
+            alert("About to remove a relationship");
+            deleteRelationship(abortController, values.relationships[index].relationUuid).then(async () => {
+                await deletePerson(abortController, values.relationships[index].personUuid)
+                arrayHelpers.remove(index);
+                showToast({
+                    title: t('successfullyRemoved', 'Successfully removed'),
+                    kind: 'success',
+                    description: 'Relationship removed succesfully',
+                })
+            }).catch(error => {
+                showToast({ description: error.message })
+            })
+        }
+    }
 
     return (
         <div className={styles.marginTop}>
@@ -68,34 +88,10 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
                                                 ) : ""
                                         }
                                         {index > 0 ? (
-
-                                            <Icon
-                                                icon="akar-icons:circle-minus-fill"
-                                                inline={true}
-                                                width="32"
-                                                height="32"
-                                                color="#699BF7"
-                                                className={`${styles.buttonPlusStyle} ${styles.flexEnd}`}
-                                                onClick={() => {
-                                                    if (!values.relationships[index]?.personUuid && !values.relationships[index]?.relationUuid) {
-                                                        arrayHelpers.remove(index);
-                                                    }
-                                                    else {
-                                                        alert("About to remove a relationship");
-                                                        deleteRelationship(abortController, values.relationships[index].relationUuid).then(async () => {
-                                                            await deletePerson(abortController, values.relationships[index].personUuid)
-                                                            arrayHelpers.remove(index);
-                                                            showToast({
-                                                                title: t('successfullyRemoved', 'Successfully removed'),
-                                                                kind: 'success',
-                                                                description: 'Relationship removed succesfully',
-                                                            })
-                                                        }).catch(error => {
-                                                            showToast({ description: error.message })
-                                                        })
-                                                    }
-                                                }}
-                                            />
+                                            <ConfirmationModal onConfirmModal={()=>{
+                                                removeRelationShip(values,index, arrayHelpers)
+                                            }}/>
+                                            
                                         ) : ""
                                         }
                                     </div>
