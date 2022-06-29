@@ -1,6 +1,17 @@
+.node{
+    border-top: 5px solid #c6000d;
+    border-radius: 10px;
+}
+
 .modal {
-    border-radius: 5px;
     padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.body{
+    margin-top: 10px!important;
+    margin-bottom: 15px !important;
 }
 
 .deleteButton {
@@ -20,18 +31,17 @@
     margin-bottom: 2px;
 
     .cancelButton {
-        margin-right: 10px;
+        margin-left: 10px;
         width: 20px;
         height: 24.79px;
-        background: rgba(74, 159, 199, 0.2);
         border-radius: 5px;
         padding: 5px;
         justify-content: center;
-        border: 1px solid #0457a0;
-        color: #0457a0;
+        border: 1px solid #034E5E;
+        color: #024352;
 
         &:hover {
-            background: #0457a0;
+            background: #034E5E;
             color: white;
         }
     }
@@ -44,6 +54,7 @@
         border: 1px solid #FB000F;
         padding: 20px;
         justify-content: center;
+        margin-right: 10px;
 
         &:hover {
             background: #c6000d;

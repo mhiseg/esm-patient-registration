@@ -1,4 +1,4 @@
-import { Column, Grid, Row } from "carbon-components-react";
+import { Column, Grid, Modal, Row } from "carbon-components-react";
 import { FieldArray } from "formik";
 import React, { useContext, useState } from "react";
 import { Icon } from '@iconify/react';
@@ -9,9 +9,10 @@ import { GivenNameField } from "../name/givenname-field.component";
 import { RelationTypeList } from "./relationshipList";
 import { relationshipType } from "../../patient-registration-types";
 import { useTranslation } from 'react-i18next';
-import { ConfirmationModal } from "../../widget/confirmation-modal";
 import { showToast } from "@openmrs/esm-framework";
 import { deletePerson, deleteRelationship } from "../../patient-registration.ressources";
+import { ConfirmationModal } from "../../widget/confirmation-modal";
+
 
 
 export interface RelationshipsProps {
@@ -23,11 +24,12 @@ export interface RelationshipsProps {
 export const RelationShips: React.FC<RelationshipsProps> = (values) => {
     const { t } = useTranslation();
     const abortController = new AbortController();
+    const [stateModal, setStateModal] = useState(false);
     const relationships: relationshipType = {
         givenName: "", familyName: "", contactPhone: "", type: "", personUuid: "", relationUuid: ""
     };
 
-    function removeRelationShip(values,index, arrayHelpers){
+    function removeRelationShip(values, index, arrayHelpers) {
         if (!values.relationships[index]?.personUuid && !values.relationships[index]?.relationUuid) {
             arrayHelpers.remove(index);
         }
@@ -87,13 +89,29 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
                                                     />
                                                 ) : ""
                                         }
-                                        {index > 0 ? (
-                                            <ConfirmationModal onConfirmModal={()=>{
-                                                removeRelationShip(values,index, arrayHelpers)
-                                            }}/>
-                                            
-                                        ) : ""
+                                        {index > 0 && (
+                                            <Icon
+                                                icon="akar-icons:circle-minus-fill"
+                                                inline={true}
+                                                width="32"
+                                                height="32"
+                                                color="#699BF7"
+                                                className={`${styles.buttonPlusStyle} ${styles.flexEnd}`}
+                                                onClick={() => {
+                                                    setStateModal(true);
+                                                    console.log(stateModal)
+                                                }
+                                                }
+                                            />
+                                        )
                                         }
+                                        {<ConfirmationModal
+                                            conFirmModal={() => {
+                                                removeRelationShip(values, index, arrayHelpers);
+                                                setStateModal(false)
+                                            }}
+                                            modalState={stateModal}
+                                            closeModal={setStateModal} />}
                                     </div>
                                 </Row>
                             ))}

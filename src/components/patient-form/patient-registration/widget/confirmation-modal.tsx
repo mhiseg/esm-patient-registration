@@ -1,61 +1,32 @@
-import React, { useState } from "react";
-import { Button, ComposedModal, ModalBody, ModalFooter, ModalHeader } from "carbon-components-react";
-import { Icon } from "@iconify/react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import styles from "./confirmation-modal.scss";
+import { BasicModal } from "./basic-modal/basic-modal";
+
 
 export interface ConfirmationModalProps {
-    onConfirmModal:() => void;
+    conFirmModal: any;
+    closeModal: any;
+    modalState: boolean;
 }
 
-export const ConfirmationModal: React.FC<ConfirmationModalProps> = (props) => {
-    const [showModal, setState] = useState(false)
+export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ conFirmModal, closeModal,modalState }) => {
     const { t } = useTranslation();
+
     return (
         <>
-
-            <Icon
-                icon="akar-icons:circle-minus-fill"
-                inline={true}
-                width="32"
-                height="32"
-                color="#699BF7"
-                onClick={e => setState(true)
+            <BasicModal
+                onConfirmModal={conFirmModal}
+                state={modalState}
+                onClose={closeModal}
+                title={t("relationShipsModal", "Supprimer une relation")}
+                body={
+                    <p >
+                        {t("messageErrorModalRelationShips", "Attention! Vous etes sur le point de supprimer une relation pour ce patient. Cette action est irreversible, voulez vous continuer?")}
+                    </p>
                 }
+                primaryButtonName={t("cancelModalButton", "Annuler")}
+                secondaryButtonName={t("confirmModalButton", "Supprimer")}
             />
-
-
-            <div>
-                <ComposedModal open={showModal} className={styles.modal} containerClassName={styles.modal} size='xs'>
-                    <ModalHeader  title={t("relationShipsModal","Supprimer une relation")} className={styles.header}/>
-                    <ModalBody className={styles}>
-                        <p >
-                            {t("messageErrorModalRelationShips","Attention! Vous etes sur le point de supprimer une relation pour ce patient. Cette action est irreversible, voulez vous continuer?") }
-                        </p>
-                    </ModalBody>
-                    <ModalFooter className={styles.footer}>
-                        <Button
-                            className={styles.cancelButton}
-                            kind="tertiary"
-                            isSelected={true}
-                            onClick={e => setState(false)}
-                        >
-                            {t("cancelModalButton", "Annuler")}
-                        </Button>
-                        <Button
-                            //renderIcon={(props) => <Trash size={24} {...props} />}
-                            className={styles.deleteButton}
-                            kind="danger--tertiary"
-                            isSelected={true}
-                            onClick={e => {
-                                props.onConfirmModal();
-                            }}
-                        >
-                            {t("confirmModalButton", "Supprimer")}
-                        </Button>
-                    </ModalFooter>
-                </ComposedModal>
-            </div>
         </>
     );
 }
