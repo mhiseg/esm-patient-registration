@@ -27,7 +27,8 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             uuid: patient?.uuid,
             openmrsId: patient?.identifiers[0]?.identifier || "",
             relationships: formatRelationship(relationships),
-            identifierType: patient?.identifiers[1]?.identifierType?.uuid || "",
+            identifierType: patient?.identifiers[1]?.identifierType?.uuid || null,
+            identifierUuid: patient?.identifiers[1]?.uuid || "",
             givenName: patient?.person?.names[0]?.givenName,
             dob: { birthdate: patient?.person?.birthdate, age: patient?.person?.age },
             status: getAnswerObs(maritalStatusConcept, obs),
@@ -36,8 +37,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             identifier: patient?.identifiers[1]?.identifier,
             familyName: patient?.person?.names[0]?.familyName,
             occupation: getAnswerObs(occupationConcept, obs),
-            residence:formAddres(patient?.person?.addresses[0]) || "",
-            //address: formAddres(patient?.person?.addresses[0])?.address1 || "",
+            residence: formAddres(patient?.person?.addresses[0]) || "",
             phone: patient?.person?.attributes.find((attribute) => attribute.attributeType.uuid == uuidPhoneNumber)?.value || "",
             habitat: getAnswerObs(habitatConcept, obs),
         }
@@ -45,7 +45,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
     const getAnswerObs = (question: string, obs: any[]) => {
         return obs?.find((o) => o.concept.uuid === question)?.answer?.uuid || undefined;
     }
-    
+
     const [initialV, setInitiatV] = useState(formatInialValue(patient));
 
     const patientSchema = Yup.object().shape({
@@ -93,8 +93,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
         return validateId(value, createError);
     });
 
-    /*************************Save patient****************************/
-    const save = async (id,values,resetForm) => {
+    const save = async (id, values, resetForm) => {
         let patient: Patient;
         let concepts: Concept[] = [];
         patient = {
@@ -106,7 +105,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             }
         }
         if (values.identifierType && values.identifier) {
-            patient.identifiers.push({ identifier: values.identifier, identifierType: values.identifierType, })
+            patient.identifiers.push({ identifier: values.identifier, identifierType: values.identifierType, uuid: values.identifierUuid == "" ? null : values.identifierUuid })
         }
         if (values.dob.birthdateEstimated) {
             patient.person.birthdateEstimated = true;
@@ -147,15 +146,12 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                     kind: 'success',
                     description: 'Patient save succesfully',
                 })
-                console.log(res);
                 resetForm(values);
             })
             .catch(error => {
                 showToast({ description: error.message })
             })
     }
-    /******************************End*********************************/
-
 
     return (
         <Formik
@@ -165,7 +161,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                 async (values, { setSubmitting, resetForm }) => {
                     setSubmitting(false)
                     const id = await generateIdentifier(sourceUuid, abortController);
-                    save(id.data.identifier, values,resetForm)
+                    save(id.data.identifier, values, resetForm);
                 }
             }
 
@@ -178,7 +174,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                     touched,
                     setFieldValue,
                     isValid,
-                    dirty,
+                    dirty
                 } = formik;
                 return (
                     <Form name="form" className={styles.cardForm} onSubmit={handleSubmit}>
@@ -245,7 +241,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                                             <Column className={styles.marginTop} lg={12} >
                                                 <div className={styles.flexEnd}>
                                                     <Button
-                                                       className={styles.buttonStyle}
+                                                        className={styles.buttonStyle}
                                                         kind="danger--tertiary"
                                                         type="reset"
                                                         size="sm"
