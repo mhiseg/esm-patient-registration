@@ -30,13 +30,15 @@ export const Autosuggest: React.FC<AutosuggestProps> = ({
   const wrapper = useRef(null);
   const { t } = useTranslation();
 
+
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutsideComponent);
     searchBox.current.input.value= value || '';
     return () => {
       document.removeEventListener('mousedown', handleClickOutsideComponent);
     };
-  }, [wrapper]);
+  }, [wrapper,value]);
 
   const handleClickOutsideComponent = e => {
 

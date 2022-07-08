@@ -12,6 +12,7 @@ interface BirthPlaceProps {
 }
 
 const BirthPlace: React.FC<BirthPlaceProps> = ({ value }) => {
+    
     const [places, setPlaces] = useState<Address[]>([]);
     const { t } = useTranslation();
     const { setFieldValue } = useContext(PatientRegistrationContext);

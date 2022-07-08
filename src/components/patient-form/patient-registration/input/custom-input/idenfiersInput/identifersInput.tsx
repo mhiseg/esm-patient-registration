@@ -23,7 +23,6 @@ export const IdentInput: React.FC<InputProps> = (props) => {
     const { t } = useTranslation();
 
     const handleMaskChange = (identifierType)=>{
-        console.log(identifierType);
         let mask;
         if (!identifierType) {
             mask="Identifiant";

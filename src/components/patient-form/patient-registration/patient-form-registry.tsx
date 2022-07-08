@@ -22,10 +22,9 @@ export interface PatientProps {
 export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relationships, obs }) => {
     const abortController = new AbortController();
     const { t } = useTranslation();
-    const formatInialValue = (patient) => {
+    const formatInialValue = (patient, obs, getAnswerObs) => {
         return {
             uuid: patient?.uuid,
-            openmrsId: patient?.identifiers[0]?.identifier || "",
             relationships: formatRelationship(relationships),
             identifierType: patient?.identifiers[1]?.identifierType?.uuid || null,
             identifierUuid: patient?.identifiers[1]?.uuid || "",
@@ -46,7 +45,8 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
         return obs?.find((o) => o.concept.uuid === question)?.answer?.uuid || undefined;
     }
 
-    const [initialV, setInitiatV] = useState(formatInialValue(patient));
+
+    const [initialV, setInitialV] = useState(formatInialValue(patient, obs, getAnswerObs));
 
     const patientSchema = Yup.object().shape({
         uuid: Yup.string(),
@@ -146,15 +146,54 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                     kind: 'success',
                     description: 'Patient save succesfully',
                 })
-                resetForm(values);
+                if (values.uuid) {
+                    setInitialV({
+                        uuid: values.uuid,
+                        relationships: formatRelationship([]),
+                        identifierType: res,
+                        identifierUuid: "",
+                        givenName: "",
+                        dob: { birthdate: undefined, age: undefined },
+                        status: "",
+                        gender: "",
+                        birthPlace: { cityVillage: "", stateProvince: "", country: "", display: "" },
+                        identifier: "",
+                        familyName: "",
+                        occupation: "",
+                        residence: "",
+                        phone: "",
+                        habitat: undefined
+                    });
+                } else {
+                    setInitialV({
+                        uuid: "",
+                        relationships: formatRelationship([]),
+                        identifierType: "",
+                        identifierUuid: "",
+                        givenName: "",
+                        dob: { birthdate: undefined, age: undefined },
+                        status: "",
+                        gender: "",
+                        birthPlace: { cityVillage: "", stateProvince: "", country: "", display: "" },
+                        identifier: "",
+                        familyName: "",
+                        occupation: "",
+                        residence: "",
+                        phone: "",
+                        habitat: undefined
+                    });
+                }
             })
             .catch(error => {
                 showToast({ description: error.message })
             })
     }
 
+
+    console.log(initialV, '*******************************');
     return (
         <Formik
+            enableReinitialize
             initialValues={initialV}
             validationSchema={patientSchema}
             onSubmit={
