@@ -7,18 +7,18 @@ interface NameValue {
   familyName: string;
 }
 export type Person = {
-  
-    uuid?: string;
-    names: Array<NameValue>;
-    gender: string;
-    birthdate?: string;
-    birthdateEstimated?: boolean;
-    attributes?: Array<AttributeValue>;
-    addresses?: Array<Address>;
-    dead?: boolean;
-    deathDate?: string;
-    causeOfDeath?: string;
-    age?: number;
+
+  uuid?: string;
+  names: Array<NameValue>;
+  gender: string;
+  birthdate?: string;
+  birthdateEstimated?: boolean;
+  attributes?: Array<AttributeValue>;
+  addresses?: Array<Address>;
+  dead?: boolean;
+  deathDate?: string;
+  causeOfDeath?: string;
+  age?: number;
 };
 
 export interface AttributeValue {
@@ -141,21 +141,15 @@ export type Patient = {
   person: Person;
   voided?: boolean;
 }
-export interface ObsFetchResponse {
-  results: Array<PhotoObs>;
-}
 
-export interface PhotoObs {
-  display: string;
-  obsDatetime: string;
-  uuid: string;
-  value: {
-    display: string;
-    links: {
-      rel: string;
-      uri: string;
-    };
-  };
+export type Obs = {
+  uuid?: string;
+  person?: Person | string;
+  obsDatetime?: string;
+  encounter?: Encounter | string;
+  location?: string;
+  concept?: string ;
+  value?: string;
 }
 
 export interface UsePatientPhotoResult {
@@ -165,10 +159,12 @@ export interface UsePatientPhotoResult {
 }
 
 export type Encounter = {
-  patient: string;
-  encounterDatetime: string;
+  patient?: string;
+  encounterDatetime?: string;
   encounterType: string;
-  location: string;
+  location?: string;
+  uuid?: string;
+  displays?: string;
 }
 
 export interface RelationshipValue {

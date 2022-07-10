@@ -4,8 +4,8 @@ import * as Yup from 'yup';
 import { Formik } from "formik";
 import { Grid, Row, Column, Button, Form } from "carbon-components-react";
 import { useTranslation } from "react-i18next";
-import { showToast } from "@openmrs/esm-framework";
-import { Concept, Patient, PatientIdentifier, Relationships, relationshipType } from "./patient-registration-types";
+import { navigate, NavigateOptions, showToast } from "@openmrs/esm-framework";
+import { Obs, Patient, relationshipType } from "./patient-registration-types";
 import FieldForm from "./field.component";
 import { RelationShips } from "./field/relationship/relationship-field-component";
 import { PatientRegistrationContext } from "./patient-registration-context";
@@ -15,17 +15,20 @@ import { dob, validateRelationShips, validateId } from "./validation/validation-
 
 export interface PatientProps {
     patient?: Patient;
-    relationships?: Relationships[];
-    obs?: any[];
+    relationships?: relationshipType[];
+    obs?: Obs[];
 }
 
 export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relationships, obs }) => {
     const abortController = new AbortController();
+    const toSearch: NavigateOptions = { to: window.spaBase + "/death/search" };
+    const reload: NavigateOptions = { to: window.location.href };
     const { t } = useTranslation();
     const formatInialValue = (patient, obs, getAnswerObs) => {
         return {
             uuid: patient?.uuid,
-            relationships: formatRelationship(relationships),
+            encounterUuid: obs ? obs[0]?.encounter : undefined,
+            relationships: relationships?.length > 0 ? relationships : [{ givenName: undefined, familyName: undefined, contactPhone: undefined, type: undefined, personUuid: undefined, relationUuid: undefined }],
             identifierType: patient?.identifiers[1]?.identifierType?.uuid || null,
             identifierUuid: patient?.identifiers[1]?.uuid || "",
             givenName: patient?.person?.names[0]?.givenName,
@@ -41,17 +44,16 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             habitat: getAnswerObs(habitatConcept, obs),
         }
     }
-    const getAnswerObs = (question: string, obs: any[]) => {
-        return obs?.find((o) => o.concept.uuid === question)?.answer?.uuid || undefined;
+    const getAnswerObs = (question: string, obs: Obs[]) => {
+        return obs?.find((o) => o?.concept === question) || { concept: question };
     }
 
 
     const [initialV, setInitialV] = useState(formatInialValue(patient, obs, getAnswerObs));
-
     const patientSchema = Yup.object().shape({
         uuid: Yup.string(),
         openmrsId: Yup.string(),
-        identifierType: Yup.string(),
+        identifierType: Yup.string().nullable(),
         givenName: Yup.string().required("messageErrorGivenName"),
         dob: Yup.object({
             birthdate: Yup.date(),
@@ -61,16 +63,16 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
         }).test("validate date ", ("messageErrorDob"), (value, { createError }) => {
             return dob(value, createError);
         }),
-        status: Yup.string(),
+        status: Yup.object(),
         gender: Yup.string().required("messageErrorGender"),
         birthPlace: Yup.object(),
         identifier: Yup.string(),
         familyName: Yup.string().required("messageErrorFamilyName"),
-        occupation: Yup.string(),
+        occupation: Yup.object(),
         residence: Yup.object().nullable(),
         address: Yup.string(),
         phone: Yup.string().min(9, ("messageErrorPhoneNumber")),
-        habitat: Yup.string(),
+        habitat: Yup.object(),
         relationships: Yup.array(
             Yup.object({
                 givenName: Yup.string(),
@@ -95,9 +97,9 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
 
     const save = async (id, values, resetForm) => {
         let patient: Patient;
-        let concepts: Concept[] = [];
+        let concepts: Obs[] = [];
         patient = {
-            identifiers: [{ identifier: id, identifierType: uuidIdentifier, location: uuidIdentifierLocation, preferred: true },],
+            identifiers: [{ identifier: id, identifierType: uuidIdentifier, location: uuidIdentifierLocation, preferred: true }],
             person: {
                 names: [{ givenName: values.givenName, familyName: values.familyName, }],
                 gender: values.gender,
@@ -119,54 +121,34 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             patient.person.attributes.push({ attributeType: uuidPhoneNumber, value: values.phone, })
         }
         if (values.residence) {
-            patient.person.addresses = []
+            patient.person.addresses = [];
             patient.person.addresses.push({
                 ...values.residence,
                 country: countryName,
             })
         }
         if (values.status) {
-            concepts.push({ uuid: maritalStatusConcept, answer: values.status });
+            concepts.push({ ...values.status });
         }
         if (values.occupation) {
-            concepts.push({ uuid: occupationConcept, answer: values.occupation });
+            concepts.push({ ...values.occupation });
         }
         if (values.habitat) {
-            concepts.push({ uuid: habitatConcept, answer: values.habitat });
+            concepts.push({ ...values.habitat });
         }
-        console.log(patient)
         savePatient(abortController, patient, values.uuid)
             .then(async (res) => {
                 const person = res.data.uuid;
-                if (values.relationships.length >= 1 && values.relationships[0].givenName)
-                    await saveAllRelationships(values.relationships, person, abortController)
-                await saveAllConcepts(concepts, person, abortController)
-                showToast({
-                    title: t('successfullyAdded', 'Successfully added'),
-                    kind: 'success',
-                    description: 'Patient save succesfully',
-                })
+                const relationships: relationshipType[] = values.relationships.filter(relationship => (relationship.givenName || relationship.relationUuid));
+                if (relationships.length > 0)
+                    await saveAllRelationships(relationships, person, abortController)
+                await saveAllConcepts(concepts, person, abortController, values.encounterUuid)
                 if (values.uuid) {
-                    setInitialV({
-                        uuid: values.uuid,
-                        relationships: formatRelationship([]),
-                        identifierType: res,
-                        identifierUuid: "",
-                        givenName: "",
-                        dob: { birthdate: undefined, age: undefined },
-                        status: "",
-                        gender: "",
-                        birthPlace: { cityVillage: "", stateProvince: "", country: "", display: "" },
-                        identifier: "",
-                        familyName: "",
-                        occupation: "",
-                        residence: "",
-                        phone: "",
-                        habitat: undefined
-                    });
+                    navigate(reload);
                 } else {
                     setInitialV({
                         uuid: "",
+                        encounterUuid: "",
                         relationships: formatRelationship([]),
                         identifierType: "",
                         identifierUuid: "",
@@ -183,14 +165,16 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                         habitat: undefined
                     });
                 }
+                showToast({
+                    title: t('successfullyAdded', 'Successfully added'),
+                    kind: 'success',
+                    description: 'Patient save succesfully',
+                })
             })
             .catch(error => {
                 showToast({ description: error.message })
             })
     }
-
-
-    console.log(initialV, '*******************************');
     return (
         <Formik
             enableReinitialize
@@ -262,7 +246,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                                 </Row>
                                 <Row >
                                     <Column className={styles.firstColSyle} lg={6}>
-                                        {FieldForm("status")}
+                                        {FieldForm("status", values?.status)}
                                     </Column>
                                     <Column className={styles.secondColStyle} lg={6}>
                                         {FieldForm("occupation")}
@@ -285,6 +269,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                                                         type="reset"
                                                         size="sm"
                                                         isSelected={true}
+                                                        onClick={() => navigate(toSearch)}
                                                     >
                                                         {t("cancelButton", "Annuler")}
                                                     </Button>

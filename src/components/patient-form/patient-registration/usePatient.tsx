@@ -118,8 +118,6 @@ export function usePatient(patientUuid?: string) {
 
     let active = true;
     if (state.isLoadingPatient && state.patientUuid) {
-
-
       fetchPatient(state.patientUuid).then(
         async (data) => {
           const relationships = await fetchRelationships(data.data.uuid);
@@ -139,9 +137,8 @@ export function usePatient(patientUuid?: string) {
             type: ActionTypes.loadError,
           })
       );
-
-
     }
+    
     return () => {
       active = false;
     };

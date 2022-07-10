@@ -3,13 +3,17 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { maritalStatusConcept, occupationConcept } from '../../../../constants';
 import { SelectCustom } from '../../input/custom-input/custom-select/custom-selected-component';
+import { SelectCustomObs } from '../../input/custom-input/custom-select/custom-selected-component-obs';
+import { Concept, Obs } from '../../patient-registration-types';
 import { fetchConceptByUuid, getConceptAnswer, getSynchronizedCurrentUser } from '../../patient-registration.ressources';
 import styles from '../field.scss';
 
-
-export const StatusField: React.FC = () => {
+interface StatusProps {
+  className?: string;
+}
+export const StatusField: React.FC<StatusProps> = () => {
   const { t } = useTranslation();
-  const [answers, setAnswers] = useState([])
+  const [answers, setAnswers] = useState([{}])
   const [question, setQuestion] = useState("");
 
   useEffect(() => {
@@ -26,7 +30,7 @@ export const StatusField: React.FC = () => {
 
   return (
     <>
-      <SelectCustom
+      <SelectCustomObs
         className={styles.margin_field}
         options={[...answers]}
         label={t('Select') + ' ' + question}

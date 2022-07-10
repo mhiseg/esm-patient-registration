@@ -26,26 +26,24 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
     const abortController = new AbortController();
     const [stateModal, setStateModal] = useState(false);
     const relationships: relationshipType = {
-        givenName: "", familyName: "", contactPhone: "", type: "", personUuid: "", relationUuid: ""
+        givenName: undefined, familyName: undefined, contactPhone: undefined, type: undefined, personUuid: undefined, relationUuid: undefined
     };
 
-    function removeRelationShip(values, index, arrayHelpers) {
+    async function removeRelationShip(values, index, arrayHelpers) {
         if (!values.relationships[index]?.personUuid && !values.relationships[index]?.relationUuid) {
             arrayHelpers.remove(index);
         }
         else {
-            alert("About to remove a relationship");
-            deleteRelationship(abortController, values.relationships[index].relationUuid).then(async () => {
-                await deletePerson(abortController, values.relationships[index].personUuid)
+            deleteRelationship(abortController, values.relationships[index].relationUuid, values.relationships[index].personUuid)
+            .then(res => {
                 arrayHelpers.remove(index);
                 showToast({
                     title: t('successfullyRemoved', 'Successfully removed'),
                     kind: 'success',
                     description: 'Relationship removed succesfully',
                 })
-            }).catch(error => {
-                showToast({ description: error.message })
             })
+            .catch(error => showToast({ description: "Failed to delete relationships" }))
         }
     }
 
@@ -99,7 +97,6 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
                                                 className={`${styles.buttonPlusStyle} ${styles.flexEnd}`}
                                                 onClick={() => {
                                                     setStateModal(true);
-                                                    console.log(stateModal)
                                                 }
                                                 }
                                             />

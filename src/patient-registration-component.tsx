@@ -21,10 +21,11 @@ const PatientRegistration = () => {
 
     const getFormPatient = () => {
         toNewPatient(patientToEdit?.data)
+
         return <>
             <h4 className={`title-page`}>{patientToEdit?.data ? t('editPatientTitle', 'Edit Patient') : t('savePatientTitle', 'New Patient')}</h4>
             <div className={`mhiseg-main-content `}>
-                {patientToEdit?.data ? <PatientFormRegistry obs={obsToEdit} relationships={relationshipsToEdit.data.results} patient={patientToEdit.data} /> : <PatientFormRegistry />}
+                {patientToEdit?.data ? <PatientFormRegistry obs={obsToEdit} relationships={relationshipsToEdit} patient={patientToEdit.data} /> : <PatientFormRegistry />}
             </div>
         </>
     }
