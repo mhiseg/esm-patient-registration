@@ -138,6 +138,14 @@ export async function saveAllConcepts(obs: Obs[], person: string, abortControlle
   }
 }
 
+export function getPatient(query) {
+  return openmrsFetch(
+    `${BASE_WS_API_URL}patient?v=full&q=${query}`,
+    {
+      method: "GET",
+    }
+  );
+}
 export function generateIdentifier(source: string, abortController: AbortController) {
   return openmrsFetch(`${BASE_WS_API_URL}idgen/identifiersource/${source}/identifier`, {
     headers: {

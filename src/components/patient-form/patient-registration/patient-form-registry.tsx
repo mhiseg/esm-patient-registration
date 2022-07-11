@@ -42,6 +42,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             residence: formAddres(patient?.person?.addresses[0]) || "",
             phone: patient?.person?.attributes.find((attribute) => attribute.attributeType.uuid == uuidPhoneNumber)?.value || "",
             habitat: getAnswerObs(habitatConcept, obs),
+            patient: patient,
         }
     }
     const getAnswerObs = (question: string, obs: Obs[]) => {
@@ -107,7 +108,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             }
         }
         if (values.identifierType && values.identifier) {
-            patient.identifiers.push({ identifier: values.identifier, identifierType: values.identifierType, uuid: values.identifierUuid == "" ? null : values.identifierUuid })
+            patient.identifiers.push({ identifier: values.identifier.replace(/\D/g, ""), identifierType: values.identifierType, uuid: values.identifierUuid == "" ? null : values.identifierUuid })
         }
         if (values.dob.birthdateEstimated) {
             patient.person.birthdateEstimated = true;
@@ -162,7 +163,8 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                         occupation: "",
                         residence: "",
                         phone: "",
-                        habitat: undefined
+                        habitat: undefined,
+                        patient: undefined
                     });
                 }
                 showToast({
@@ -202,7 +204,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                 return (
                     <Form name="form" className={styles.cardForm} onSubmit={handleSubmit}>
                         <Grid fullWidth={true} className={styles.p0}>
-                            <PatientRegistrationContext.Provider value={{ setFieldValue: setFieldValue, identifierType: values.identifierType }}>
+                            <PatientRegistrationContext.Provider value={{ setFieldValue: setFieldValue, identifierType: values.identifierType, patient: null }}>
                                 <Row>
                                     <Column className={styles.firstColSyle} lg={6}>
                                         {FieldForm("idType")}

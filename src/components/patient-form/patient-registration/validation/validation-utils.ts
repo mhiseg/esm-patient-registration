@@ -1,4 +1,7 @@
+import { useContext } from "react";
 import { cinUuid, nifUuid } from "../../../constants";
+import { PatientRegistrationContext } from "../patient-registration-context";
+import { getPatient } from "../patient-registration.ressources";
 
 export function dob(value, createError) {
     if ((value.birthdate === undefined) && (value.age === undefined)) {
@@ -11,7 +14,17 @@ export function dob(value, createError) {
         return true;
 }
 
-export function validateId(value, createError) {
+export async function validateId(value, createError) {
+    
+    if (value.identifier && value.identifier.replace(/\D/g, "").length == 10) {
+        const patientSearch = await getPatient(value.identifier.replace(/\D/g, ""));
+        if (patientSearch?.data?.results.length > 0 && patientSearch?.data?.results[0]?.identifiers[1].identifier !== value?.patient?.identifiers[1]?.identifier)
+            return createError({
+                path: 'identifier',
+                message: ("messageErrorIdentifierExisted"),
+            });
+    }
+
     if ((value.identifierType == undefined) && (value.identifier == undefined)) {
         return true;
     }

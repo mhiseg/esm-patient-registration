@@ -1,4 +1,5 @@
 import { createContext, SetStateAction, useContext } from 'react';
+import { Patient } from './patient-registration-types';
 
 export interface FormValues {
   relationships: Array<any>,
@@ -21,6 +22,7 @@ export interface FormValues {
 export interface PatientRegistrationContextProps {
   setFieldValue(field: string, value: any, shouldValidate?: boolean): void;
   identifierType: string;
+  patient: any;
 }
 
 export const PatientRegistrationContext = createContext<PatientRegistrationContextProps | undefined>(undefined);

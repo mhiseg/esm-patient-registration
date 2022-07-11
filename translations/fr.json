@@ -32,5 +32,6 @@
   "relationShipsModal": "Supprimer une relation",
   "editPatientTitle": "Modifier un patient",
   "confirmModalButton" : "Supprimer",
-  "cancelModalButton": "Annuler"
+  "cancelModalButton": "Annuler",
+  "messageErrorIdentifierExisted": "Cet identifiant existe déjà"
 }
