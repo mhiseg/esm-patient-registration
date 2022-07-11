@@ -10,8 +10,9 @@ import FieldForm from "./field.component";
 import { RelationShips } from "./field/relationship/relationship-field-component";
 import { PatientRegistrationContext } from "./patient-registration-context";
 import { savePatient, generateIdentifier, saveAllConcepts, saveAllRelationships, formAddres, formatRelationship } from "./patient-registration.ressources";
-import { countryName, habitatConcept, maritalStatusConcept, occupationConcept, sourceUuid, uuidBirthPlace, uuidIdentifier, uuidIdentifierLocation, uuidPhoneNumber } from "../../constants";
+import { cinUuid, countryName, habitatConcept, maritalStatusConcept, occupationConcept, sourceUuid, uuidBirthPlace, uuidIdentifier, uuidIdentifierLocation, uuidPhoneNumber } from "../../constants";
 import { dob, validateRelationShips, validateId } from "./validation/validation-utils";
+import { formatCin, formatNif } from "./input/custom-input/idenfiersInput/id-utils";
 
 export interface PatientProps {
     patient?: Patient;
@@ -24,6 +25,13 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
     const toSearch: NavigateOptions = { to: window.spaBase + "/death/search" };
     const reload: NavigateOptions = { to: window.location.href };
     const { t } = useTranslation();
+    const format = (identifierType, value) => {
+        if (identifierType == cinUuid)
+            return formatCin(value);
+        else
+            return formatNif(value);
+    }
+
     const formatInialValue = (patient, obs, getAnswerObs) => {
         return {
             uuid: patient?.uuid,
@@ -36,7 +44,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
             status: getAnswerObs(maritalStatusConcept, obs),
             gender: patient?.person?.gender,
             birthPlace: formAddres(patient?.person?.attributes.find((attribute) => attribute?.attributeType?.uuid == uuidBirthPlace)?.value) || "",
-            identifier: patient?.identifiers[1]?.identifier,
+            identifier: format(patient?.identifiers[1]?.identifierType?.uuid, patient?.identifiers[1]?.identifier),
             familyName: patient?.person?.names[0]?.familyName,
             occupation: getAnswerObs(occupationConcept, obs),
             residence: formAddres(patient?.person?.addresses[0]) || "",
