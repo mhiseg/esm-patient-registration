@@ -34,6 +34,8 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
     }
 
     const formatInialValue = (patient, obs, getAnswerObs) => {
+
+        console.log({ birthdate: patient?.person?.birthdate, age: patient?.person?.age },'----------------------')
         return {
             uuid: patient?.uuid,
             encounterUuid: obs ? obs[0]?.encounter : undefined,
@@ -155,27 +157,25 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                 if (values.uuid) {
                     navigate(reload);
                 } else {
-                    navigate(reload);
-
-                    // setInitialV( {
-                    //     uuid: "",
-                    //     encounterUuid: "",
-                    //     relationships: formatRelationship([]),
-                    //     identifierType: "",
-                    //     identifierUuid: "",
-                    //     givenName: "",
-                    //     dob: { birthdate: undefined, age: undefined },
-                    //     status: getAnswerObs(maritalStatusConcept, [{}]),
-                    //     gender: "",
-                    //     birthPlace: { cityVillage: "", stateProvince: "", country: "", display: "" },
-                    //     identifier: "",
-                    //     familyName: "",
-                    //     occupation: getAnswerObs(occupationConcept,[{}]),
-                    //     residence: "",
-                    //     phone: "",
-                    //     habitat: getAnswerObs(habitatConcept,[{}]),
-                    //     patient: undefined
-                    // });
+                    resetForm({
+                        uuid: "",
+                        encounterUuid: "",
+                        relationships: formatRelationship([]),
+                        identifierType: "",
+                        identifierUuid: "",
+                        givenName: "",
+                        dob: { birthdate: undefined, age: undefined },
+                        status: getAnswerObs(maritalStatusConcept, [{}]),
+                        gender: "",
+                        birthPlace: { cityVillage: "", stateProvince: "", country: "", display: "" },
+                        identifier: "",
+                        familyName: "",
+                        occupation: getAnswerObs(occupationConcept, [{}]),
+                        residence: "",
+                        phone: "",
+                        habitat: getAnswerObs(habitatConcept, [{}]),
+                        patient: undefined
+                    });
                 }
                 showToast({
                     title: t('successfullyAdded', 'Successfully added'),
@@ -187,7 +187,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                 showToast({ description: error.message })
             })
     }
-    
+
     return (
         <Formik
             enableReinitialize

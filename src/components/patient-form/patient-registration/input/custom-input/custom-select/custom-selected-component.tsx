@@ -11,8 +11,7 @@ interface InputSelectProps {
 }
 
 export const SelectCustom: React.FC<InputSelectProps> = ({ name, options, label, className }) => {
-  const [field, meta, helpers] = useField(name);
-  const {setValue} = helpers;
+  const [field, meta] = useField(name);
 
   const { t } = useTranslation();
   const selectOptions = [
@@ -33,7 +32,7 @@ export const SelectCustom: React.FC<InputSelectProps> = ({ name, options, label,
         hideLabel={true}
         invalid={!!(meta.error && meta.touched)}
         invalidText={meta.error}
-        value={meta.value}
+        value={meta.value || ""}
       >
         {selectOptions}
       </Select>

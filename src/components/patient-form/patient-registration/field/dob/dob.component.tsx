@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Column,  DatePicker, DatePickerInput, NumberInput, Row } from 'carbon-components-react';
+import { Column, DatePicker, DatePickerInput, NumberInput, Row } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
 import { PatientRegistrationContext } from '../../patient-registration-context';
 import styles from '../../field/field.scss';
@@ -19,11 +19,12 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
   const [dob, setDob] = useState(calculDate(props.age, props.months, props.birthdate));
   const { setFieldValue } = useContext(PatientRegistrationContext);
   const [birthdate, birthdateMeta] = useField('dob');
-  
+
   const onDateChange = ([birthdate]) => {
     setDob(dateDiff(new Date(birthdate), today));
     setFieldValue('dob', { ...dob, birthdateEstimated: false });
   };
+
   function dateDiff(date1, date2) {
     var tmp = date2 - date1;
     if (tmp > 0) {
@@ -47,7 +48,7 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
       currentYear.setFullYear(currentYear.getFullYear() - age);
       return ({ birthdate: currentYear, age: age, months: months })
 
-    }else{
+    } else {
       return ({ birthdate: undefined, age: undefined, months: 0 })
 
     }
@@ -61,7 +62,7 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
       setDob(calculDate(0, dob.months))
   };
 
- const onChange = () => {
+  const onChange = () => {
     setFieldValue('dob', { ...dob, birthdateEstimated: true });
   }
 
@@ -72,6 +73,7 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
     else
       setDob(calculDate(dob.age, 0))
   };
+
   return (
     <Row className={styles.margin_field}>
       <Column>
@@ -83,14 +85,14 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
           dateFormat="d/m/Y"
           light={true}
           onChange={onDateChange}
-          value={dob.birthdate}
-          
+          value={dob.birthdate || ""}
+
         >
           <DatePickerInput
             id="birthdate"
             labelText="Date Picker label"
             hideLabel={true}
-            placeholder={"dd/mm/yyyy"+" *"}
+            placeholder={"dd/mm/yyyy" + " *"}
             size="md"
             invalid={!!(birthdateMeta.error)}
             invalidText={t(birthdateMeta.error)}
@@ -109,7 +111,7 @@ export const DobField: React.FC<DobFieldProps> = (props) => {
           allowEmpty={true}
           light={true}
           hideSteppers={true}
-          value={dob?.age}  
+          value={dob?.age}
           onChange={onEstimatedAgeChange}
           onBlur={onChange}
           placeholder="Ans"

@@ -120,7 +120,7 @@ export function formatRelationship(values): relationshipType[] {
         givenName: value?.personB?.display.split(" ")[0],
         familyName: value?.personB?.display.split(" ")[1],
         contactPhone: value?.personB?.attributes[0]?.display.split(" = ")[1],
-        type: value?.relationshipType?.uuid
+        type: value?.relationshipType?.uuid == undefined? "" :value?.relationshipType?.uuid,
       }
     }))
   }
