@@ -7,7 +7,6 @@ interface NameValue {
   familyName: string;
 }
 export type Person = {
-
   uuid?: string;
   names: Array<NameValue>;
   gender: string;

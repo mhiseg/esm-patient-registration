@@ -19,14 +19,12 @@ export interface RelationshipsProps {
     relationships: relationshipType[];
 }
 
-
-
 export const RelationShips: React.FC<RelationshipsProps> = (values) => {
     const { t } = useTranslation();
     const abortController = new AbortController();
     const [stateModal, setStateModal] = useState(false);
     const relationships: relationshipType = {
-        givenName: undefined, familyName: undefined, contactPhone: undefined, type: undefined, personUuid: undefined, relationUuid: undefined
+        givenName: undefined, familyName: undefined, contactPhone: undefined, type: "", personUuid: undefined, relationUuid: undefined
     };
 
     async function removeRelationShip(values, index, arrayHelpers) {
@@ -58,7 +56,7 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
                                     <input id={`relationships.[${index}].relationUuid`} name={`relationships.[${index}].relationUuid`} value={r.relationUuid} hidden={true} />
                                     <input id={`relationships.[${index}].personUuid`} name={`relationships.[${index}].personUuid`} value={r.personUuid} hidden={true} />
                                     <Column lg={3} className={styles.pl0}>
-                                        <RelationTypeList name={`relationships.[${index}].type`} value={null} />
+                                        <RelationTypeList name={`relationships.[${index}].type`} />
                                     </Column>
                                     <Column lg={3} className={styles.pl0}>
                                         <FamilyNameField name={`relationships.[${index}].familyName`} />
@@ -82,6 +80,7 @@ export const RelationShips: React.FC<RelationshipsProps> = (values) => {
                                                         className={`${styles.buttonPlusStyle} ${styles.flexEnd}`}
                                                         onClick={() => {
                                                             arrayHelpers.unshift(relationships)
+                                                            console.log("================= relationships",arrayHelpers);
                                                         }
                                                         }
                                                     />

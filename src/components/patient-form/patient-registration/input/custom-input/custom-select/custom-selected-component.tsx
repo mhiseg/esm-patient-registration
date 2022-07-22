@@ -11,11 +11,13 @@ interface InputSelectProps {
 }
 
 export const SelectCustom: React.FC<InputSelectProps> = ({ name, options, label, className }) => {
-  const [field, meta] = useField(name);
+  const [field, meta, helpers] = useField(name);
+  const {setValue} = helpers;
+
   const { t } = useTranslation();
   const selectOptions = [
     <SelectItem text={label} key="" value={undefined} />,
-    ...options.map((currentOption, index) => <SelectItem text={t(currentOption.display)} value={currentOption} key={index} />
+    ...options.map((currentOption, index) => <SelectItem text={t(currentOption.display)} value={currentOption.uuid} key={index} />
     ),
   ];
 
@@ -31,6 +33,7 @@ export const SelectCustom: React.FC<InputSelectProps> = ({ name, options, label,
         hideLabel={true}
         invalid={!!(meta.error && meta.touched)}
         invalidText={meta.error}
+        value={meta.value}
       >
         {selectOptions}
       </Select>

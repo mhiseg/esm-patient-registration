@@ -14,6 +14,7 @@ export const GivenNameField:React.FC<GivenNameFieldProps> = ({name, className,re
   const { t } = useTranslation();
   let star = "";
   required == true ? star =" *":star="";
+
   return(
     <>
       <Input

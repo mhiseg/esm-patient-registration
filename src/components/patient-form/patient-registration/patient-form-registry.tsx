@@ -25,6 +25,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
     const toSearch: NavigateOptions = { to: window.spaBase + "/death/search" };
     const reload: NavigateOptions = { to: window.location.href };
     const { t } = useTranslation();
+
     const format = (identifierType, value) => {
         if (identifierType == cinUuid)
             return formatCin(value);
@@ -56,7 +57,6 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
     const getAnswerObs = (question: string, obs: Obs[]) => {
         return obs?.find((o) => o?.concept === question) || { concept: question };
     }
-
 
     const [initialV, setInitialV] = useState(formatInialValue(patient, obs, getAnswerObs));
     const patientSchema = Yup.object().shape({
@@ -155,25 +155,27 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                 if (values.uuid) {
                     navigate(reload);
                 } else {
-                    setInitialV({
-                        uuid: "",
-                        encounterUuid: "",
-                        relationships: formatRelationship([]),
-                        identifierType: "",
-                        identifierUuid: "",
-                        givenName: "",
-                        dob: { birthdate: undefined, age: undefined },
-                        status: "",
-                        gender: "",
-                        birthPlace: { cityVillage: "", stateProvince: "", country: "", display: "" },
-                        identifier: "",
-                        familyName: "",
-                        occupation: "",
-                        residence: "",
-                        phone: "",
-                        habitat: undefined,
-                        patient: undefined
-                    });
+                    navigate(reload);
+
+                    // setInitialV( {
+                    //     uuid: "",
+                    //     encounterUuid: "",
+                    //     relationships: formatRelationship([]),
+                    //     identifierType: "",
+                    //     identifierUuid: "",
+                    //     givenName: "",
+                    //     dob: { birthdate: undefined, age: undefined },
+                    //     status: getAnswerObs(maritalStatusConcept, [{}]),
+                    //     gender: "",
+                    //     birthPlace: { cityVillage: "", stateProvince: "", country: "", display: "" },
+                    //     identifier: "",
+                    //     familyName: "",
+                    //     occupation: getAnswerObs(occupationConcept,[{}]),
+                    //     residence: "",
+                    //     phone: "",
+                    //     habitat: getAnswerObs(habitatConcept,[{}]),
+                    //     patient: undefined
+                    // });
                 }
                 showToast({
                     title: t('successfullyAdded', 'Successfully added'),
@@ -185,6 +187,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                 showToast({ description: error.message })
             })
     }
+    
     return (
         <Formik
             enableReinitialize

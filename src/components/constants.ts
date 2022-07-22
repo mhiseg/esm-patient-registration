@@ -18,5 +18,5 @@ export const maritalStatusConcept = '1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
 export const occupationConcept = '1542AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
 export const habitatConcept = "965014a7-644d-4df8-898b-33cb4d76c326";
 export const cinUuid = "72242d84-1e2c-4991-b523-4f86ad115b31";
-export const nifUuid = "f013b1b6-23bd-4fde-a913-4b0d6c81d2d4";
+export const nifUuid = "e7260a40-fb8a-42ec-8e86-caf31be03f60";
 

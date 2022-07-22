@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-import styles from '../../../field/field.scss';
+import React, { useContext, useState } from 'react';
 import { formatCin, formatNif } from './id-utils';
 import { TextInput } from 'carbon-components-react';
 import { useField } from 'formik';
