@@ -23,7 +23,6 @@ export interface PatientProps {
 export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relationships, obs }) => {
     const abortController = new AbortController();
     const toSearch: NavigateOptions = { to: window.spaBase + "/death/search" };
-    const reload: NavigateOptions = { to: window.location.href };
     const { t } = useTranslation();
 
     const format = (identifierType, value) => {
@@ -35,7 +34,7 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
 
     const formatInialValue = (patient, obs, getAnswerObs) => {
 
-        console.log({ birthdate: patient?.person?.birthdate, age: patient?.person?.age },'----------------------')
+        console.log({ birthdate: patient?.person?.birthdate, age: patient?.person?.age }, '----------------------')
         return {
             uuid: patient?.uuid,
             encounterUuid: obs ? obs[0]?.encounter : undefined,
@@ -154,34 +153,12 @@ export const PatientFormRegistry: React.FC<PatientProps> = ({ patient, relations
                 if (relationships.length > 0)
                     await saveAllRelationships(relationships, person, abortController)
                 await saveAllConcepts(concepts, person, abortController, values.encounterUuid)
-                if (values.uuid) {
-                    navigate(reload);
-                } else {
-                    resetForm({
-                        uuid: "",
-                        encounterUuid: "",
-                        relationships: formatRelationship([]),
-                        identifierType: "",
-                        identifierUuid: "",
-                        givenName: "",
-                        dob: { birthdate: undefined, age: undefined },
-                        status: getAnswerObs(maritalStatusConcept, [{}]),
-                        gender: "",
-                        birthPlace: { cityVillage: "", stateProvince: "", country: "", display: "" },
-                        identifier: "",
-                        familyName: "",
-                        occupation: getAnswerObs(occupationConcept, [{}]),
-                        residence: "",
-                        phone: "",
-                        habitat: getAnswerObs(habitatConcept, [{}]),
-                        patient: undefined
-                    });
-                }
                 showToast({
                     title: t('successfullyAdded', 'Successfully added'),
                     kind: 'success',
                     description: 'Patient save succesfully',
                 })
+                navigate(toSearch);
             })
             .catch(error => {
                 showToast({ description: error.message })
